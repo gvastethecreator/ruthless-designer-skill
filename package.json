@@ -1,0 +1,24 @@
+{
+  "name": "ruthless-designer-skill",
+  "version": "0.1.0",
+  "private": false,
+  "description": "A Codex skill for ruthless blank-canvas UI creation, obsessive design iteration, and visual QA.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-skill.mjs SKILLS/ruthless-designer",
+    "smoke": "node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path SKILLS/ruthless-designer/fixtures/deep-review-bad.tsx --out .scratch/ruthless-designer-smoke --fail-on=P0",
+    "check": "npm run validate && npm run smoke"
+  },
+  "keywords": [
+    "codex",
+    "skill",
+    "ui-design",
+    "frontend",
+    "design-review",
+    "visual-qa"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}
