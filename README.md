@@ -1,6 +1,6 @@
 # Ruthless Designer
 
-![Ruthless Designer banner](./assets/readme-banner.png)
+![Ruthless Designer banner](./assets/readme-banner-v5.png)
 
 > A Codex skill for blank-canvas UI creation with teeth: complete product screens, dashboards, landing pages, prototypes, visual systems, obsessive critique/fix/proof loops, and visual QA.
 
