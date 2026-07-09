@@ -8,11 +8,16 @@
 - Hybrid UI should not let expressive brand treatment leak into forms, tables, and repeated controls.
 - Scan for generated-UI tells: gradient text, purple-blue gradients, cream defaults, nested cards, icon tiles above headings, repeated eyebrows, over-rounded cards, decorative glass, wide shadows with hairline borders, and generic SaaS copy.
 - When the cleanup would only make the UI competent, run a distinction pass and add one signature move tied to the real product, task, or brand artifact.
+- For open-ended or high-ambition work, run a direction sprint before committing to layout, palette, or effects.
+- Pick a composition pattern only when it sharpens the task, proof, artifact, comparison, or story.
 - If local files are available, run the bundled static detector for a first pass, then verify findings manually.
 - Choose the smallest proof recipe that can support the final claim; do not use a clean static scan as proof of visual quality.
 
 See [registers.md](registers.md).
 See [taste-calibration.md](taste-calibration.md).
+See [direction-sprint.md](direction-sprint.md).
+See [composition-patterns.md](composition-patterns.md).
+See [signature-moves.md](signature-moves.md).
 See [anti-slop.md](anti-slop.md).
 See [distinction.md](distinction.md).
 See [detector-rules.md](detector-rules.md).

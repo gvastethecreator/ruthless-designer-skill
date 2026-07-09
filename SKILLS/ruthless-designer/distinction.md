@@ -4,6 +4,8 @@ Use this when visual quality is in scope, the user says the UI feels generic/bla
 
 Anti-slop removes obvious tells. Distinction adds the reason a reviewer would prefer this interface.
 
+For high-ambition, "incredible", "standout", or open-ended creation, pair this file with [direction-sprint.md](direction-sprint.md) and [signature-moves.md](signature-moves.md). The sprint chooses the direction; this pass rejects reflexes and verifies the chosen move is not decoration.
+
 ## Reflex Audit
 
 Before choosing a direction, name and reject the predictable moves:
@@ -27,6 +29,8 @@ Pick one or two signature moves. A signature move must be visible, useful, testa
 - Constraint as style: choose one hard constraint for brand surfaces, such as monochrome plus one material color, type-led editorial rhythm, image-led full bleed, dense catalog grid, or civic restraint.
 
 Cut any move that cannot survive responsive layout, accessibility basics, and proof.
+
+Use [signature-moves.md](signature-moves.md) when the direction needs a sharper move than these categories suggest.
 
 ## Product Vs Brand
 

@@ -1,6 +1,6 @@
 ---
 name: ruthless-designer
-description: "Ruthless blank-canvas and broad interface design skill. Use to create complete, obsessive, standout UI from scratch; design new product screens, dashboards, landing pages, portfolios, prototypes, visual systems, feature flows, and strong redesign directions; also use for aggressive design strategy, visual direction, reference-led UI creation, critique/fix/proof loops, and visual QA when the user wants a severe designer's standard rather than ordinary polish. Prefer improve-ui for targeted fixes to existing implemented UI."
+description: "Blank-canvas interface design. Use for new product screens, dashboards, landing pages, portfolios, prototypes, visual systems, broad redesign direction, reference-led UI creation, critique/fix/proof loops, and visual QA."
 ---
 
 # Ruthless Designer
@@ -11,17 +11,27 @@ Ruthless does not mean theatrical cruelty. It means no fake hierarchy, no trend 
 
 Quality obsession is part of the contract. Keep at least 70% of the mission on artifact work: designing, implementing, rendering, screenshotting, comparing, fixing, or proving. Process that does not change the artifact, critique, or proof is waste.
 
+## Mandatory Entry Frame
+
+- For visual quality, interface improvement, polish, production-readiness, redesign, screenshot critique, or visible UI bugs, read `relentless-mode.md` before the first recommendation.
+- For design analysis, audit, visual verdict, screenshot critique, "does this look good?", or roast, read `forensic-roast.md` before scoring or final judgment.
+- For every nontrivial run, read `core-moves.md` as the compact operating map before selecting deeper references.
+- For open-ended, high-ambition, "incredible", "standout", "not generic", or blank-canvas work, read `direction-sprint.md` and choose a direction before composing the final system.
+- For any final claim of visual quality, use `checklist.md` as the closeout gate. Do not claim complete when required proof or state coverage is missing.
+
 ## Boundary
 
 - Use this skill for greenfield UI, new screens, new product flows, new landing/portfolio/brand surfaces, visual identity direction, prototypes, broad redesign concepts, and reference-led creation.
-- Use `improve-ui` for targeted improvement of an already implemented UI: visual bugs, polish, accessibility hardening, runtime proof, component fixes, and production-readiness passes.
-- If existing code is present but the user asks for a new direction, Ruthless Designer owns the concept and system; `improve-ui` can still be used later for surgical implementation hardening.
+- If `improve-ui` is installed, combine with it for targeted improvement of an already implemented UI: visual bugs, polish, accessibility hardening, runtime proof, component fixes, and production-readiness passes.
+- If `improve-ui` is unavailable, Ruthless Designer remains self-contained: use its local QA, hardening, proof, and detector references to verify the created interface.
+- If existing code is present but the user asks for a new direction, Ruthless Designer owns the concept and system; `improve-ui` can still be used later for surgical implementation hardening when available.
 
 ## Process
 
 1. Lock the design target without turning the work into a questionnaire.
    - Identify the product, audience, core user task, surface, desired interactivity, data/content reality, and visual/reference constraints.
    - Ask only when two plausible directions would produce incompatible interfaces. Otherwise choose the strongest interpretation and state it.
+   - Use `core-moves.md` to select the minimum deeper references for the actual task.
    - Done when the design read can guide layout, hierarchy, system choice, and proof.
 
 2. Start from blank-canvas discipline.
@@ -29,6 +39,7 @@ Quality obsession is part of the contract. Keep at least 70% of the mission on a
    - Read `obsessive-design-loop.md` for substantial, broad, complete, high-polish, or user-declared obsessive design missions.
    - Read `taste-calibration.md` to set register and dials.
    - Read `distinction.md` before choosing a direction; reject the first reflex and second reflex.
+   - Read `direction-sprint.md`, `composition-patterns.md`, and `signature-moves.md` when the output needs a memorable direction instead of competent cleanup.
    - Read `reference-capture.md` when a URL, screenshot, video, HTML export, image, brand asset, or generated comp can reduce guessing.
    - Done when the product intent, signature move, system choice, and proof target are explicit.
 
@@ -47,6 +58,7 @@ Quality obsession is part of the contract. Keep at least 70% of the mission on a
 5. Run visual QA before calling it good.
    - Read `visual-qa.md` when there is a source visual, reference, mock, screenshot, or intended implementation.
    - Read `proof-recipes.md` for runtime, responsive, state, motion, reference-led, or blocked-proof evidence.
+   - Use `checklist.md` to catch missing proof, state coverage, weak distinction, and unresolved P1/P2 issues before finalizing.
    - For broad design missions, keep looping until the obsessive backlog has no blocker/major findings left, or an evidence-backed blocker/no-padding verdict says more loops would not improve user value.
    - If proof shows generic output, weak hierarchy, broken states, or repeated P2 issues, keep cutting or state the blocker.
    - Done when the final note names design choices, files/artifacts, proof, skipped checks, blockers, and remaining risk.
@@ -56,6 +68,7 @@ Quality obsession is part of the contract. Keep at least 70% of the mission on a
 - Greenfield product app/dashboard: use `greenfield-design.md`, `registers.md`, `contracts.md`, `hardening.md`, and `proof-recipes.md`. The interface must expose task priority, data states, keyboard/focus basics, and realistic dense content.
 - Greenfield landing/brand/portfolio: use `greenfield-design.md`, `marketing-pages.md`, `taste-calibration.md`, `distinction.md`, and `reference-capture.md`. The first viewport must carry a real offer or product artifact, not a decorative hero.
 - Prototype/game/tool: use `greenfield-design.md`, `surfaces.md`, `animations.md`, `motion-craft.md`, and `proof-recipes.md`. Interaction grammar matters more than decorative novelty.
+- Open-ended standout direction: use `direction-sprint.md`, `composition-patterns.md`, `signature-moves.md`, `taste-calibration.md`, and `distinction.md`. Generate incompatible directions, kill the obvious ones, and build the chosen signature move into the information architecture.
 - Broad redesign direction: audit the existing surface only enough to know what to preserve, then create the new system. If the request becomes targeted implementation cleanup, route that phase to `improve-ui`.
 - Reference-led creation: extract hierarchy, typography, spacing, surface logic, media treatment, and motion beats before coding. Copy the system logic, not the costume.
 - Visual QA: compare the source truth and rendered implementation at the same viewport/state; do not pass from memory or code paths alone.
@@ -72,9 +85,13 @@ Quality obsession is part of the contract. Keep at least 70% of the mission on a
 
 Required gates:
 
+- Nontrivial UI work without `core-moves.md` is incomplete.
+- Visual quality, improvement, audit, polish, readiness, redesign, or screenshot critique without `relentless-mode.md` is incomplete.
+- Design verdict, UI audit, screenshot critique, or roast without `forensic-roast.md` is incomplete.
 - Blank-canvas UI without `greenfield-design.md` is incomplete.
 - Substantial, broad, complete, or user-declared obsessive design work without `obsessive-design-loop.md` is incomplete.
 - Open-ended visual work without `taste-calibration.md` and `distinction.md` is incomplete.
+- "Incredible", "standout", high-ambition, or not-generic work without `direction-sprint.md` and a named signature move is incomplete.
 - A new design that could fit a competitor by swapping the logo is not distinctive enough.
 - A product surface without empty, loading, error, permission/recovery, long-content, and responsive consideration is unfinished unless scoped out.
 - A brand/landing surface without offer, audience, proof, objection handling, and CTA flow is unfinished unless scoped out.
@@ -83,10 +100,17 @@ Required gates:
 - Frontend code change without visual proof is incomplete unless the blocker is stated.
 - Reference-led work without source/reference and after-proof is incomplete.
 - Repeated/systemic P2 issues require another pass unless blocked or explicitly out of scope.
+- Final quality claims without `checklist.md` coverage and named proof limits are incomplete.
 
 ## Reference Files
 
+- [core-moves.md](core-moves.md): compact operating map for routing, anti-slop, contracts, motion, surfaces, proof, and scoring
+- [relentless-mode.md](relentless-mode.md): default skeptical loop for improvement, polish, readiness, redesign, and visible UI bugs
+- [forensic-roast.md](forensic-roast.md): evidence-backed visual/code critique mode for audits, roasts, and design verdicts
 - [greenfield-design.md](greenfield-design.md): blank-canvas UI creation, system choice, states, signature move, and build gates
+- [direction-sprint.md](direction-sprint.md): generate, reject, and select incompatible visual/product directions before building
+- [composition-patterns.md](composition-patterns.md): reusable structural patterns for product, brand, hybrid, and prototype surfaces
+- [signature-moves.md](signature-moves.md): library of distinctive moves tied to task, proof, state, artifact, data, material, or motion
 - [obsessive-design-loop.md](obsessive-design-loop.md): artifact-first persistence, critique/fix/proof loops, evidence gates, and direction reset
 - [visual-qa.md](visual-qa.md): source-vs-rendered comparison, fidelity surfaces, screenshot acceptance, pass/block rules
 - [taste-calibration.md](taste-calibration.md): design read, variance/motion/density dials, redesign protocol, reference-led flow
@@ -109,3 +133,11 @@ Required gates:
 - [anti-slop.md](anti-slop.md): generated-UI tells and replacement moves
 - [audit-score.md](audit-score.md): scored audit dimensions, severity, and report shape
 - [detector-rules.md](detector-rules.md): bundled static detector usage and rule meanings
+- [checklist.md](checklist.md): final closeout gate for proof, state coverage, craft, motion, hardening, and unresolved findings
+- [templates/design-read.md](templates/design-read.md): reusable design read and direction record
+- [templates/loop-log.md](templates/loop-log.md): obsessive loop ledger template
+- [templates/evidence-ledger.md](templates/evidence-ledger.md): proof ledger template for commands, screenshots, state, and claim limits
+- [templates/final-checklist.md](templates/final-checklist.md): copyable final verification checklist
+- [examples/golden-dashboard.md](examples/golden-dashboard.md): compact example of a strong product dashboard direction
+- [examples/golden-landing.md](examples/golden-landing.md): compact example of a strong marketing/brand direction
+- [examples/golden-prototype.md](examples/golden-prototype.md): compact example of a strong prototype/tool direction

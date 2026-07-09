@@ -26,11 +26,13 @@ Ask one question only when missing context would split the design into incompati
 4. Choose the register: product, brand, or hybrid.
 5. Set the dials from `taste-calibration.md`.
 6. Reject the first reflex and second reflex from `distinction.md`.
-7. Choose one signature move tied to product use, proof, content, data, material, motion, or comparison.
-8. Define the system: layout grid, type roles, spacing rhythm, surface model, palette roles, components, states, and motion grammar.
-9. Build the core path before edge decoration.
-10. For complete or ambitious work, enter the loop in `obsessive-design-loop.md`.
-11. Prove the rendered result or clearly mark proof blocked.
+7. For open-ended or high-ambition work, run `direction-sprint.md` before committing to a direction.
+8. Choose one signature move from `signature-moves.md` or define a custom one tied to product use, proof, content, data, material, motion, or comparison.
+9. Pick a composition pattern from `composition-patterns.md` only when it sharpens the task or proof.
+10. Define the system: layout grid, type roles, spacing rhythm, surface model, palette roles, components, states, and motion grammar.
+11. Build the core path before edge decoration.
+12. For complete or ambitious work, enter the loop in `obsessive-design-loop.md`.
+13. Prove the rendered result or clearly mark proof blocked.
 
 ## What Makes It Ruthless
 
@@ -40,6 +42,7 @@ Ask one question only when missing context would split the design into incompati
 - A page that needs visual assets must use real, generated bitmap, or explicitly missing assets. Do not fake product media with div art.
 - A brand surface must have a memorable constraint. "Premium", "modern", and "clean" are not constraints.
 - A product surface must earn every expressive move through task clarity, faster comparison, stronger feedback, or better trust.
+- A high-ambition surface must name the killed default, selected direction, signature move, and proof target before implementation gets decorative.
 - If a design could fit a competitor after swapping the logo, cut again.
 
 ## System Choice
@@ -93,6 +96,7 @@ Prefer:
 ## Done
 
 - The design read, dials, rejected defaults, signature move, and system choice are explicit.
+- Any open-ended direction sprint has a selected direction and rejected alternatives.
 - The main path and relevant states are designed or intentionally scoped.
 - The UI has a reason to look this way beyond category fashion.
 - Implementation or spec is concrete enough to execute.

@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "validate": "node scripts/validate-skill.mjs SKILLS/ruthless-designer",
-    "smoke": "node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path SKILLS/ruthless-designer/fixtures/deep-review-bad.tsx --out .scratch/ruthless-designer-smoke --fail-on=P0",
+    "smoke": "node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path SKILLS/ruthless-designer/fixtures/deep-review-bad.tsx --out .scratch/ruthless-designer-smoke --expect-finding=ease-in-ui-motion --expect-finding=scale-zero-entry --expect-finding=interactive-div --expect-finding=fake-product-preview --expect-verdict=poor --fail-verdict=poor",
     "check": "npm run validate && npm run smoke"
   },
   "keywords": [

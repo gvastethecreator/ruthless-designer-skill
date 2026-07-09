@@ -43,6 +43,8 @@ Use these lenses:
 
 For substantial missions with no explicit limit, target 30 concrete weaknesses or risks when the surface is large enough. Use fewer only when the artifact is honestly small or the user limited scope.
 
+Use `templates/backlog.jsonl`, `templates/loop-log.md`, and `templates/evidence-ledger.md` when a durable ledger would help another reviewer reproduce the loop. Keep the ledger short, but do not rely on memory for evidence.
+
 ## Valid Loop
 
 Each counted loop must include:

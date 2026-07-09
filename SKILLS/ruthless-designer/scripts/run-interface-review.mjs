@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const severityRank = { P0: 0, P1: 1, P2: 2, P3: 3 };
+const verdictRank = { critical: 0, poor: 1, acceptable: 2, good: 3, excellent: 4 };
 const root = findRepoRoot();
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const detectorPath = path.join(scriptDir, "detect-ui-antipatterns.mjs");
@@ -36,6 +37,9 @@ const review = {
       surface: options.surface || "unknown",
       viewports: options.viewports,
       states: options.states.length ? options.states : ["default"],
+      waitUntil: options.waitUntil,
+      settleMs: options.settleMs,
+      signatureProof: options.signatureProof || null,
     },
     evidence: [],
     changeAmbition: options.ambition || "unknown",
@@ -46,7 +50,21 @@ const review = {
   findings: [],
   score: null,
   gates: [],
+  expectations: [],
 };
+
+if (options.requireRuntime && !options.url) {
+  review.ledger.blockers.push({
+    gate: "runtime-visual",
+    reason: "--require-runtime was set, but no --url was provided.",
+  });
+}
+if (options.signatureProof) {
+  review.ledger.evidence.push({
+    type: "signature-proof",
+    detail: options.signatureProof,
+  });
+}
 
 if (options.path) runStaticReview(review);
 if (options.url) review.runtime = await runRuntimeReview(review);
@@ -54,6 +72,7 @@ if (options.url) review.runtime = await runRuntimeReview(review);
 review.findings = collectFindings(review);
 review.gates = evaluateGates(review);
 review.score = scoreReview(review);
+review.expectations = evaluateExpectations(review, options);
 
 const jsonPath = path.join(outDir, "review.json");
 const markdownPath = path.join(outDir, "README.md");
@@ -67,6 +86,7 @@ const summary = {
   score: review.score,
   gates: review.gates,
   blockers: review.ledger.blockers,
+  expectations: review.expectations,
 };
 console.log(JSON.stringify(summary, null, 2));
 
@@ -74,6 +94,15 @@ if (options.failOn && review.findings.some((finding) => severityRank[finding.sev
   process.exitCode = 1;
 }
 if (options.fail && review.gates.some((gate) => gate.status === "fail")) {
+  process.exitCode = 1;
+}
+if (options.failVerdict && !verdictAtLeast(review.score.verdict, options.failVerdict)) {
+  process.exitCode = 1;
+}
+if (options.failUnderScore !== null && review.score.total < options.failUnderScore) {
+  process.exitCode = 1;
+}
+if (review.expectations.some((expectation) => expectation.status === "fail")) {
   process.exitCode = 1;
 }
 
@@ -109,12 +138,14 @@ async function runRuntimeReview(targetReview) {
     return null;
   }
 
-  const actions = loadActions(options.actions);
+  const actionGroups = loadActionGroups(options);
   const browser = await playwright.chromium.launch({ headless: true });
   const results = [];
   try {
     for (const viewport of options.viewports) {
-      results.push(await inspectViewport(browser, viewport, actions));
+      for (const actionGroup of actionGroups) {
+        results.push(await inspectViewport(browser, viewport, actionGroup));
+      }
     }
   } finally {
     await browser.close();
@@ -123,7 +154,11 @@ async function runRuntimeReview(targetReview) {
   const runtimePath = path.join(outDir, "runtime-findings.json");
   const runtime = {
     url: options.url,
-    actions: actions.map((action) => sanitizeAction(action)),
+    actionGroups: actionGroups.map((group) => ({
+      name: group.name,
+      source: group.source,
+      actions: group.actions.map((action) => sanitizeAction(action)),
+    })),
     results,
   };
   fs.writeFileSync(runtimePath, `${JSON.stringify(runtime, null, 2)}\n`);
@@ -135,7 +170,7 @@ async function runRuntimeReview(targetReview) {
   return runtime;
 }
 
-async function inspectViewport(browser, viewport, actions) {
+async function inspectViewport(browser, viewport, actionGroup) {
   const page = await browser.newPage({ viewport });
   const consoleErrors = [];
   const requestFailures = [];
@@ -186,12 +221,12 @@ async function inspectViewport(browser, viewport, actions) {
   });
 
   try {
-    await page.goto(options.url, { waitUntil: "networkidle", timeout: options.timeout });
-    await page.waitForTimeout(250);
-    for (const action of actions) await applyAction(page, action);
-    await page.waitForTimeout(250);
+    await page.goto(options.url, { waitUntil: options.waitUntil, timeout: options.timeout });
+    await page.waitForTimeout(options.settleMs);
+    for (const action of actionGroup.actions) await applyAction(page, action);
+    await page.waitForTimeout(options.settleMs);
 
-    const suffix = `${viewport.width}x${viewport.height}`;
+    const suffix = `${safeFilePart(actionGroup.name)}-${viewport.width}x${viewport.height}`;
     const screenshotPath = path.join(screenshotsDir, `${suffix}.png`);
     await page.screenshot({ path: screenshotPath, fullPage: true });
     const metrics = await page.evaluate(() => {
@@ -248,6 +283,71 @@ async function inspectViewport(browser, viewport, actions) {
         })
         .filter((img) => !img.widthAttr || !img.heightAttr || !img.alt || img.naturalWidth === 0)
         .slice(0, 12);
+      const parseColor = (value) => {
+        const match = String(value).match(/rgba?\(([^)]+)\)/);
+        if (!match) return null;
+        const parts = match[1].split(",").map((part) => Number(part.trim()));
+        if (parts.length < 3 || parts.some((part, index) => index < 3 && !Number.isFinite(part))) return null;
+        return { r: parts[0], g: parts[1], b: parts[2], a: Number.isFinite(parts[3]) ? parts[3] : 1 };
+      };
+      const blend = (fg, bg) => ({
+        r: fg.r * fg.a + bg.r * (1 - fg.a),
+        g: fg.g * fg.a + bg.g * (1 - fg.a),
+        b: fg.b * fg.a + bg.b * (1 - fg.a),
+        a: 1,
+      });
+      const channel = (value) => {
+        const v = value / 255;
+        return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+      };
+      const luminance = (color) => 0.2126 * channel(color.r) + 0.7152 * channel(color.g) + 0.0722 * channel(color.b);
+      const contrast = (a, b) => {
+        const l1 = luminance(a);
+        const l2 = luminance(b);
+        return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+      };
+      const backgroundFor = (node) => {
+        let current = node;
+        let bg = { r: 255, g: 255, b: 255, a: 1 };
+        while (current && current.nodeType === Node.ELEMENT_NODE) {
+          const color = parseColor(getComputedStyle(current).backgroundColor);
+          if (color && color.a > 0) {
+            bg = color.a >= 1 ? color : blend(color, bg);
+            if (bg.a >= 1) break;
+          }
+          current = current.parentElement;
+        }
+        return bg;
+      };
+      const contrastIssues = [...document.querySelectorAll("body *")]
+        .filter(visible)
+        .filter((node) => {
+          if (["script", "style", "svg", "path"].includes(node.tagName.toLowerCase())) return false;
+          const text = node.textContent?.trim();
+          if (!text || text.length < 2) return false;
+          return ![...node.children].some((child) => child.textContent?.trim());
+        })
+        .map((node) => {
+          const style = getComputedStyle(node);
+          const fg = parseColor(style.color);
+          if (!fg) return null;
+          const ratio = contrast(fg.a >= 1 ? fg : blend(fg, backgroundFor(node)), backgroundFor(node));
+          const fontSize = Number.parseFloat(style.fontSize || "16");
+          const fontWeight = Number.parseInt(style.fontWeight || "400", 10);
+          const largeText = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
+          const threshold = largeText ? 3 : 4.5;
+          if (ratio >= threshold) return null;
+          return {
+            tag: node.tagName.toLowerCase(),
+            text: text.slice(0, 100),
+            ratio: Number(ratio.toFixed(2)),
+            threshold,
+            color: style.color,
+            background: getComputedStyle(node).backgroundColor,
+          };
+        })
+        .filter(Boolean)
+        .slice(0, 12);
       const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
       const isInViewport = (node) => {
@@ -301,6 +401,7 @@ async function inspectViewport(browser, viewport, actions) {
         unnamedButtons,
         clippedText,
         imageIssues,
+        contrastIssues,
         animationAudit: {
           total: animations.length,
           running: runningAnimations.length,
@@ -321,6 +422,7 @@ async function inspectViewport(browser, viewport, actions) {
 
     return {
       viewport,
+      state: actionGroup.name,
       screenshot: path.relative(root, screenshotPath),
       ok: true,
       transferredBytes,
@@ -328,14 +430,15 @@ async function inspectViewport(browser, viewport, actions) {
       requestFailures,
       badResponses,
       metrics,
-      findings: runtimeFindings(viewport, metrics, consoleErrors, requestFailures, badResponses),
+      findings: runtimeFindings(viewport, actionGroup.name, metrics, consoleErrors, requestFailures, badResponses),
     };
   } catch (error) {
-    const suffix = `${viewport.width}x${viewport.height}-error`;
+    const suffix = `${safeFilePart(actionGroup.name)}-${viewport.width}x${viewport.height}-error`;
     const screenshotPath = path.join(screenshotsDir, `${suffix}.png`);
     await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => {});
     return {
       viewport,
+      state: actionGroup.name,
       screenshot: fs.existsSync(screenshotPath) ? path.relative(root, screenshotPath) : null,
       ok: false,
       transferredBytes,
@@ -360,8 +463,8 @@ async function inspectViewport(browser, viewport, actions) {
   }
 }
 
-function runtimeFindings(viewport, metrics, consoleErrors, requestFailures, badResponses) {
-  const file = `${options.url} @ ${viewport.width}x${viewport.height}`;
+function runtimeFindings(viewport, state, metrics, consoleErrors, requestFailures, badResponses) {
+  const file = `${options.url} @ ${state} ${viewport.width}x${viewport.height}`;
   const findings = [];
   const push = (id, severity, category, message, snippet) => {
     findings.push({ id, severity, category, message, file, line: 0, snippet: String(snippet).slice(0, 180) });
@@ -375,6 +478,7 @@ function runtimeFindings(viewport, metrics, consoleErrors, requestFailures, badR
   if (metrics.smallHitAreas.length) push("small-hit-area", "P2", "accessibility", "Visible controls below 40px hit-area floor.", JSON.stringify(metrics.smallHitAreas[0]));
   if (metrics.clippedText.length) push("clipped-text", "P2", "resilience", "Text appears clipped or horizontally overflowing.", JSON.stringify(metrics.clippedText[0]));
   if (metrics.imageIssues.length) push("runtime-image-issues", "P2", "performance", "Visible images have missing alt/dimensions or broken natural size.", JSON.stringify(metrics.imageIssues[0]));
+  if (metrics.contrastIssues?.length) push("low-contrast-text", "P1", "accessibility", "Visible text appears below WCAG contrast threshold.", JSON.stringify(metrics.contrastIssues[0]));
   if (metrics.animationAudit?.offscreenRunningCount) push("offscreen-running-animation", "P2", "performance", "Animations are running outside the viewport; pause offscreen decorative motion.", JSON.stringify(metrics.animationAudit.offscreenRunning[0]));
   const activeOffscreenCanvas = (metrics.canvasDetails || []).find((canvas) => !canvas.visible && /^(true|1|running|active)$/i.test(String(canvas.animationActive || "")));
   if (activeOffscreenCanvas) push("offscreen-active-canvas", "P2", "performance", "Canvas/WebGL region is marked active outside the viewport; pause or lower work offscreen.", JSON.stringify(activeOffscreenCanvas));
@@ -394,6 +498,7 @@ async function applyAction(page, action) {
   else if (action.type === "press") await page.press(action.selector || "body", action.key, { timeout });
   else if (action.type === "scroll") await page.mouse.wheel(action.x || 0, action.y || 600);
   else if (action.type === "wait") await page.waitForTimeout(action.ms || 250);
+  else throw new Error(`Unsupported action type: ${action.type}`);
 }
 
 function collectFindings(targetReview) {
@@ -447,20 +552,14 @@ function scoreReview(targetReview) {
   }
 
   const total = Object.values(dimensions).reduce((sum, value) => sum + value, 0);
+  const baseVerdict = total >= 18 ? "excellent" : total >= 14 ? "good" : total >= 10 ? "acceptable" : total >= 6 ? "poor" : "critical";
+  const excellentEligible =
+    !isAmbitiousReview(targetReview) ||
+    (dimensions.antiSlop === 4 && Boolean(targetReview.ledger.context.signatureProof) && Boolean(targetReview.runtime));
   return {
     dimensions,
     total,
-    verdict: blockedEvidenceGates.length
-      ? "blocked"
-      : total >= 18
-        ? "excellent"
-        : total >= 14
-          ? "good"
-          : total >= 10
-            ? "acceptable"
-            : total >= 6
-              ? "poor"
-              : "critical",
+    verdict: blockedEvidenceGates.length ? "blocked" : baseVerdict === "excellent" && !excellentEligible ? "good" : baseVerdict,
     blockedGates: blockedEvidenceGates.map((gate) => gate.gate),
   };
 }
@@ -480,9 +579,22 @@ function evaluateGates(targetReview) {
   });
   gates.push({
     gate: "runtime-visual",
-    status: options.url ? (targetReview.runtime ? "pass" : "fail") : "skip",
-    detail: options.url ? (targetReview.runtime ? "screenshots/runtime captured" : "runtime blocked") : "no URL",
+    status: options.url || options.requireRuntime ? (targetReview.runtime ? "pass" : "fail") : "skip",
+    detail: options.url
+      ? targetReview.runtime
+        ? "screenshots/runtime captured"
+        : "runtime blocked"
+      : options.requireRuntime
+        ? "runtime required but no URL provided"
+        : "no URL",
   });
+  if (options.requireSignature || options.signatureProof) {
+    gates.push({
+      gate: "signature-proof",
+      status: options.signatureProof ? "pass" : "fail",
+      detail: options.signatureProof ? options.signatureProof : "signature proof required but missing",
+    });
+  }
   if (options.asyncUi) {
     const expected = ["empty", "loading", "error", "permission", "long-content", "slow-network", "rapid-click"];
     const missing = expected.filter((state) => !options.states.includes(state));
@@ -493,6 +605,44 @@ function evaluateGates(targetReview) {
     });
   }
   return gates;
+}
+
+function isAmbitiousReview(targetReview) {
+  const value = [
+    targetReview.ledger.context.register,
+    targetReview.ledger.context.surface,
+    targetReview.ledger.changeAmbition,
+    targetReview.ledger.context.signatureProof,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  return options.requireSignature || /\b(?:brand|portfolio|prototype|greenfield|redesign|standout|incredible|premium|not-generic|not generic|landing|hero)\b/i.test(value);
+}
+
+function evaluateExpectations(targetReview, targetOptions) {
+  const expectations = [];
+  for (const id of targetOptions.expectFindings) {
+    const found = targetReview.findings.some((finding) => finding.id === id);
+    expectations.push({
+      expectation: `finding:${id}`,
+      status: found ? "pass" : "fail",
+      detail: found ? "finding present" : "finding missing",
+    });
+  }
+  if (targetOptions.expectVerdict) {
+    const found = targetReview.score.verdict === targetOptions.expectVerdict;
+    expectations.push({
+      expectation: `verdict:${targetOptions.expectVerdict}`,
+      status: found ? "pass" : "fail",
+      detail: `actual ${targetReview.score.verdict}`,
+    });
+  }
+  return expectations;
+}
+
+function verdictAtLeast(actual, minimum) {
+  if (actual === "blocked") return false;
+  return verdictRank[actual] >= verdictRank[minimum];
 }
 
 function renderMarkdown(targetReview, jsonPath) {
@@ -517,6 +667,11 @@ function renderMarkdown(targetReview, jsonPath) {
     "",
     "Gates:",
     ...targetReview.gates.map((gate) => `- ${gate.gate}: ${gate.status} - ${gate.detail}`),
+    "",
+    "Expectations:",
+    ...(targetReview.expectations.length
+      ? targetReview.expectations.map((expectation) => `- ${expectation.expectation}: ${expectation.status} - ${expectation.detail}`)
+      : ["- none"]),
     "",
     "Relentless improvement gate:",
     "- Treat this report as red until P1 and repeated/systemic P2 issues in scope are fixed, blocked, or explicitly deferred.",
@@ -566,6 +721,36 @@ function loadActions(file) {
   return Array.isArray(data) ? data : data.actions || [];
 }
 
+function loadActionGroups(targetOptions) {
+  const groups = [];
+  if (targetOptions.actions) {
+    groups.push({
+      name: "default",
+      source: targetOptions.actions,
+      actions: loadActions(targetOptions.actions),
+    });
+  }
+  for (const spec of targetOptions.actionGroups) {
+    const [name, file] = parseNamedFile(spec, "--action-group");
+    groups.push({
+      name,
+      source: file,
+      actions: loadActions(file),
+    });
+  }
+  return groups.length ? groups : [{ name: "default", source: null, actions: [] }];
+}
+
+function parseNamedFile(value, optionName) {
+  const input = String(value || "");
+  const index = input.indexOf("=");
+  if (index <= 0 || index === input.length - 1) {
+    console.error(`Invalid ${optionName} ${value}; expected name=actions.json`);
+    process.exit(2);
+  }
+  return [input.slice(0, index), input.slice(index + 1)];
+}
+
 function sanitizeAction(action) {
   return {
     type: action.type,
@@ -584,12 +769,22 @@ function parseArgs(args) {
     out: null,
     slug: null,
     actions: null,
+    actionGroups: [],
     failOn: null,
+    failVerdict: null,
+    failUnderScore: null,
     fail: false,
     timeout: 15000,
+    waitUntil: "domcontentloaded",
+    settleMs: 500,
     register: null,
     surface: null,
     ambition: null,
+    requireRuntime: false,
+    requireSignature: false,
+    signatureProof: null,
+    expectFindings: [],
+    expectVerdict: null,
     asyncUi: false,
     states: [],
     viewports: [],
@@ -606,12 +801,22 @@ function parseArgs(args) {
     else if (name === "--out") options.out = nextValue();
     else if (name === "--slug") options.slug = nextValue();
     else if (name === "--actions") options.actions = nextValue();
+    else if (name === "--action-group") options.actionGroups.push(nextValue());
     else if (name === "--fail-on") options.failOn = normalizeSeverity(nextValue());
+    else if (name === "--fail-verdict") options.failVerdict = normalizeVerdict(nextValue());
+    else if (name === "--fail-under-score") options.failUnderScore = Number(nextValue());
     else if (arg === "--fail") options.fail = true;
     else if (name === "--timeout") options.timeout = Number(nextValue());
+    else if (name === "--wait-until") options.waitUntil = normalizeWaitUntil(nextValue());
+    else if (name === "--settle-ms") options.settleMs = Number(nextValue());
     else if (name === "--register") options.register = nextValue();
     else if (name === "--surface") options.surface = nextValue();
     else if (name === "--ambition") options.ambition = nextValue();
+    else if (arg === "--require-runtime") options.requireRuntime = true;
+    else if (arg === "--require-signature") options.requireSignature = true;
+    else if (name === "--signature-proof") options.signatureProof = nextValue();
+    else if (name === "--expect-finding") options.expectFindings.push(nextValue());
+    else if (name === "--expect-verdict") options.expectVerdict = normalizeExpectedVerdict(nextValue());
     else if (arg === "--async-ui") options.asyncUi = true;
     else if (name === "--states") options.states = nextValue().split(",").map((state) => state.trim()).filter(Boolean);
     else if (name === "--viewport") {
@@ -635,6 +840,14 @@ function parseArgs(args) {
       { width: 390, height: 844 },
     ];
   }
+  if (options.failUnderScore !== null && (!Number.isFinite(options.failUnderScore) || options.failUnderScore < 0 || options.failUnderScore > 20)) {
+    console.error(`Invalid --fail-under-score ${options.failUnderScore}; expected a number from 0 to 20`);
+    process.exit(2);
+  }
+  if (!Number.isFinite(options.settleMs) || options.settleMs < 0) {
+    console.error(`Invalid --settle-ms ${options.settleMs}; expected a non-negative number`);
+    process.exit(2);
+  }
 
   delete options.customViewports;
   return options;
@@ -656,6 +869,33 @@ function normalizeSeverity(value) {
     process.exit(2);
   }
   return severity;
+}
+
+function normalizeVerdict(value) {
+  const verdict = String(value || "").toLowerCase();
+  if (!Object.hasOwn(verdictRank, verdict)) {
+    console.error(`Invalid verdict ${value}; expected critical, poor, acceptable, good, or excellent`);
+    process.exit(2);
+  }
+  return verdict;
+}
+
+function normalizeExpectedVerdict(value) {
+  const verdict = String(value || "").toLowerCase();
+  if (verdict !== "blocked" && !Object.hasOwn(verdictRank, verdict)) {
+    console.error(`Invalid expected verdict ${value}; expected blocked, critical, poor, acceptable, good, or excellent`);
+    process.exit(2);
+  }
+  return verdict;
+}
+
+function normalizeWaitUntil(value) {
+  const waitUntil = String(value || "");
+  if (!["domcontentloaded", "load", "networkidle", "commit"].includes(waitUntil)) {
+    console.error(`Invalid --wait-until ${value}; expected domcontentloaded, load, networkidle, or commit`);
+    process.exit(2);
+  }
+  return waitUntil;
 }
 
 function summarizeSeverity(findings) {
@@ -682,6 +922,13 @@ function slugify(value) {
     .slice(0, 80) || "review";
 }
 
+function safeFilePart(value) {
+  return String(value || "default")
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60) || "default";
+}
+
 function usage() {
-  console.error("Usage: node run-interface-review.mjs --path <file-or-dir> [--url <local-url>] [--out <dir>] [--actions actions.json] [--viewport 1280x800] [--fail-on=P1|P2|P3] [--fail]");
+  console.error("Usage: node run-interface-review.mjs --path <file-or-dir> [--url <local-url>] [--out <dir>] [--actions actions.json] [--action-group name=actions.json] [--viewport 1280x800] [--fail-on=P1|P2|P3] [--fail-verdict=good] [--require-runtime] [--require-signature] [--signature-proof text] [--expect-finding rule-id] [--fail]");
 }

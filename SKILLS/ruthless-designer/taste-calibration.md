@@ -65,6 +65,8 @@ Use reference images, supplied screenshots, URLs, videos, HTML exports, or gener
 
 Do not force image-first work for technical bugs, small component fixes, dense product dashboards, or precise existing design-system work.
 
+When the brief is high-ambition or open-ended, run [direction-sprint.md](direction-sprint.md) after setting the dials and before choosing layout or effects. Use [composition-patterns.md](composition-patterns.md) for structure and [signature-moves.md](signature-moves.md) for the one memorable move.
+
 When using references:
 
 - Prefer one clear reference per section or state over one tiny compressed board.
@@ -81,6 +83,7 @@ When using references:
 Before finalizing a visual pass, check:
 
 - Design read and dials are explicit enough to prevent defaulting.
+- Direction sprint is complete when the brief is open-ended or high-ambition.
 - Register is respected; brand expression does not leak into dense controls.
 - Existing system or official system choice is honored.
 - Color uses one coherent palette and one accent strategy unless the brand system already defines more.

@@ -33,15 +33,21 @@ if (!fs.existsSync(skillPath)) {
     }
   }
 
+  const directSkillLinks = new Set();
   for (const link of markdownLinks(text)) {
     if (!link.endsWith(".md")) continue;
-    const target = path.resolve(skillDir, link);
-    if (!target.startsWith(skillDir)) {
-      errors.push(`Reference escapes skill folder: ${link}`);
-    } else if (!fs.existsSync(target)) {
-      errors.push(`Missing referenced file: ${link}`);
+    directSkillLinks.add(normalizeRelative(link));
+  }
+  for (const file of fs.readdirSync(skillDir)) {
+    if (!file.endsWith(".md") || file === "SKILL.md") continue;
+    if (!directSkillLinks.has(file)) {
+      errors.push(`Top-level reference file is not linked from SKILL.md: ${file}`);
     }
   }
+}
+
+if (fs.existsSync(skillDir)) {
+  checkMarkdownLinks(skillDir, errors);
 }
 
 if (errors.length) {
@@ -72,4 +78,44 @@ function markdownLinks(source) {
     links.push(link);
   }
   return links;
+}
+
+function checkMarkdownLinks(rootDir, outErrors) {
+  for (const file of markdownFiles(rootDir)) {
+    const text = fs.readFileSync(file, "utf8");
+    for (const link of markdownLinks(text)) {
+      if (!link.endsWith(".md")) continue;
+      const target = path.resolve(path.dirname(file), link);
+      const relLink = path.relative(rootDir, target);
+      const from = path.relative(rootDir, file);
+      if (!isInside(rootDir, target)) {
+        outErrors.push(`Reference escapes skill folder: ${from} -> ${link}`);
+      } else if (!fs.existsSync(target)) {
+        outErrors.push(`Missing referenced file: ${from} -> ${relLink}`);
+      }
+    }
+  }
+}
+
+function markdownFiles(dir) {
+  const files = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (entry.name === "node_modules" || entry.name === ".git") continue;
+      files.push(...markdownFiles(fullPath));
+    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
+
+function isInside(rootDir, target) {
+  const relative = path.relative(rootDir, target);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+function normalizeRelative(value) {
+  return value.replaceAll("\\", "/").replace(/^\.\//, "");
 }

@@ -74,6 +74,18 @@ For multiple states, prefer multiple small runs with clear slugs over one vague 
 - `output/ruthless-designer/<slug>-error`
 - `output/ruthless-designer/<slug>-mobile`
 
+When one review must capture several interaction states, use repeated action groups:
+
+```powershell
+node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --action-group default=actions-default.json --action-group menu=actions-menu.json --out output/ruthless-designer/<slug>
+```
+
+Use strict gates when the final claim depends on them:
+
+```powershell
+node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --require-runtime --require-signature --signature-proof "artifact-first hero visible in desktop/mobile screenshots" --fail-verdict=good --out output/ruthless-designer/<slug>
+```
+
 ## Evidence Ledger
 
 For final reporting, name:

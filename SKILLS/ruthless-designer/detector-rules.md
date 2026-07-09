@@ -37,6 +37,16 @@ Full harness:
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --out output/ruthless-designer/<slug> --fail-on=P1
 ```
 
+Stricter harness gates:
+
+- `--fail-verdict=poor|acceptable|good|excellent`: exit nonzero when the scored verdict is below the requested floor.
+- `--fail-under-score <0-20>`: exit nonzero when total score is below the requested number.
+- `--expect-finding <rule-id>`: assert a smoke fixture still emits a specific finding.
+- `--expect-verdict <verdict>`: assert a smoke fixture keeps the expected verdict.
+- `--require-runtime`: runtime proof is mandatory; missing URL or blocked browser proof makes the verdict blocked.
+- `--require-signature --signature-proof <text>`: high-ambition work must name visible signature proof.
+- `--action-group name=actions.json`: capture multiple interaction states in one review run.
+
 Runtime-only harness signals include:
 
 - `offscreen-running-animation`: visible page has animations running outside the sampled viewport.

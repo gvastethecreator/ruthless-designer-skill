@@ -117,6 +117,8 @@ Rating bands:
 - `6-9`: poor, major overhaul.
 - `0-5`: critical, fundamentals broken.
 
+`excellent` is not available for open-ended, greenfield, brand, portfolio, prototype, or "incredible"/"standout" work unless anti-slop/visual trust scores `4`, a signature move is named, and desktop plus mobile/narrow proof shows the move survived. A merely correct, accessible, fast, generic interface is `good` at best.
+
 If a requested detector, runtime, visual, or async-state gate is blocked, the verdict is `blocked` even when the visible finding count is low. Do not convert missing evidence into a high score. If the user asked for implementation-quality improvement, `acceptable` is not a stopping point by itself; keep moving until the top in-scope P1/P2 problems are fixed or blocked.
 
 ## Evidence Rules
