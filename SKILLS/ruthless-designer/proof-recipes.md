@@ -11,7 +11,9 @@ The job is to pick the smallest proof that can support the claim. More screensho
 - Component polish: inspect default, hover/focus/disabled, long text, narrow width, and one edge state.
 - Product app/dashboard: inspect desktop and mobile or narrow container, long content, empty/loading/error/permission where relevant, keyboard/focus basics, and one high-density state.
 - Marketing/landing/pricing: inspect first viewport, proof/product section, CTA/pricing decision point, and mobile. Use reference/after or before/after artifacts when visual quality is the claim.
-- Interaction/motion: inspect the trigger, interrupted/repeated trigger, reduced motion, hover gating, transform origin, duration/easing, and runtime frame/console signals when a URL exists.
+- Interaction/motion: inspect the trigger, pointer-down response, interrupted/repeated trigger, reduced motion, hover gating, transform origin, duration/easing, and runtime frame/console signals when a URL exists.
+- Gesture motion: inspect slow drag, fast flick, reversal mid-motion, release outside bounds, pointer capture behavior, velocity handoff, reduced motion, and snap/rubber-band behavior.
+- Material/translucency: inspect over plain and busy content, light/dark or theme variants, reduced-transparency/high-contrast fallback when relevant, and text readability over the material.
 - Async/data UI: inspect empty, loading, error, permission, long-content, slow-network, and rapid-click states, or state why a subset is scoped.
 - Immersive canvas/WebGL/3D: inspect visible render, mobile/narrow render, reduced motion/fallback, offscreen pause, cleanup/disposal path, console/WebGL errors, and foreground readability.
 - Reference-led work: record source/reference, extracted system, what was copied/adapted/rejected, and after proof against the same target read.
@@ -104,6 +106,8 @@ Use direct language when evidence is unavailable:
 - `Visual proof blocked: Playwright/browser runtime was unavailable. Code and detector checks passed; UI fit remains unverified.`
 - `State proof scoped: loading and error states were inspected; permission and slow-network states require fixtures not present in this repo.`
 - `Performance claim limited: source removes broad work, but no before/after runtime trace was captured.`
+- `Gesture proof limited: source includes pointer capture and velocity-aware release, but no touch hardware or slowed interaction capture was available.`
+- `Material proof limited: translucent chrome has fallbacks in source, but reduced-transparency/high-contrast rendering was not inspected in browser.`
 
 Do not upgrade a blocked claim into `verified`, `complete`, `production-ready`, or `deep review`.
 
@@ -113,3 +117,4 @@ Do not upgrade a blocked claim into `verified`, `complete`, `production-ready`, 
 - At least one main path and one relevant edge/recovery state are inspected for nontrivial UI changes.
 - Visual claims cite before/after, reference/after, or explicit blocker.
 - Runtime, static, and manual proof limits are clear enough that a later reviewer can reproduce or challenge them.
+- High-stakes or hard-to-judge motion was inspected slowed down or explicitly marked for fresh-eyes follow-up instead of guessed.

@@ -68,6 +68,7 @@ Slop and taste signals:
 - `wide-shadow-border`: hairline border plus wide soft shadow.
 - `repeating-stripes`: repeating stripe gradient decoration.
 - `glass-default`: backdrop blur/glass treatment.
+- `heavy-blur-effect`: `20px+` blur or backdrop blur that needs a functional material/crossfade reason and runtime proof.
 - `hero-eyebrow`: tracked uppercase eyebrow near hero heading.
 - `bounce-easing`: bounce, elastic, wobble, jiggle, or overshoot easing.
 - `marketing-buzzword`: generic SaaS copy.
@@ -88,6 +89,7 @@ Quality signals:
 - `framer-motion-shorthand-risk`: Motion `x`/`y`/`scale` shorthand on potentially busy-page motion.
 - `parent-css-var-transform-risk`: parent/root CSS variables driving transform-like child motion.
 - `ungated-hover-motion`: hover motion without `(hover: hover) and (pointer: fine)`.
+- `gesture-missing-pointer-capture`: pointer-driven drag/swipe code without `setPointerCapture`.
 - `layout-read-write-risk`: layout reads near DOM writes or state writes.
 - `will-change-broad`: broad or layout-heavy `will-change`.
 - `will-change-mass-layering`: many `will-change` hints in one file.
@@ -104,6 +106,7 @@ Quality signals:
 - `z-index-overlay-risk`: very high z-index values.
 - `hardcoded-color-drift`: literal color values where tokens may be expected.
 - `missing-reduced-motion-guard`: motion in a file without `prefers-reduced-motion`.
+- `missing-reduced-transparency-fallback`: blurred/translucent chrome without `prefers-reduced-transparency`, `prefers-contrast`, or `forced-colors` fallback.
 
 Provider-gated signals:
 
@@ -114,6 +117,8 @@ Provider-gated signals:
 ## How To Use Findings
 
 - Treat contrast, missing alt, broad transitions, layout transitions, and overflow as quality issues first.
+- Treat blurred material findings as design/performance/accessibility findings together: ask whether the surface is functional chrome, whether it earns signature-move status, whether text remains readable, and whether a solid/high-contrast fallback exists.
+- Treat gesture findings as review prompts: verify pointer-down response, 1:1 tracking, grab offset, pointer capture, velocity handoff, and interruption before approving.
 - Treat slop signals as design findings only after checking register and intent.
 - Group repeated findings by pattern.
 - Do not report generated-file or dependency findings unless the user explicitly asks.
@@ -128,10 +133,13 @@ Ignore a finding when:
 - The pattern is isolated and clearly intentional.
 - A slop rule conflicts with product-register trust and the product-register choice is better for users.
 - The finding is inside a deliberately scoped motion primitive whose local component docs require that layout property or overshoot easing. Verify the actual interaction before escalating.
+- `gesture-missing-pointer-capture` appears in non-drag pointer tracking, such as hover sensors, drawing canvases with their own capture model, or library wrappers that capture internally.
+- `missing-reduced-transparency-fallback` appears on purely decorative blur that is removed or hidden in the real rendered state; still prefer deleting decorative blur.
 - `long-ui-duration`, bounce, and layout-animation findings are allowed only when frequency, spatial distance, containment, and visual proof justify them.
 
 ## Escalation
 
 - P1: missing alt on meaningful images, low contrast found elsewhere, layout transition causing jank, `ease-in` entry, `scale(0)` entry, text overflow that breaks core flow.
 - P2: repeated visual tells, drift from tokens, repeated generic copy, nested cards, broad transition helpers, ungated hover motion, missing reduced-motion path, keyframes on rapidly-triggered UI.
+- P2: blurred functional chrome without reduced-transparency/contrast fallback, heavy blur in repeated content, gesture motion that jumps, loses pointer, or ignores velocity when the gesture is central.
 - P3: isolated stylistic tells with low user impact.

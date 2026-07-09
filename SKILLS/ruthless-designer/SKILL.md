@@ -67,7 +67,7 @@ Quality obsession is part of the contract. Keep at least 70% of the mission on a
 
 - Greenfield product app/dashboard: use `greenfield-design.md`, `registers.md`, `contracts.md`, `hardening.md`, and `proof-recipes.md`. The interface must expose task priority, data states, keyboard/focus basics, and realistic dense content.
 - Greenfield landing/brand/portfolio: use `greenfield-design.md`, `marketing-pages.md`, `taste-calibration.md`, `distinction.md`, and `reference-capture.md`. The first viewport must carry a real offer or product artifact, not a decorative hero.
-- Prototype/game/tool: use `greenfield-design.md`, `surfaces.md`, `animations.md`, `motion-craft.md`, and `proof-recipes.md`. Interaction grammar matters more than decorative novelty.
+- Prototype/game/tool: use `greenfield-design.md`, `surfaces.md`, `animations.md`, `motion-craft.md`, and `proof-recipes.md`. Interaction grammar matters more than decorative novelty; if the concept depends on drag/swipe/sheet motion, verify pointer-down response, 1:1 tracking, velocity/reversal behavior, and reduced-motion fallback.
 - Open-ended standout direction: use `direction-sprint.md`, `composition-patterns.md`, `signature-moves.md`, `taste-calibration.md`, and `distinction.md`. Generate incompatible directions, kill the obvious ones, and build the chosen signature move into the information architecture.
 - Broad redesign direction: audit the existing surface only enough to know what to preserve, then create the new system. If the request becomes targeted implementation cleanup, route that phase to `improve-ui`.
 - Reference-led creation: extract hierarchy, typography, spacing, surface logic, media treatment, and motion beats before coding. Copy the system logic, not the costume.
@@ -96,6 +96,8 @@ Required gates:
 - A product surface without empty, loading, error, permission/recovery, long-content, and responsive consideration is unfinished unless scoped out.
 - A brand/landing surface without offer, audience, proof, objection handling, and CTA flow is unfinished unless scoped out.
 - First-impression proof must pass on actual desktop and mobile/narrow evidence for broad visual work.
+- Gesture-led directions require pointer-down feedback, 1:1 tracking, pointer capture, grab-offset preservation, velocity-aware release, reduced-motion, and touch/slow-motion proof or blocker when the gesture is central.
+- Translucent/blurred material may be a signature move only when it functions as chrome over real content and has reduced-transparency/high-contrast fallback.
 - Two consecutive `flat` or `worse` verdicts require a direction reset, not more polish.
 - Frontend code change without visual proof is incomplete unless the blocker is stated.
 - Reference-led work without source/reference and after-proof is incomplete.
