@@ -1,15 +1,20 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 
 const VALID_EXT = new Set([
   ".astro",
+  ".cjs",
   ".css",
   ".html",
   ".js",
   ".jsx",
+  ".less",
   ".mdx",
+  ".mjs",
+  ".sass",
+  ".scss",
   ".svelte",
   ".ts",
   ".tsx",
@@ -22,29 +27,55 @@ const SKIP_DIRS = new Set([
   ".nuxt",
   ".output",
   ".svelte-kit",
+  "__fixtures__",
+  "__tests__",
   "build",
   "coverage",
   "dist",
+  "fixture",
+  "fixtures",
+  "generated",
   "node_modules",
   "out",
+  "test",
+  "tests",
   "vendor",
 ]);
 
 const severityRank = { P0: 0, P1: 1, P2: 2, P3: 3 };
 const { options, targets } = parseArgs(process.argv.slice(2));
 
+if (options.gpt || options.gemini) {
+  console.error("Warning: --gpt and --gemini are deprecated no-ops; findings are provider-neutral.");
+}
+
 if (!targets.length && !options.changedOnly) {
   usage();
   process.exit(2);
 }
 
+const resolvedTargets = (targets.length ? targets : [process.cwd()]).map((target) => path.resolve(target));
+
+for (const resolvedTarget of resolvedTargets) {
+  if (!fs.existsSync(resolvedTarget)) {
+    console.error(`Target does not exist: ${resolvedTarget}`);
+    process.exit(2);
+  }
+}
+
+const reportRoot = resolveReportRoot(resolvedTargets);
 const allowlist = loadFindingSet(options.allowlist);
 const baseline = loadFindingSet(options.baseline);
-const changedFiles = options.changedOnly ? new Set(gitChangedFiles()) : null;
+const changedFiles = options.changedOnly ? new Set(gitChangedFiles(reportRoot)) : null;
 const files = [];
 
-for (const target of targets.length ? targets : [process.cwd()]) {
-  collectFiles(path.resolve(target), files, changedFiles);
+for (const target of resolvedTargets) {
+  collectFiles(target, files, changedFiles, true);
+}
+
+if (!files.length && !options.allowEmpty) {
+  console.error("No compatible files found. Pass --allow-empty to accept an empty scan.");
+  process.exit(2);
 }
 
 const findings = [];
@@ -56,12 +87,13 @@ for (const file of [...new Set(files)].sort()) {
 
 const filtered = uniqueFindings(findings)
   .filter((finding) => !options.category || finding.category === options.category || finding.id === options.category)
-  .filter((finding) => !allowlist.has(fingerprint(finding)))
-  .filter((finding) => !baseline.has(fingerprint(finding)));
+  .filter((finding) => !findingSetHas(allowlist, finding))
+  .filter((finding) => !findingSetHas(baseline, finding));
 
 const payload = {
   scannedAt: new Date().toISOString(),
   cwd: process.cwd(),
+  root: reportRoot,
   files: files.length,
   targets,
   options: publicOptions(options),
@@ -255,7 +287,7 @@ function rules() {
     {
       id: "layout-transition",
       category: "performance",
-      severity: "P1",
+      severity: "P2",
       message: "Layout-property transitions can cause jank. Prefer transform/opacity or a deliberate layout technique.",
       patterns: [
         /transition(?:-property)?\s*:\s*[^;\n]*(?:width|height|padding|margin|top|left|right|bottom)/gi,
@@ -265,7 +297,7 @@ function rules() {
     {
       id: "ease-in-ui-motion",
       category: "motion",
-      severity: "P1",
+      severity: "P2",
       message: "ease-in on UI entry/opening feels delayed. Prefer ease-out or a strong custom curve.",
       patterns: [
         /(?:transition(?:-timing-function)?|animation(?:-timing-function)?)\s*:[^;\n]*(?<![\w-])ease-in(?!-out|\w)/gi,
@@ -275,7 +307,7 @@ function rules() {
     {
       id: "scale-zero-entry",
       category: "motion",
-      severity: "P1",
+      severity: "P2",
       message: "scale(0) makes elements appear from nowhere. Start around scale(0.9-0.97) plus opacity.",
       patterns: [
         /scale(?:3d|X|Y)?\(\s*0(?:\.0+)?(?:\s|,|\))/gi,
@@ -443,38 +475,12 @@ function rules() {
       message: "Repeated literal colors can drift from tokens. Prefer semantic tokens when a design system exists.",
       patterns: [/(?:color|background|border(?:-color)?)\s*:\s*#[0-9a-f]{3,8}\b/gi],
     },
-    {
-      id: "gpt-thin-border-wide-shadow",
-      category: "slop",
-      severity: "P3",
-      provider: "gpt",
-      message: "Hairline border plus diffuse shadow is a common generated-card signature.",
-      patterns: [/\bborder\b[^"\n]{0,80}\bbox-shadow\b|\bbox-shadow\b[^"\n]{0,80}\bborder\b/gi],
-    },
-    {
-      id: "gpt-repeating-stripes",
-      category: "slop",
-      severity: "P3",
-      provider: "gpt",
-      message: "Repeating stripe decoration is a common generated UI filler pattern.",
-      patterns: [/repeating-linear-gradient\(/gi],
-    },
-    {
-      id: "gemini-image-hover-transform",
-      category: "slop",
-      severity: "P3",
-      provider: "gemini",
-      message: "Image hover scale/rotate can be a generated default. Verify it helps inspection.",
-      patterns: [/(?:img|image|photo)[^;\n]{0,160}:hover[^;\n]*(?:scale|rotate)|hover:[^\s"']*(?:scale|rotate)[^\s"']*(?:img|image|photo)/gi],
-    },
   ];
 }
 
 function runPatternRules(file, text) {
   const out = [];
   for (const rule of rules()) {
-    if (rule.provider === "gpt" && !options.gpt) continue;
-    if (rule.provider === "gemini" && !options.gemini) continue;
     for (const pattern of rule.patterns) {
       pattern.lastIndex = 0;
       let count = 0;
@@ -491,8 +497,17 @@ function runPatternRules(file, text) {
 
 function runFileRules(file, text) {
   const out = [];
-  const hasMotion =
-    /@keyframes\b|animation(?:-name)?\s*:|\banimate-[\w-]+\b|\btransition(?:-\[|:|-property)?/.test(text);
+  const significantMotionIndex = firstMatchIndex(text, [
+    /@keyframes\b/i,
+    /animation(?:-name|-duration|-timing-function)?\s*:/i,
+    /\banimate-(?!none\b)[\w-]+\b/i,
+    /\btransition-all\b/i,
+    /\btransition-(?:transform|opacity)\b/i,
+    /\btransition-\[[^\]]*(?:transform|translate|scale|rotate|opacity|filter|clip-path|width|height|padding|margin|top|left|right|bottom)[^\]]*\]/i,
+    /transition(?:-property)?\s*:[^;\n]*(?:transform|translate|scale|rotate|opacity|filter|clip-path|width|height|padding|margin|top|left|right|bottom)/i,
+    /scroll-behavior\s*:\s*smooth/i,
+  ]);
+  const hasMotion = significantMotionIndex >= 0;
   const hasReducedMotion = /prefers-reduced-motion/.test(text);
   if (hasMotion && !hasReducedMotion) {
     out.push(
@@ -505,7 +520,7 @@ function runFileRules(file, text) {
         },
         file,
         text,
-        Math.max(0, text.search(/@keyframes\b|animation(?:-name)?\s*:|\banimate-[\w-]+\b|\btransition(?:-\[|:|-property)?/)),
+        significantMotionIndex,
         "motion without prefers-reduced-motion",
       ),
     );
@@ -590,6 +605,15 @@ function runFileRules(file, text) {
   return out;
 }
 
+function firstMatchIndex(text, patterns) {
+  let first = -1;
+  for (const pattern of patterns) {
+    const index = text.search(pattern);
+    if (index >= 0 && (first < 0 || index < first)) first = index;
+  }
+  return first;
+}
+
 function uniqueFindings(value) {
   const seen = new Set();
   const out = [];
@@ -603,15 +627,31 @@ function uniqueFindings(value) {
 }
 
 function toFinding(rule, file, text, index, snippet) {
-  return {
+  const finding = {
     id: rule.id,
     category: rule.category,
     severity: rule.severity,
+    confidence: rule.confidence || defaultConfidence(rule),
+    applicability: rule.applicability || defaultApplicability(rule),
     message: rule.message,
-    file: path.relative(process.cwd(), file),
+    file: path.relative(reportRoot, file).replaceAll("\\", "/"),
     line: lineForIndex(text, index),
     snippet: cleanSnippet(snippet),
   };
+  return { ...finding, fingerprint: fingerprint(finding) };
+}
+
+function defaultConfidence(rule) {
+  if (["slop", "design-system"].includes(rule.category)) return "low";
+  if (["missing-img-alt", "empty-img-src", "interactive-div"].includes(rule.id)) return "high";
+  return "medium";
+}
+
+function defaultApplicability(rule) {
+  if (["missing-img-alt", "empty-img-src", "interactive-div", "transition-all", "will-change-broad"].includes(rule.id)) {
+    return "direct";
+  }
+  return "contextual";
 }
 
 function parseArgs(args) {
@@ -625,6 +665,8 @@ function parseArgs(args) {
     baseline: null,
     changedOnly: false,
     category: null,
+    allowEmpty: false,
+    includeIgnored: false,
   };
   const targets = [];
 
@@ -637,6 +679,8 @@ function parseArgs(args) {
     else if (arg === "--gpt") options.gpt = true;
     else if (arg === "--gemini") options.gemini = true;
     else if (arg === "--changed-only") options.changedOnly = true;
+    else if (arg === "--allow-empty") options.allowEmpty = true;
+    else if (arg === "--include-ignored") options.includeIgnored = true;
     else if (name === "--format") options.format = normalizeFormat(nextValue());
     else if (name === "--fail-on") options.failOn = normalizeSeverity(nextValue());
     else if (name === "--out") options.out = nextValue();
@@ -671,36 +715,92 @@ function normalizeSeverity(value) {
   return severity;
 }
 
-function collectFiles(target, out, changedFiles) {
+function collectFiles(target, out, changedFiles, isExplicitTarget = false) {
   if (!fs.existsSync(target)) return;
   const stat = fs.statSync(target);
   if (stat.isDirectory()) {
-    const name = path.basename(target);
-    if (SKIP_DIRS.has(name)) return;
-    for (const entry of fs.readdirSync(target)) collectFiles(path.join(target, entry), out, changedFiles);
+    const name = path.basename(target).toLowerCase();
+    if (!isExplicitTarget && !options.includeIgnored && SKIP_DIRS.has(name)) return;
+    for (const entry of fs.readdirSync(target)) collectFiles(path.join(target, entry), out, changedFiles, false);
     return;
   }
   if (!stat.isFile()) return;
-  if (!VALID_EXT.has(path.extname(target))) return;
+  if (!VALID_EXT.has(path.extname(target).toLowerCase())) return;
 
-  const rel = path.relative(process.cwd(), target).replaceAll("\\", "/");
-  if (changedFiles && !changedFiles.has(rel)) return;
+  if (changedFiles && !changedFiles.has(normalizeFsPath(target))) return;
   out.push(target);
 }
 
-function gitChangedFiles() {
+function gitChangedFiles(startPath = process.cwd()) {
+  const changed = new Set();
+  let gitRoot;
   try {
-    const output = execSync("git diff --name-only --diff-filter=ACMRTUXB HEAD", {
+    const cwd = fs.statSync(startPath).isDirectory() ? startPath : path.dirname(startPath);
+    gitRoot = execFileSync("git", ["-C", cwd, "rev-parse", "--show-toplevel"], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
-    });
-    return output
-      .split(/\r?\n/)
-      .map((line) => line.trim().replaceAll("\\", "/"))
-      .filter(Boolean);
+    }).trim();
   } catch {
     return [];
   }
+  for (const command of [
+    "git diff --name-only --diff-filter=ACMRTUXB -z HEAD",
+    "git ls-files --others --exclude-standard -z",
+  ]) {
+    try {
+      const output = execSync(command, {
+        cwd: gitRoot,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      });
+      for (const file of output.split("\0")) {
+        const normalized = file.trim() ? normalizeFsPath(path.resolve(gitRoot, file.trim())) : "";
+        if (normalized) changed.add(normalized);
+      }
+    } catch {
+      // A repository without HEAD can still contribute untracked files.
+    }
+  }
+  return [...changed];
+}
+
+function resolveReportRoot(scanTargets) {
+  const gitRoots = new Set();
+  for (const target of scanTargets) {
+    const start = fs.statSync(target).isDirectory() ? target : path.dirname(target);
+    try {
+      const root = execFileSync("git", ["-C", start, "rev-parse", "--show-toplevel"], {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      }).trim();
+      if (root) gitRoots.add(normalizeFsPath(root));
+    } catch {
+      // Non-Git scans use their stable target ancestor instead.
+    }
+  }
+  if (gitRoots.size === 1) return [...gitRoots][0];
+
+  const anchors = scanTargets.map((target) => (fs.statSync(target).isDirectory() ? target : path.dirname(target)));
+  return commonAncestor(anchors);
+}
+
+function commonAncestor(paths) {
+  if (!paths.length) return process.cwd();
+  let candidate = path.resolve(paths[0]);
+  for (const current of paths.slice(1)) {
+    const absolute = path.resolve(current);
+    while (!isInsideOrSame(candidate, absolute)) {
+      const parent = path.dirname(candidate);
+      if (parent === candidate) return path.parse(candidate).root;
+      candidate = parent;
+    }
+  }
+  return candidate;
+}
+
+function isInsideOrSame(parent, child) {
+  const relative = path.relative(parent, child);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
 }
 
 function loadFindingSet(file) {
@@ -709,8 +809,13 @@ function loadFindingSet(file) {
   const data = JSON.parse(fs.readFileSync(file, "utf8"));
   const findings = Array.isArray(data) ? data : data.findings || [];
   for (const item of findings) {
-    if (typeof item === "string") set.add(item);
-    else set.add(fingerprint(item));
+    if (typeof item === "string") {
+      set.add(item);
+    } else {
+      if (typeof item.fingerprint === "string") set.add(item.fingerprint);
+      set.add(fingerprint(item));
+      set.add(legacyFingerprint(item));
+    }
   }
   return set;
 }
@@ -719,13 +824,39 @@ function fingerprint(finding) {
   return [
     finding.id,
     normalizePath(finding.file || ""),
+    normalizeFingerprintSnippet(finding.snippet || ""),
+  ].join("|");
+}
+
+function legacyFingerprint(finding) {
+  return [
+    finding.id,
+    normalizePath(finding.file || ""),
     finding.line || "",
     cleanSnippet(finding.snippet || ""),
   ].join("|");
 }
 
+function findingSetHas(set, finding) {
+  return set.has(fingerprint(finding)) || set.has(legacyFingerprint(finding));
+}
+
+function normalizeFingerprintSnippet(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .replace(/\s*([:;,{}()[\]=<>])\s*/g, "$1")
+    .trim()
+    .slice(0, 180);
+}
+
 function normalizePath(value) {
   return String(value).replaceAll("\\", "/");
+}
+
+function normalizeFsPath(value) {
+  const normalized = path.resolve(String(value)).replaceAll("\\", "/");
+  return process.platform === "win32" ? normalized.toLowerCase() : normalized;
 }
 
 function lineForIndex(text, index) {
@@ -796,6 +927,8 @@ function publicOptions(value) {
     gemini: value.gemini,
     failOn: value.failOn,
     changedOnly: value.changedOnly,
+    allowEmpty: value.allowEmpty,
+    includeIgnored: value.includeIgnored,
     category: value.category,
     allowlist: Boolean(value.allowlist),
     baseline: Boolean(value.baseline),
@@ -803,5 +936,5 @@ function publicOptions(value) {
 }
 
 function usage() {
-  console.error("Usage: node detect-ui-antipatterns.mjs [--json|--format=text|md|json] [--fail-on=P1|P2|P3] [--out file] [--allowlist file] [--baseline file] [--changed-only] [--category name] [--gpt] [--gemini] <file-or-directory>...");
+  console.error("Usage: node detect-ui-antipatterns.mjs [--json|--format=text|md|json] [--fail-on=P1|P2|P3] [--out file] [--allowlist file] [--baseline file] [--changed-only] [--allow-empty] [--include-ignored] [--category name] [--gpt] [--gemini] <file-or-directory>...");
 }

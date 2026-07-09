@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ruthless Designer"
+  short_description: "Brutal, distinctive, evidence-backed UI design"
+  default_prompt: "Use $ruthless-designer to create or brutally redesign this interface and prove the result."

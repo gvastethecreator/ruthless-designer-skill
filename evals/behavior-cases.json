@@ -1,0 +1,154 @@
+[
+  {
+    "id": "behavior-product-dashboard",
+    "mode": "create",
+    "prompt": "Use $ruthless-designer to design a scheduling dashboard for a recording studio. The operator must resolve today's room, crew, gear, and approval conflicts faster than they can in a spreadsheet.",
+    "must": [
+      "identify the operator's first decision",
+      "reject a generic KPI-card dashboard",
+      "derive one product-specific direction from scheduling conflicts",
+      "cover one failure or recovery state",
+      "define desktop and narrow proof"
+    ],
+    "must_not": [
+      "lead with decorative metrics",
+      "invent customer proof",
+      "claim visual quality without rendered evidence"
+    ]
+  },
+  {
+    "id": "behavior-brand-landing",
+    "mode": "create",
+    "prompt": "Use $ruthless-designer to create a landing page for a small architectural lighting studio. It needs to feel specific, physical, and expensive without default beige luxury styling.",
+    "must": [
+      "make the fixture or lighting result the first-view artifact",
+      "derive palette and composition from a physical source",
+      "handle the real-asset gap honestly",
+      "place proof before decorative narrative",
+      "check the mobile first viewport"
+    ],
+    "must_not": [
+      "replace product imagery with div art",
+      "use a centered hero plus three equal feature cards",
+      "use fictional metrics or logos as proof"
+    ]
+  },
+  {
+    "id": "behavior-broad-redesign",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to reimagine an existing media editor whose canvas is buried under status panels. Keep routes, shortcuts, saved-project behavior, and accessibility wins intact.",
+    "must": [
+      "name the accidental visual priority",
+      "state what must be killed and what must survive",
+      "make the canvas dominate the new composition",
+      "preserve the explicit product contracts",
+      "compare the result with the baseline"
+    ],
+    "must_not": [
+      "rewrite unrelated architecture",
+      "hide diagnostics without a recovery path",
+      "stop at advice when implementation is requested and editable"
+    ]
+  },
+  {
+    "id": "behavior-aggressive-critique",
+    "mode": "critique",
+    "prompt": "Use $ruthless-designer to roast this implementation and screenshot. I want the real design crime, the source cause, and the redesign—not polite feedback.",
+    "must": [
+      "attack the artifact rather than the author",
+      "open with the dominant design failure",
+      "connect every major blow to evidence and user harm",
+      "prescribe exact cuts or replacements",
+      "end with a sharp verdict"
+    ],
+    "must_not": [
+      "use a praise sandwich",
+      "substitute jokes for evidence",
+      "say improve hierarchy or spacing without naming elements"
+    ]
+  },
+  {
+    "id": "behavior-proof-blocked",
+    "mode": "proof",
+    "prompt": "Use $ruthless-designer to certify that this new interface is production-ready. Only source code is available; there is no runnable URL or screenshot.",
+    "must": [
+      "refuse a verified visual-quality claim",
+      "run or request the smallest available static evidence",
+      "state runtime and visual proof as blocked",
+      "name the exact remaining claim limit"
+    ],
+    "must_not": [
+      "return excellent from a clean static scan",
+      "treat missing evidence as a pass",
+      "claim production-ready"
+    ]
+  },
+  {
+    "id": "behavior-data-decision-dashboard",
+    "mode": "create",
+    "prompt": "Use $ruthless-designer to redesign a hospital-capacity dashboard so an operations lead can decide where to move staff. Forecasts include uncertainty, missing feeds, and zero-capacity wards.",
+    "must": [
+      "start from the staffing decision rather than chart variety",
+      "distinguish zero, missing, stale, and uncertain data",
+      "choose encodings and scales that support comparison",
+      "provide an accessible table or equivalent exact values",
+      "annotate the consequence or threshold that changes the decision"
+    ],
+    "must_not": [
+      "use decorative KPI cards as the primary answer",
+      "encode critical meaning with color alone",
+      "invent certainty or interpolate missing data silently"
+    ]
+  },
+  {
+    "id": "behavior-expressive-product",
+    "mode": "create",
+    "prompt": "Use $ruthless-designer to create a daily practice interface for an experimental electronic musician. It is a repeated-use product, but it should feel like an instrument rather than neutral enterprise software.",
+    "must": [
+      "calibrate expression, density, motion, familiarity, trust, and emotional tone from the task",
+      "keep repeated controls learnable and fast",
+      "derive visual character from sound, performance, or the musical object",
+      "use motion as feedback or continuity rather than ambient theater",
+      "prove the core practice loop and a narrow layout"
+    ],
+    "must_not": [
+      "default to neutrals plus one restrained accent solely because it is a product surface",
+      "turn every control into bespoke art",
+      "hide latency or state behind animation"
+    ]
+  },
+  {
+    "id": "behavior-cultural-surface",
+    "mode": "create",
+    "prompt": "Use $ruthless-designer to create a site for a restored silent-film season. The experience should build curiosity and atmosphere before revealing the full programme; it is cultural, not a SaaS funnel.",
+    "must": [
+      "justify delayed disclosure as part of the audience experience",
+      "derive art direction from real film or archive material",
+      "preserve orientation and an accessible route to the programme",
+      "calibrate pacing and motion instead of forcing immediate conversion",
+      "state asset rights or availability gaps honestly"
+    ],
+    "must_not": [
+      "force a dominant signup CTA into the first viewport",
+      "apply a stock proof-wall or pricing-funnel structure",
+      "use mystery to hide basic navigation or essential access"
+    ]
+  },
+  {
+    "id": "behavior-critique-preservation",
+    "mode": "critique",
+    "prompt": "Use $ruthless-designer to tear apart this overloaded incident console, but do not destroy its excellent keyboard-driven event scrubber while redesigning the shell.",
+    "must": [
+      "name the dominant systemic failure",
+      "identify the scrubber as an explicit preservation constraint",
+      "use no more cuts than real root causes justify",
+      "attach evidence, damage, cause, exact fix, and an earned roast to major causes",
+      "state how the redesign keeps the preserved mechanism visible and usable"
+    ],
+    "must_not": [
+      "pad the critique to exactly five findings",
+      "praise-sandwich the verdict",
+      "replace the scrubber merely to make the redesign look more original"
+    ]
+  }
+]

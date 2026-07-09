@@ -2,139 +2,188 @@
 
 ![Ruthless Designer banner](./assets/readme-banner-v5.png)
 
-> A Codex skill for blank-canvas UI creation with teeth: complete product screens, dashboards, landing pages, prototypes, visual systems, obsessive critique/fix/proof loops, and visual QA.
+> A Codex skill with teeth: distinctive interface creation, broad redesign, aggressive evidence-backed critique, and visual proof that refuses to certify vibes.
 
 [![License: MIT](https://shieldcn.dev/badge/license-MIT-yellow.svg?variant=secondary&size=xs)](./LICENSE)
 [![Status](https://shieldcn.dev/badge/status-preview-red.svg?variant=secondary&size=xs)](#status)
 
-Ruthless Designer is for moments where "make it nice" is not enough. It creates or reimagines interfaces from first principles, rejects generic defaults, defines a visual system, builds the artifact when code is available, and keeps cutting until the design survives evidence.
+Ruthless Designer is hostile to mediocre artifacts and loyal to the user. It kills generic defaults, finds the structural cause behind weak hierarchy, builds the better interface when implementation is requested, and refuses to call unobserved work excellent.
 
-Use it for:
+Its aggression has a contract: attack the interface, never its author. Every major blow must earn itself through evidence, user damage, structural cause, an exact fix, and a better design move.
 
-- greenfield app screens, dashboards, tools, prototypes, and product flows
-- new landing pages, portfolios, launch pages, and visual systems
-- broad redesign direction when the old surface is not worth polishing
-- reference-led UI creation from screenshots, URLs, videos, images, or brand assets
-- obsessive visual QA before a design or implementation is called good
+## Use It For
 
-It is intentionally severe. A result that could fit a competitor after swapping the logo fails. A design without state coverage fails. A claim without screenshot, diff, command output, source artifact, or explicit blocker fails.
+- Greenfield product screens, dashboards, editors, tools, landing pages, portfolios, and interactive prototypes.
+- Broad redesigns that change hierarchy, composition, or the visual system.
+- Reference-led UI creation from screenshots, URLs, videos, brand assets, or existing products.
+- Decision-heavy dashboards, tables, charts, uncertainty, and dense information design.
+- Deep screenshot/code autopsies, aggressive design critique, and visual QA.
+- Critique/fix/proof loops where the rendered artifact—not the first patch—decides when work stops.
 
-## What Makes It Different
+Do not use it for isolated component fixes, small visual bugs, accessibility/performance-only repairs, or code-only review without a broad design mandate. A surgical task does not need a designer kicking down every wall in the building.
 
-- `greenfield-design.md` forces a real product read before layout.
-- `obsessive-design-loop.md` brings artifact-first persistence: critique/fix/proof loops, side-by-side evidence, first-impression gates, state coverage, direction resets, and a Loop 30 continue/ask/stop verdict for broad missions.
-- `visual-qa.md` compares source truth against rendered result instead of blessing vibes.
-- `direction-sprint.md`, `composition-patterns.md`, and `signature-moves.md` turn "make it incredible" into a concrete direction-selection workflow.
-- The bundled review harness and detector create local evidence packs for static and runtime UI review, with expectation gates for smoke tests and stricter quality thresholds.
+## What It Does Differently
+
+- Runs one state machine: `CLASSIFY -> READ -> CHOOSE -> BUILD -> PROVE -> CONTINUE | RESET | STOP`.
+- Loads only the reference route needed for the current surface.
+- Rejects the obvious category default and the fashionable second reflex.
+- Requires one useful, product-specific signature move instead of decorative novelty.
+- Calibrates expression, density, motion, familiarity, confidence, and emotional tone from the audience and task instead of equating product with beige restraint.
+- Makes product state, real content, verified assets, and responsive pressure part of the design.
+- Keeps critique brutal without letting jokes replace evidence.
+- Preserves mechanisms that already work and limits the first cuts to the root causes that actually exist.
+- Separates `observed`, `captured`, `compared`, `passed`, and `blocked` evidence.
+- Judges production integrity, task effectiveness, and distinctiveness independently.
+- Treats static detector output as a lead, never a visual verdict.
 
 ## Install
 
-Install with the Skills CLI:
+With the Skills CLI:
 
-```powershell
+```bash
 npx skills add gvastethecreator/ruthless-designer-skill
 ```
 
-Or copy the skill folder into your Codex skills directory:
+Manual install on macOS/Linux:
 
-```powershell
-Copy-Item -Recurse .\SKILLS\ruthless-designer "$env:USERPROFILE\.codex\skills\ruthless-designer"
+```bash
+target="${CODEX_HOME:-$HOME/.codex}/skills/ruthless-designer"
+mkdir -p "$target"
+cp -R ./SKILLS/ruthless-designer/. "$target/"
 ```
 
-If `CODEX_HOME` is set, install there instead:
+Manual install on PowerShell:
 
 ```powershell
-Copy-Item -Recurse .\SKILLS\ruthless-designer "$env:CODEX_HOME\skills\ruthless-designer"
+$skillsRoot = if ($env:CODEX_HOME) { Join-Path $env:CODEX_HOME "skills" } else { Join-Path $env:USERPROFILE ".codex\skills" }
+$target = Join-Path $skillsRoot "ruthless-designer"
+New-Item -ItemType Directory -Force $target | Out-Null
+Copy-Item -Recurse -Force .\SKILLS\ruthless-designer\* $target
 ```
 
 ## Usage
 
-Invoke it by name or ask for work that clearly matches it:
-
 ```text
-Use ruthless-designer to create a complete dashboard for a studio booking tool.
+Use $ruthless-designer to create and implement a scheduling dashboard whose current conflicts dominate the interface.
 ```
 
 ```text
-Design a landing page from scratch. Be ruthless: no generic SaaS hero, include states and proof.
+Use $ruthless-designer to reimagine this editor. Keep routes and shortcuts, but kill the shell that buries the canvas under diagnostics.
 ```
 
 ```text
-Create a new visual direction for this product from the screenshots and implement the first screen.
+Use $ruthless-designer to roast this screenshot and implementation. Give me the real design crime, source cause, up to five cuts without filler, what must not break, and the better redesign.
 ```
 
-For targeted cleanup of existing implemented UI, use a focused improvement skill when available. Ruthless Designer can still inspect existing surfaces, but its strongest mode is invention and broad reimagination.
+The skill answers in the user's language. It does not use praise sandwiches, corporate filler, or generic advice such as "improve hierarchy" without naming what must dominate and what must die.
 
-This skill is self-contained. When `improve-ui` is also installed, use Improve UI after the direction is chosen for targeted implementation hardening, visual bug fixes, accessibility polish, and production-readiness passes.
+## Validate The Package
 
-## Useful Commands
+Run the complete local gate:
 
-Validate the skill package:
-
-```powershell
-npm run validate
-```
-
-Run the static smoke review against the intentionally bad fixture:
-
-```powershell
-npm run smoke
-```
-
-The smoke test now expects specific high-severity findings from the bad fixture. It fails if the detector stops catching those patterns or if the verdict drifts above/below the expected poor fixture verdict.
-
-Run both:
-
-```powershell
+```bash
 npm run check
 ```
 
-Run the harness against a target project:
+That command validates the skill and metadata, validates the evaluation specifications, runs detector/harness/installer regression tests, and exercises the deliberately bad smoke fixture.
 
-```powershell
-node .\SKILLS\ruthless-designer\scripts\run-interface-review.mjs --path <frontend-path> --out .scratch\ruthless-designer\<slug> --fail-on=P2
+Individual commands:
+
+```bash
+npm run validate
+npm run evals
+npm test
+npm run smoke
 ```
 
-Add a local URL when the UI is runnable:
+## Static Detector
 
-```powershell
-node .\SKILLS\ruthless-designer\scripts\run-interface-review.mjs --path <frontend-path> --url http://localhost:5173 --out .scratch\ruthless-designer\<slug> --fail-on=P1
+```bash
+node SKILLS/ruthless-designer/scripts/detect-ui-antipatterns.mjs --json --fail-on=P1 ./src
 ```
 
-Require runtime proof and signature-move evidence for high-ambition work:
+The detector fails closed for missing targets and zero compatible files. Use `--allow-empty` only when an empty scan is genuinely expected. Findings include confidence and applicability; aesthetic regex signals still require human confirmation.
 
-```powershell
-node .\SKILLS\ruthless-designer\scripts\run-interface-review.mjs --path <frontend-path> --url http://localhost:5173 --require-runtime --require-signature --signature-proof "artifact-first hero visible in desktop and mobile screenshots" --fail-verdict=good --out .scratch\ruthless-designer\<slug>
+Common options:
+
+- `--changed-only`: staged, unstaged, and untracked non-ignored files.
+- `--include-ignored`: include normally skipped test/fixture/generated/vendor directories.
+- `--allowlist` / `--baseline`: suppress stable finding fingerprints.
+- `--category`: filter by rule or category.
+- `--fail-on=P1|P2|P3`: choose the severity gate.
+
+## Runtime Evidence Harness
+
+Static plus runnable UI:
+
+```bash
+node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path ./src --url http://localhost:5173 --require-runtime --out ./output/ruthless-designer/app-shell
 ```
 
-Capture multiple interaction states in one run:
+Strict layout-shift regression:
 
-```powershell
-node .\SKILLS\ruthless-designer\scripts\run-interface-review.mjs --path <frontend-path> --url http://localhost:5173 --action-group default=actions-default.json --action-group menu=actions-menu.json --out .scratch\ruthless-designer\<slug>
+```bash
+node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path ./src --url http://localhost:5173 --strict-cls --out ./output/ruthless-designer/app-shell
 ```
+
+The harness records source findings, successful/failed runtime observations, screenshots, console/network signals, viewport state, evidence coverage, and blocked gates. A screenshot is reported as captured and `not-compared`; the tool does not pretend capture alone proves visual quality.
+
+Runtime action files support `assert-visible`, `assert-text`, and `assert-url`. Async state coverage passes only when every declared state has a non-empty named action group and a successful observable assertion; listing state names is not evidence. A signature claim also needs an observable target:
+
+```bash
+node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --url http://localhost:5173 --require-signature --signature-proof "conflict rail is present" --signature-selector "[data-signature='conflict-rail']" --out ./output/ruthless-designer/signature
+```
+
+Partial evidence leaves dimensions `unknown`. `--fail-under-score` fails when coverage is incomplete, and source plus screenshots cannot earn a high verdict while comparison remains `not-compared`.
+
+Runtime screenshots and logs can contain private product data. The harness removes URL credentials, query strings, fragments, bearer tokens, and common secret assignments from its reports, but review artifacts before sharing them.
+
+## Check The Active Installation
+
+Codex may be loading a copied or junctioned skill that has drifted from this repository. Diagnose it with:
+
+```bash
+npm run doctor
+```
+
+Use `--check` when drift should fail CI or a local gate:
+
+```bash
+node scripts/doctor-skill.mjs --check
+```
+
+Preview a local installation sync:
+
+```bash
+npm run install:local
+```
+
+Write and prune stale files only after inspecting the dry run:
+
+```bash
+node scripts/install-local-skill.mjs --write --prune
+```
+
+The installer resolves linked parents as well as the final target and refuses to write through a symlink/junction unless `--allow-linked-target` is supplied explicitly. It also rejects nested links that would let a copied file escape the skill directory. Those guards exist because silently dirtying another source repository is not installation; it is vandalism with a copy command.
 
 ## Project Structure
 
-- [`SKILLS/ruthless-designer/SKILL.md`](./SKILLS/ruthless-designer/SKILL.md): trigger contract and router.
-- [`greenfield-design.md`](./SKILLS/ruthless-designer/greenfield-design.md): blank-canvas design process.
-- [`direction-sprint.md`](./SKILLS/ruthless-designer/direction-sprint.md): incompatible direction generation and selection.
-- [`composition-patterns.md`](./SKILLS/ruthless-designer/composition-patterns.md): structural patterns for product, brand, hybrid, and prototype surfaces.
-- [`signature-moves.md`](./SKILLS/ruthless-designer/signature-moves.md): library of distinctive moves tied to task, proof, state, and artifact.
-- [`obsessive-design-loop.md`](./SKILLS/ruthless-designer/obsessive-design-loop.md): persistence and evidence gates.
-- [`visual-qa.md`](./SKILLS/ruthless-designer/visual-qa.md): source-vs-rendered comparison.
-- [`templates/`](./SKILLS/ruthless-designer/templates): design-read, loop, evidence, and final-checklist ledgers.
-- [`examples/`](./SKILLS/ruthless-designer/examples): compact golden direction references.
-- [`scripts/`](./SKILLS/ruthless-designer/scripts): static detector and review harness.
-- [`fixtures/`](./SKILLS/ruthless-designer/fixtures): intentionally bad UI fixture for smoke tests.
+- [`SKILL.md`](./SKILLS/ruthless-designer/SKILL.md): compact trigger, voice, state machine, and route selector.
+- [`references/`](./SKILLS/ruthless-designer/references): creation, direction, product, brand, data/information, visual craft, critique, motion, proof, tooling, and contrasting examples.
+- [`scripts/`](./SKILLS/ruthless-designer/scripts): dependency-free static detector and runtime evidence harness.
+- [`tests/`](./tests): positive, negative, adversarial, validator, doctor, and installer regression tests.
+- [`evals/`](./evals): trigger and behavioral contracts for clean-context forward testing.
 
 ## Status
 
 Preview public skill project.
 
-- The skill validates without external dependencies.
-- Static review smoke runs with Node.js only.
-- Runtime browser proof requires Playwright in the target project or an available Playwright path.
+- Skill package, metadata, links, context budgets, and evaluation specs are validated locally.
+- Static detector and harness adversarial suites run without external dependencies.
+- Runtime browser evidence requires Playwright in the target project or a configured Playwright path.
+- The harness captures evidence but deliberately does not claim visual comparison without an actual before/reference review.
+- Behavioral eval cases are versioned; fresh-context forward tests remain the quality gate for future releases.
 
-## License
+## Attribution And License
 
-MIT.
+Released under the [MIT License](./LICENSE).

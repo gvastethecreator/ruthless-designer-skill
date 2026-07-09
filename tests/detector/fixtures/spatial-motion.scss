@@ -1,0 +1,10 @@
+.panel {
+  animation: panel-enter 180ms ease-out;
+}
+
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

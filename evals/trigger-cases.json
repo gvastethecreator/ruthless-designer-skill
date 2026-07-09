@@ -1,0 +1,92 @@
+[
+  {
+    "id": "trigger-greenfield-dashboard",
+    "expected": "trigger",
+    "prompt": "Design and implement a complete operations dashboard from scratch. Give it a product-specific visual direction and prove the desktop and mobile result."
+  },
+  {
+    "id": "trigger-landing",
+    "expected": "trigger",
+    "prompt": "Create a standout landing page for this product. I do not want another generic SaaS hero and three cards."
+  },
+  {
+    "id": "trigger-portfolio",
+    "expected": "trigger",
+    "prompt": "Invent a new visual system and portfolio direction for this studio, then build the first page."
+  },
+  {
+    "id": "trigger-prototype",
+    "expected": "trigger",
+    "prompt": "Build a playable shader tool where the canvas dominates and the controls feel like an instrument rather than a form."
+  },
+  {
+    "id": "trigger-broad-redesign",
+    "expected": "trigger",
+    "prompt": "This product works but the entire interface direction is wrong. Reimagine the shell and primary workflow without losing the routes or data model."
+  },
+  {
+    "id": "trigger-reference-led",
+    "expected": "trigger",
+    "prompt": "Use these screenshots as visual references, extract the system behind them, and create a new interface for our product."
+  },
+  {
+    "id": "trigger-ruthless-critique",
+    "expected": "trigger",
+    "prompt": "Roast this dashboard without mercy, identify what is structurally wrong, and show me the much better redesign direction."
+  },
+  {
+    "id": "trigger-visual-verdict",
+    "expected": "trigger",
+    "prompt": "Does this landing page actually look good? Be ruthless and cross-reference the screenshot with the code."
+  },
+  {
+    "id": "no-trigger-small-padding",
+    "expected": "do-not-trigger",
+    "prompt": "Increase the button padding from 8px to 10px and keep everything else unchanged."
+  },
+  {
+    "id": "no-trigger-code-bug",
+    "expected": "do-not-trigger",
+    "prompt": "Fix the TypeScript error in Button.tsx. Do not change the design."
+  },
+  {
+    "id": "no-trigger-a11y-only",
+    "expected": "do-not-trigger",
+    "prompt": "Audit this form only for WCAG label and keyboard issues. Do not redesign it."
+  },
+  {
+    "id": "no-trigger-performance-only",
+    "expected": "do-not-trigger",
+    "prompt": "Profile the bundle and reduce JavaScript execution time without changing the UI."
+  },
+  {
+    "id": "no-trigger-backend",
+    "expected": "do-not-trigger",
+    "prompt": "Add cursor pagination to this API endpoint and write database tests."
+  },
+  {
+    "id": "no-trigger-copy-edit",
+    "expected": "do-not-trigger",
+    "prompt": "Rewrite these five error messages in clearer English. No layout changes."
+  },
+  {
+    "id": "no-trigger-tiny-component-fix",
+    "expected": "do-not-trigger",
+    "prompt": "The tooltip is clipped by overflow hidden. Fix only that visible bug."
+  },
+  {
+    "id": "no-trigger-design-token-migration",
+    "expected": "do-not-trigger",
+    "prompt": "Mechanically replace deprecated color tokens with the new token names."
+  },
+  {
+    "id": "no-trigger-fixed-spec-new-page",
+    "expected": "do-not-trigger",
+    "prompt": "Implement a new account settings page from the supplied Figma using only the existing components and tokens. Match it exactly; do not invent or redesign anything."
+  },
+  {
+    "id": "no-trigger-ruthless-single-component-qa",
+    "expected": "do-not-trigger",
+    "prompt": "Be ruthless: compare this one button with the reference screenshot and fix its 2px icon misalignment. Keep every other visual unchanged."
+  }
+]

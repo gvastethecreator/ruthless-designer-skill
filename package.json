@@ -2,13 +2,17 @@
   "name": "ruthless-designer-skill",
   "version": "0.1.0",
   "private": false,
-  "description": "A Codex skill for ruthless blank-canvas UI creation, obsessive design iteration, and visual QA.",
+  "description": "A ruthless Codex skill for distinctive interface creation, broad redesign, aggressive critique, and evidence-backed visual QA.",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "validate": "node scripts/validate-skill.mjs SKILLS/ruthless-designer",
+    "evals": "node scripts/validate-evals.mjs",
+    "test": "node scripts/run-tests.mjs",
     "smoke": "node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path SKILLS/ruthless-designer/fixtures/deep-review-bad.tsx --out .scratch/ruthless-designer-smoke --expect-finding=ease-in-ui-motion --expect-finding=scale-zero-entry --expect-finding=interactive-div --expect-finding=fake-product-preview --expect-finding=heavy-blur-effect --expect-finding=missing-reduced-transparency-fallback --expect-finding=gesture-missing-pointer-capture --expect-verdict=poor --fail-verdict=poor",
-    "check": "npm run validate && npm run smoke"
+    "doctor": "node scripts/doctor-skill.mjs",
+    "install:local": "node scripts/install-local-skill.mjs",
+    "check": "npm run validate && npm run evals && npm test && npm run smoke"
   },
   "keywords": [
     "codex",
@@ -16,6 +20,7 @@
     "ui-design",
     "frontend",
     "design-review",
+    "design-critique",
     "visual-qa"
   ],
   "engines": {

@@ -1,0 +1,8 @@
+.button {
+  color: var(--text-default);
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.button:hover {
+  color: var(--text-emphasis);
+}
