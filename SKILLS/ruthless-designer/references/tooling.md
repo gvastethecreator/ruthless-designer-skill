@@ -12,6 +12,8 @@ node SKILLS/ruthless-designer/scripts/detect-ui-antipatterns.mjs --json --fail-o
 
 Useful flags:
 
+- `--list-rules`: print the executable rule catalog without requiring a target.
+- `--explain <rule-id>`: print one rule's severity, confidence, applicability, message, and contextual exceptions.
 - `--format=text|md|json` or `--json`: choose output.
 - `--fail-on=P1|P2|P3`: fail when that severity or worse exists.
 - `--out <file>`: persist the report.
@@ -36,6 +38,8 @@ Treat every finding as a lead:
 - Group repeated findings by primitive, token, component, or state model.
 - Keep fingerprints stable in baselines; do not key long-lived suppressions to line numbers.
 
+Read the rule's exceptions before sentencing the artifact. Documented system intent, generated/vendor/fixture code, layout primitives, pointer-capture infrastructure, and decorative blur can make otherwise suspicious syntax legitimate. Frequency, distance, register, and user task also change the damage. An exception is an investigation path, not an automatic acquittal: confirm the rendered behavior or source contract and record why the rule does or does not apply.
+
 The deprecated `--gpt` and `--gemini` flags are accepted only for compatibility and emit no provider-specific findings. Design slop is a pattern, not a model nationality.
 
 ## Full Review Harness
@@ -58,17 +62,25 @@ Useful gates:
 
 - `--require-runtime`: fail when no runnable URL exists or runtime evidence cannot complete.
 - `--fail-on=P1|P2|P3`: gate finding severity.
-- `--fail-verdict=<verdict>`: require a minimum evidence-backed verdict.
-- `--fail-under-score <number>`: require a minimum score only when dimensions have sufficient evidence.
 - `--require-signature --signature-proof <text> --signature-selector <selector>`: require a named signature claim, successful runtime screenshots, and an observable visible target. A selector proves presence, not visual excellence.
-- `--expect-finding <rule-id>` and `--expect-verdict <verdict>`: smoke-test known fixtures.
+- `--expect-finding <rule-id>` and `--expect-assessment=blocked|findings|evidence-collected`: smoke-test known fixtures.
 - `--viewport <width>x<height>`: target a specific viewport.
 
-Unknown or uncovered score dimensions remain unknown. Do not treat them as `4/4`, and do not average missing evidence into excellence. A failed required gate must block the verdict even when the static finding count is zero.
+The report records a nonnumeric assessment:
 
-The harness score summarizes collected technical evidence; it is not the final judgment of production integrity, task effectiveness, or distinctiveness. Without an actual comparison, even clean source plus runtime capture is capped at `acceptable`.
+- `blocked`: at least one required evidence gate failed.
+- `findings`: evidence ran and produced static or runtime findings; inspect severity and the available context or applicability.
+- `evidence-collected`: evidence ran without detector findings; this is not approval.
+
+Unknown dimensions remain unknown. The report also keeps production integrity, task effectiveness, and distinctiveness separate; the harness may block or limit production integrity, but it does not automatically assess human comprehension or visual distinction. A failed required gate blocks the assessment even when the static finding count is zero.
+
+The retired `--fail-verdict`, `--fail-under-score`, and `--expect-verdict` flags exit with a migration error. Use explicit evidence gates and severities instead of laundering incomplete coverage into a flattering number.
+
+`--expect-assessment=blocked` may make a known blocked fixture exit successfully while its failed gates remain visible in the report. It does not override `--fail`, `--fail-on`, another failed expectation, or invalid input.
 
 Captured screenshots prove capture, not visual comparison. Inspect them manually or compare them against before/reference artifacts before claiming fidelity or improvement.
+
+This harness does not orchestrate multi-tab conflicts, server-side authorization, replay/idempotency, or every offline/network race. Exercise those contracts in the application's own integration or end-to-end runner, then attach the commands and artifacts to the same evidence ledger.
 
 ## Interaction States
 
@@ -115,5 +127,6 @@ Inspect the report, screenshots, console/network results, state runs, and gate f
 - Signature proof is visible in successful captures.
 - Async state names correspond to successful action groups or fixtures.
 - Console/network failures and layout/motion signals are investigated rather than blindly copied into the roast.
+- The assessment result and claim limits match the evidence actually collected.
 
 Persist the exact command, output path, viewport/state, and claim limit in the evidence ledger.

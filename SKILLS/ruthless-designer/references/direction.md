@@ -34,6 +34,8 @@ Do not move every axis together. Loud does not require motion. Dense does not re
 
 Ground the category default in the existing product, supplied references, or a few real category examples when the domain is unfamiliar; do not hallucinate a stereotype and congratulate yourself for rejecting it. Separate conventions users rely on from costumes competitors repeat. Kill the unearned default, then generate three genuinely viable, incompatible cards before committing to layout or effects. Do not waste one slot on a strawman you already intend to reject.
 
+For reference-led work, record each decisive source, its role, the extracted system, constraints, what not to copy, and proof gaps. Preserve viewport, route or state, theme, timestamp or video frame, and crop boundaries. A crop without state provenance is inspiration, not reproducible evidence. Convert observations into tokens, components, layout rules, and proof targets; copy system logic, not costume.
+
 ```text
 Direction:
 Core task:

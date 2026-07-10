@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const severityRank = { P0: 0, P1: 1, P2: 2, P3: 3 };
-const verdictRank = { critical: 0, poor: 1, acceptable: 2, good: 3, excellent: 4 };
+const assessmentDimensions = ["accessibility", "performance", "themingDesignSystem", "responsiveContent", "antiSlop"];
 const root = findRepoRoot();
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const detectorPath = process.env.RUTHLESS_DESIGNER_DETECTOR_PATH
@@ -54,7 +54,7 @@ const review = {
   static: null,
   runtime: null,
   findings: [],
-  score: null,
+  assessment: null,
   gates: [],
   expectations: [],
 };
@@ -86,7 +86,7 @@ if (options.url) review.runtime = await runRuntimeReview(review);
 
 review.findings = collectFindings(review);
 review.gates = evaluateGates(review);
-review.score = scoreReview(review);
+review.assessment = assessReview(review);
 review.expectations = evaluateExpectations(review, options);
 
 const jsonPath = path.join(outDir, "review.json");
@@ -99,7 +99,7 @@ const summary = {
   outDir: path.relative(root, outDir),
   findings: reportReview.findings.length,
   bySeverity: summarizeSeverity(reportReview.findings),
-  score: reportReview.score,
+  assessment: reportReview.assessment,
   gates: reportReview.gates,
   blockers: reportReview.ledger.blockers,
   expectations: reportReview.expectations,
@@ -112,19 +112,10 @@ if (options.failOn && review.findings.some((finding) => severityRank[finding.sev
 if (options.fail && review.gates.some((gate) => gate.status === "fail")) {
   process.exitCode = 1;
 }
-if (options.failVerdict && !verdictAtLeast(review.score.verdict, options.failVerdict)) {
-  process.exitCode = 1;
-}
-if (
-  options.failUnderScore !== null &&
-  (review.score.total === null || review.score.coverage < 1 || review.score.total < options.failUnderScore)
-) {
-  process.exitCode = 1;
-}
 if (review.expectations.some((expectation) => expectation.status === "fail")) {
   process.exitCode = 1;
 }
-if (review.score.verdict === "blocked") process.exitCode = 1;
+if (review.assessment.result === "blocked" && options.expectAssessment !== "blocked") process.exitCode = 1;
 if (invalidInputExitCode !== null) process.exitCode = invalidInputExitCode;
 
 function runStaticReview(targetReview) {
@@ -719,71 +710,55 @@ function collectFindings(targetReview) {
   );
 }
 
-function scoreReview(targetReview) {
-  const dimensions = {
-    accessibility: null,
-    performance: null,
-    themingDesignSystem: null,
-    responsiveContent: null,
-    antiSlop: null,
-  };
-  const dimensionEvidence = Object.fromEntries(Object.keys(dimensions).map((key) => [key, []]));
-
-  const observe = (dimension, score, evidence) => {
-    dimensions[dimension] = dimensions[dimension] === null ? score : Math.min(dimensions[dimension], score);
-    if (!dimensionEvidence[dimension].includes(evidence)) dimensionEvidence[dimension].push(evidence);
-  };
-
+function assessReview(targetReview) {
+  const observed = new Set();
   if ((targetReview.static?.files || 0) > 0) {
-    observe("themingDesignSystem", 3, "static design-system checks observed");
-    observe("antiSlop", 3, "static anti-pattern checks observed");
+    observed.add("themingDesignSystem");
+    observed.add("antiSlop");
   }
 
-  const successfulRuntime = (targetReview.runtime?.results || []).filter((result) => result.ok);
-  if (successfulRuntime.length) {
-    observe("accessibility", 3, "runtime DOM checks observed");
-    observe("performance", 3, "runtime performance checks observed");
-    observe("responsiveContent", 3, "runtime viewport checks observed");
+  const runtimeEvidence = runtimeEvidenceSummary(targetReview);
+  if (runtimeEvidence.successfulRuns > 0) {
+    observed.add("accessibility");
+    observed.add("performance");
+    observed.add("responsiveContent");
   }
 
   for (const finding of targetReview.findings) {
-    const cap = finding.severity === "P0" ? 0 : finding.severity === "P1" ? 1 : finding.severity === "P2" ? 2 : 3;
-    const evidence = `finding:${finding.id}`;
-    if (finding.category === "accessibility") observe("accessibility", cap, evidence);
-    if (finding.category === "performance" || finding.category === "runtime" || finding.category === "motion") observe("performance", cap, evidence);
-    if (finding.category === "design-system" || finding.category === "quality") observe("themingDesignSystem", cap, evidence);
-    if (finding.category === "resilience") observe("responsiveContent", cap, evidence);
-    if (finding.category === "slop") observe("antiSlop", cap, evidence);
+    if (finding.category === "accessibility") observed.add("accessibility");
+    if (finding.category === "performance" || finding.category === "runtime" || finding.category === "motion") observed.add("performance");
+    if (finding.category === "design-system" || finding.category === "quality") observed.add("themingDesignSystem");
+    if (finding.category === "resilience") observed.add("responsiveContent");
+    if (finding.category === "slop") observed.add("antiSlop");
   }
 
-  const failedRequiredGates = (targetReview.gates || []).filter((gate) => gate.status === "fail" && gate.required !== false);
-  const knownScores = Object.values(dimensions).filter((value) => value !== null);
-  const total = knownScores.length ? knownScores.reduce((sum, value) => sum + value, 0) : null;
-  const coverage = knownScores.length / Object.keys(dimensions).length;
-  const average = knownScores.length ? total / knownScores.length : null;
-  let baseVerdict = average === null ? "blocked" : average >= 3.6 ? "excellent" : average >= 2.8 ? "good" : average >= 2 ? "acceptable" : average >= 1.2 ? "poor" : "critical";
-  if (targetReview.findings.some((finding) => finding.severity === "P0")) baseVerdict = "critical";
-  else if (targetReview.findings.some((finding) => finding.severity === "P1") && verdictAtLeast(baseVerdict, "good")) baseVerdict = "poor";
-  if (coverage < 1 && verdictAtLeast(baseVerdict, "good")) baseVerdict = "acceptable";
-  const runtimeEvidence = runtimeEvidenceSummary(targetReview);
-  if (runtimeEvidence.observation !== "observed" && verdictAtLeast(baseVerdict, "good")) baseVerdict = "acceptable";
-  if (runtimeEvidence.comparison !== "compared" && verdictAtLeast(baseVerdict, "good")) baseVerdict = "acceptable";
-  const excellentEligible =
-    !isAmbitiousReview(targetReview) ||
-    (dimensions.antiSlop === 4 &&
-      Boolean(targetReview.ledger.context.signatureProof) &&
-      runtimeEvidence.observation === "observed" &&
-      runtimeEvidence.capture === "captured" &&
-      runtimeEvidence.comparison === "compared");
+  const observedDimensions = assessmentDimensions.filter((dimension) => observed.has(dimension));
+  const failedRequiredGates = targetReview.gates.filter((gate) => gate.status === "fail" && gate.required !== false);
+  const highestSeverity = targetReview.findings.length ? targetReview.findings[0].severity : null;
+  const integrityBlocked = failedRequiredGates.length > 0 || highestSeverity === "P0" || highestSeverity === "P1";
   return {
-    dimensions,
-    dimensionEvidence,
-    total,
-    maxTotal: knownScores.length * 4,
-    coverage,
-    average,
-    verdict: failedRequiredGates.length ? "blocked" : baseVerdict === "excellent" && !excellentEligible ? "good" : baseVerdict,
-    blockedGates: failedRequiredGates.map((gate) => gate.gate),
+    result: failedRequiredGates.length ? "blocked" : targetReview.findings.length ? "findings" : "evidence-collected",
+    highestSeverity,
+    observedDimensions,
+    unknownDimensions: assessmentDimensions.filter((dimension) => !observed.has(dimension)),
+    evidence: {
+      static: {
+        observation: options.path ? ((targetReview.static?.files || 0) > 0 ? "observed" : "blocked") : "not-requested",
+        files: Number(targetReview.static?.files || 0),
+      },
+      runtime: {
+        observation: runtimeEvidence.observation,
+        capture: runtimeEvidence.capture,
+        comparison: runtimeEvidence.comparison,
+        successfulRuns: runtimeEvidence.successfulRuns,
+        failedRuns: runtimeEvidence.totalRuns - runtimeEvidence.successfulRuns,
+      },
+    },
+    claims: {
+      productionIntegrity: integrityBlocked ? "blocked" : "limited",
+      taskEffectiveness: "not-assessed",
+      distinctiveness: "not-assessed",
+    },
   };
 }
 
@@ -897,18 +872,6 @@ function runtimeEvidenceSummary(targetReview) {
   return runtimeEvidenceForResults(targetReview.runtime?.results || []);
 }
 
-function isAmbitiousReview(targetReview) {
-  const value = [
-    targetReview.ledger.context.register,
-    targetReview.ledger.context.surface,
-    targetReview.ledger.changeAmbition,
-    targetReview.ledger.context.signatureProof,
-  ]
-    .filter(Boolean)
-    .join(" ");
-  return options.requireSignature || /\b(?:brand|portfolio|prototype|greenfield|redesign|standout|incredible|premium|not-generic|not generic|landing|hero)\b/i.test(value);
-}
-
 function evaluateExpectations(targetReview, targetOptions) {
   const expectations = [];
   for (const id of targetOptions.expectFindings) {
@@ -919,26 +882,19 @@ function evaluateExpectations(targetReview, targetOptions) {
       detail: found ? "finding present" : "finding missing",
     });
   }
-  if (targetOptions.expectVerdict) {
-    const found = targetReview.score.verdict === targetOptions.expectVerdict;
+  if (targetOptions.expectAssessment) {
+    const found = targetReview.assessment.result === targetOptions.expectAssessment;
     expectations.push({
-      expectation: `verdict:${targetOptions.expectVerdict}`,
+      expectation: `assessment:${targetOptions.expectAssessment}`,
       status: found ? "pass" : "fail",
-      detail: `actual ${targetReview.score.verdict}`,
+      detail: `actual ${targetReview.assessment.result}`,
     });
   }
   return expectations;
 }
 
-function verdictAtLeast(actual, minimum) {
-  if (actual === "blocked") return false;
-  return verdictRank[actual] >= verdictRank[minimum];
-}
-
 function renderMarkdown(targetReview, jsonPath) {
   const screenshotPaths = (targetReview.runtime?.results || []).map((result) => result.screenshot).filter(Boolean);
-  const dimensionScore = (value) => (value === null ? "unknown" : String(value));
-  const scoreTotal = targetReview.score.total === null ? "unknown" : `${targetReview.score.total}/${targetReview.score.maxTotal}`;
   const lines = [
     "# Interface Review",
     "",
@@ -947,8 +903,11 @@ function renderMarkdown(targetReview, jsonPath) {
     `Target URL: ${targetReview.target.url || "n/a"}`,
     `Review JSON: ${path.relative(root, jsonPath)}`,
     "",
-    `Score: accessibility/performance/theming/responsive/anti-slop = ${dimensionScore(targetReview.score.dimensions.accessibility)}/${dimensionScore(targetReview.score.dimensions.performance)}/${dimensionScore(targetReview.score.dimensions.themingDesignSystem)}/${dimensionScore(targetReview.score.dimensions.responsiveContent)}/${dimensionScore(targetReview.score.dimensions.antiSlop)}, observed total ${scoreTotal}, coverage ${Math.round(targetReview.score.coverage * 100)}%`,
-    `Verdict: ${targetReview.score.verdict}`,
+    `Assessment: ${targetReview.assessment.result}`,
+    `Highest severity: ${targetReview.assessment.highestSeverity || "none"}`,
+    `Observed dimensions: ${targetReview.assessment.observedDimensions.join(", ") || "none"}`,
+    `Unknown dimensions: ${targetReview.assessment.unknownDimensions.join(", ") || "none"}`,
+    `Claims: production integrity=${targetReview.assessment.claims.productionIntegrity}; task effectiveness=${targetReview.assessment.claims.taskEffectiveness}; distinctiveness=${targetReview.assessment.claims.distinctiveness}`,
     "",
     "Ledger:",
     `- register: ${targetReview.ledger.context.register}`,
@@ -972,7 +931,7 @@ function renderMarkdown(targetReview, jsonPath) {
     "",
     "Forensic design pass:",
     "- This harness is an evidence pack, not the final design critique.",
-    "- For design analysis, screenshot critique, UI audit, or roast, complete `SKILLS/ruthless-designer/references/critique.md` before writing the final verdict.",
+    "- For design analysis, screenshot critique, UI audit, or roast, complete `SKILLS/ruthless-designer/references/critique.md` before writing the final assessment.",
     `- Cross-reference: screenshots=${screenshotPaths.length ? screenshotPaths.join(", ") : "none"}; source=${targetReview.target.path || "none"}; blockers=${targetReview.ledger.blockers.length ? "see ledger" : "none"}`,
     "- Required read: product intent, main user task, intended hierarchy, accidental priority, visual problem, source/code cause, concrete fix, first five cuts.",
     "",
@@ -1064,8 +1023,6 @@ function parseArgs(args) {
     actions: null,
     actionGroups: [],
     failOn: null,
-    failVerdict: null,
-    failUnderScore: null,
     fail: false,
     timeout: 15000,
     waitUntil: "domcontentloaded",
@@ -1080,7 +1037,7 @@ function parseArgs(args) {
     signatureProof: null,
     signatureSelector: null,
     expectFindings: [],
-    expectVerdict: null,
+    expectAssessment: null,
     asyncUi: false,
     states: [],
     viewports: [],
@@ -1099,8 +1056,14 @@ function parseArgs(args) {
     else if (name === "--actions") options.actions = nextValue();
     else if (name === "--action-group") options.actionGroups.push(nextValue());
     else if (name === "--fail-on") options.failOn = normalizeSeverity(nextValue());
-    else if (name === "--fail-verdict") options.failVerdict = normalizeVerdict(nextValue());
-    else if (name === "--fail-under-score") options.failUnderScore = Number(nextValue());
+    else if (name === "--fail-verdict") {
+      console.error("--fail-verdict was removed. Use --fail-on for finding severity, --require-runtime for evidence gates, or --expect-assessment for an expected review result.");
+      process.exit(2);
+    }
+    else if (name === "--fail-under-score") {
+      console.error("--fail-under-score was removed. Use --fail-on for finding severity, --require-runtime for evidence gates, or --expect-assessment for an expected review result.");
+      process.exit(2);
+    }
     else if (arg === "--fail") options.fail = true;
     else if (name === "--timeout") options.timeout = Number(nextValue());
     else if (name === "--wait-until") options.waitUntil = normalizeWaitUntil(nextValue());
@@ -1115,7 +1078,11 @@ function parseArgs(args) {
     else if (name === "--signature-proof") options.signatureProof = nextValue();
     else if (name === "--signature-selector") options.signatureSelector = nextValue();
     else if (name === "--expect-finding") options.expectFindings.push(nextValue());
-    else if (name === "--expect-verdict") options.expectVerdict = normalizeExpectedVerdict(nextValue());
+    else if (name === "--expect-verdict") {
+      console.error("--expect-verdict was removed. Use --fail-on for finding severity, --require-runtime for evidence gates, or --expect-assessment for an expected review result.");
+      process.exit(2);
+    }
+    else if (name === "--expect-assessment") options.expectAssessment = normalizeExpectedAssessment(nextValue());
     else if (arg === "--async-ui") options.asyncUi = true;
     else if (name === "--states") options.states = nextValue().split(",").map((state) => state.trim()).filter(Boolean);
     else if (name === "--viewport") {
@@ -1138,10 +1105,6 @@ function parseArgs(args) {
       { width: 1280, height: 800 },
       { width: 390, height: 844 },
     ];
-  }
-  if (options.failUnderScore !== null && (!Number.isFinite(options.failUnderScore) || options.failUnderScore < 0 || options.failUnderScore > 20)) {
-    console.error(`Invalid --fail-under-score ${options.failUnderScore}; expected a number from 0 to 20`);
-    process.exit(2);
   }
   if (!Number.isFinite(options.settleMs) || options.settleMs < 0) {
     console.error(`Invalid --settle-ms ${options.settleMs}; expected a non-negative number`);
@@ -1176,22 +1139,13 @@ function normalizeSeverity(value) {
   return severity;
 }
 
-function normalizeVerdict(value) {
-  const verdict = String(value || "").toLowerCase();
-  if (!Object.hasOwn(verdictRank, verdict)) {
-    console.error(`Invalid verdict ${value}; expected critical, poor, acceptable, good, or excellent`);
+function normalizeExpectedAssessment(value) {
+  const assessment = String(value || "").toLowerCase();
+  if (!["blocked", "findings", "evidence-collected"].includes(assessment)) {
+    console.error(`Invalid --expect-assessment ${value}; expected blocked, findings, or evidence-collected`);
     process.exit(2);
   }
-  return verdict;
-}
-
-function normalizeExpectedVerdict(value) {
-  const verdict = String(value || "").toLowerCase();
-  if (verdict !== "blocked" && !Object.hasOwn(verdictRank, verdict)) {
-    console.error(`Invalid expected verdict ${value}; expected blocked, critical, poor, acceptable, good, or excellent`);
-    process.exit(2);
-  }
-  return verdict;
+  return assessment;
 }
 
 function normalizeWaitUntil(value) {
@@ -1269,5 +1223,5 @@ function redactReportValue(value) {
 }
 
 function usage() {
-  console.error("Usage: node run-interface-review.mjs --path <file-or-dir> [--url <local-url>] [--out <dir>] [--actions actions.json] [--action-group name=actions.json] [--viewport 1280x800] [--cls-threshold 0.1|--strict-cls] [--fail-on=P1|P2|P3] [--fail-verdict=good] [--fail-under-score=N] [--require-runtime] [--require-signature] [--signature-proof text --signature-selector selector] [--expect-finding rule-id] [--fail]");
+  console.error("Usage: node run-interface-review.mjs --path <file-or-dir> [--url <local-url>] [--out <dir>] [--actions actions.json] [--action-group name=actions.json] [--viewport 1280x800] [--cls-threshold 0.1|--strict-cls] [--fail-on=P1|P2|P3] [--require-runtime] [--require-signature] [--signature-proof text --signature-selector selector] [--expect-finding rule-id] [--expect-assessment=blocked|findings|evidence-collected] [--fail]");
 }

@@ -30,6 +30,7 @@ Do not use it for isolated component fixes, small visual bugs, accessibility/per
 - Requires one useful, product-specific signature move instead of decorative novelty.
 - Calibrates expression, density, motion, familiarity, confidence, and emotional tone from the audience and task instead of equating product with beige restraint.
 - Makes product state, real content, verified assets, and responsive pressure part of the design.
+- Hardens production claims against stale writes, cross-tab conflicts, hydration drift, lost focus, hostile viewports, failed media, and missing browser capabilities.
 - Keeps critique brutal without letting jokes replace evidence.
 - Preserves mechanisms that already work and limits the first cuts to the root causes that actually exist.
 - Separates `observed`, `captured`, `compared`, `passed`, and `blocked` evidence.
@@ -44,7 +45,7 @@ With the Skills CLI:
 npx skills add gvastethecreator/ruthless-designer-skill
 ```
 
-Manual install on macOS/Linux:
+Portable copy install on macOS/Linux:
 
 ```bash
 target="${CODEX_HOME:-$HOME/.codex}/skills/ruthless-designer"
@@ -52,7 +53,7 @@ mkdir -p "$target"
 cp -R ./SKILLS/ruthless-designer/. "$target/"
 ```
 
-Manual install on PowerShell:
+Portable copy install on PowerShell:
 
 ```powershell
 $skillsRoot = if ($env:CODEX_HOME) { Join-Path $env:CODEX_HOME "skills" } else { Join-Path $env:USERPROFILE ".codex\skills" }
@@ -60,6 +61,8 @@ $target = Join-Path $skillsRoot "ruthless-designer"
 New-Item -ItemType Directory -Force $target | Out-Null
 Copy-Item -Recurse -Force .\SKILLS\ruthless-designer\* $target
 ```
+
+Those copy commands are for consumers without the canonical checkout. On the maintainer machine, `D:\DEV\ruthless-designer\SKILLS\ruthless-designer` is the only editable skill directory. `agents-matrix`, `.agents`, and `.codex` must be direct junctions to it; never edit or synchronize a second physical copy.
 
 ## Usage
 
@@ -106,6 +109,8 @@ The detector fails closed for missing targets and zero compatible files. Use `--
 
 Common options:
 
+- `--list-rules`: inspect the executable rule catalog without scanning a target.
+- `--explain <rule-id>`: inspect a rule's severity, confidence, applicability, and contextual exceptions.
 - `--changed-only`: staged, unstaged, and untracked non-ignored files.
 - `--include-ignored`: include normally skipped test/fixture/generated/vendor directories.
 - `--allowlist` / `--baseline`: suppress stable finding fingerprints.
@@ -134,42 +139,50 @@ Runtime action files support `assert-visible`, `assert-text`, and `assert-url`. 
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --url http://localhost:5173 --require-signature --signature-proof "conflict rail is present" --signature-selector "[data-signature='conflict-rail']" --out ./output/ruthless-designer/signature
 ```
 
-Partial evidence leaves dimensions `unknown`. `--fail-under-score` fails when coverage is incomplete, and source plus screenshots cannot earn a high verdict while comparison remains `not-compared`.
+The report uses a nonnumeric `assessment`: `blocked` when a required evidence gate fails, `findings` when the package contains static or runtime findings, and `evidence-collected` when evidence was gathered without findings. It also records the highest severity, observed and unknown dimensions, and deliberately limited claims for production integrity, task effectiveness, and distinctiveness. `evidence-collected` is not a quality verdict; source plus screenshots still cannot prove that users understand the work or that the design is distinctive.
+
+Gate automation with `--fail-on`, `--require-runtime`, `--require-signature`, and fixture-only `--expect-assessment`. The old `--fail-under-score`, `--fail-verdict`, and `--expect-verdict` flags are rejected because their numeric/verdict model claimed precision the harness did not possess.
 
 Runtime screenshots and logs can contain private product data. The harness removes URL credentials, query strings, fragments, bearer tokens, and common secret assignments from its reports, but review artifacts before sharing them.
 
 ## Check The Active Installation
 
-Codex may be loading a copied or junctioned skill that has drifted from this repository. Diagnose it with:
+Codex may be loading a copied or misdirected skill. Diagnose the required junction topology with:
 
 ```bash
 npm run doctor
 ```
 
-Use `--check` when drift should fail CI or a local gate:
+Use `--check` when any missing, copied, or misdirected target should fail:
 
 ```bash
 node scripts/doctor-skill.mjs --check
 ```
 
-Preview a local installation sync:
+Preview direct junctions for both `.agents` and `.codex`:
 
 ```bash
 npm run install:local
 ```
 
-Write and prune stale files only after inspecting the dry run:
+Create missing junctions after inspecting the dry run:
 
 ```bash
-node scripts/install-local-skill.mjs --write --prune
+node scripts/install-local-skill.mjs --write
 ```
 
-The installer resolves linked parents as well as the final target and refuses to write through a symlink/junction unless `--allow-linked-target` is supplied explicitly. It also rejects nested links that would let a copied file escape the skill directory. Those guards exist because silently dirtying another source repository is not installation; it is vandalism with a copy command.
+Replacing a real directory or a junction to the wrong source requires explicit authority:
+
+```bash
+node scripts/install-local-skill.mjs --write --replace
+```
+
+The installer validates every destination before mutating any of them, rejects nested/same-source paths, and creates direct directory junctions on Windows. The doctor reports healthy only when every required destination resolves to the canonical skill; byte-identical copies still fail because copies can drift.
 
 ## Project Structure
 
 - [`SKILL.md`](./SKILLS/ruthless-designer/SKILL.md): compact trigger, voice, state machine, and route selector.
-- [`references/`](./SKILLS/ruthless-designer/references): creation, direction, product, brand, data/information, visual craft, critique, motion, proof, tooling, and contrasting examples.
+- [`references/`](./SKILLS/ruthless-designer/references): creation, direction, product, production hardening, brand, data/information, visual craft, critique, motion implementation, proof, tooling, and contrasting examples.
 - [`scripts/`](./SKILLS/ruthless-designer/scripts): dependency-free static detector and runtime evidence harness.
 - [`tests/`](./tests): positive, negative, adversarial, validator, doctor, and installer regression tests.
 - [`evals/`](./evals): trigger and behavioral contracts for clean-context forward testing.

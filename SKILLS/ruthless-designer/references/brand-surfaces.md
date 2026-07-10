@@ -86,8 +86,6 @@ Use screenshots, URLs, videos, HTML exports, brand assets, and generated section
 - Video: inspect beats—purpose, layout, motion, interaction, timing, and implementation risk.
 - Inspiration set: use a few references with a reason for each, not a compressed moodboard graveyard.
 
-Record source, role, extracted system, constraints, what not to copy, and proof gaps. Convert observations into tokens, components, layout rules, and proof targets. Copy the system logic, not the costume.
-
 ## Visual Voice
 
 - Choose type from an audience/offer axis, not fashion. Use contrast deliberately; keep long display copy below billboard scale.

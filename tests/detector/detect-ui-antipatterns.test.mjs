@@ -30,6 +30,60 @@ function runGit(cwd, args) {
   return spawnSync("git", args, { cwd, encoding: "utf8" });
 }
 
+test("--list-rules exposes the executable rule catalog without a scan target", () => {
+  const textResult = runDetector(["--list-rules"]);
+  const result = runDetector(["--json", "--list-rules"]);
+
+  assert.equal(textResult.status, 0, textResult.stderr);
+  assert.match(textResult.stdout, /^UI anti-pattern rules \(\d+\)/);
+  assert.match(textResult.stdout, /\[P2\] gradient-text/);
+  assert.equal(result.status, 0, result.stderr);
+  const payload = JSON.parse(result.stdout);
+  assert.ok(Array.isArray(payload.rules));
+  const ids = payload.rules.map((rule) => rule.id);
+  assert.ok(ids.includes("gradient-text"));
+  assert.ok(ids.includes("missing-reduced-motion-guard"));
+  assert.equal(new Set(ids).size, ids.length);
+});
+
+test("--explain returns complete rule metadata and contextual exceptions without a scan target", () => {
+  const textResult = runDetector(["--explain", "missing-reduced-transparency-fallback"]);
+  const result = runDetector(["--json", "--explain", "missing-reduced-transparency-fallback"]);
+
+  assert.equal(textResult.status, 0, textResult.stderr);
+  assert.match(textResult.stdout, /^missing-reduced-transparency-fallback \[P2\]/);
+  assert.match(textResult.stdout, /Exceptions:\r?\n-/);
+  assert.equal(result.status, 0, result.stderr);
+  const rule = JSON.parse(result.stdout);
+  assert.deepEqual(Object.keys(rule), [
+    "id",
+    "category",
+    "severity",
+    "confidence",
+    "applicability",
+    "message",
+    "exceptions",
+  ]);
+  assert.equal(rule.id, "missing-reduced-transparency-fallback");
+  assert.equal(rule.category, "accessibility");
+  assert.equal(rule.severity, "P2");
+  assert.equal(rule.confidence, "medium");
+  assert.equal(rule.applicability, "contextual");
+  assert.ok(Array.isArray(rule.exceptions));
+  assert.match(rule.exceptions.join(" "), /documented design system|explicit product intent/i);
+  assert.match(rule.exceptions.join(" "), /generated.*vendor.*fixture/i);
+  assert.match(rule.exceptions.join(" "), /decorative blur.*functional chrome/i);
+});
+
+test("--explain rejects an unknown rule id with an actionable error", () => {
+  const result = runDetector(["--explain", "invented-rule"]);
+
+  assert.equal(result.status, 2);
+  assert.equal(result.stdout, "");
+  assert.match(result.stderr, /unknown rule id: invented-rule/i);
+  assert.match(result.stderr, /--list-rules/i);
+});
+
 test("fails closed when a requested target does not exist", () => {
   const result = runDetector(["--json", "tests/detector/does-not-exist"]);
 
@@ -201,6 +255,30 @@ test("context-dependent motion heuristics do not escalate themselves to P1", () 
       assert.equal(finding.severity, "P2");
       assert.equal(finding.applicability, "contextual");
     }
+  }));
+
+test("Framer Motion shorthand remains a low-severity profiling lead, not a categorical prescription", () =>
+  withTempDir((directory) => {
+    const component = path.join(directory, "motion-card.tsx");
+    fs.writeFileSync(component, "export const Card = () => <motion.div animate={{ x: 24, scale: 1.05 }} />;\n");
+
+    const scan = runDetector(["--json", component]);
+    assert.equal(scan.status, 0, scan.stderr);
+    const finding = JSON.parse(scan.stdout).findings.find(
+      (candidate) => candidate.id === "framer-motion-shorthand-risk",
+    );
+    assert.ok(finding);
+    assert.equal(finding.severity, "P3");
+    assert.equal(finding.confidence, "low");
+    assert.equal(finding.applicability, "contextual");
+    assert.match(finding.message, /profile.*representative load/i);
+    assert.doesNotMatch(finding.message, /use full transform strings/i);
+
+    const explained = runDetector(["--json", "--explain", "framer-motion-shorthand-risk"]);
+    assert.equal(explained.status, 0, explained.stderr);
+    const exceptions = JSON.parse(explained.stdout).exceptions.join(" ");
+    assert.match(exceptions, /framework primitive or library/i);
+    assert.match(exceptions, /register.*frequency.*distance/i);
   }));
 
 test("finding paths and fingerprints stay stable across working directories", () =>

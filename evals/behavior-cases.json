@@ -150,5 +150,90 @@
       "praise-sandwich the verdict",
       "replace the scrubber merely to make the redesign look more original"
     ]
+  },
+  {
+    "id": "behavior-production-settings-concurrency",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to implement a production-ready multilingual account-settings surface rendered on the server. Saving should feel immediate, but the network can be slow and the same account may be edited in another tab.",
+    "must": [
+      "treat server validation and authorization as final",
+      "define optimistic pending, reconciliation, rejection rollback, and retry behavior",
+      "prevent stale responses from overwriting newer state",
+      "define an explicit cross-tab conflict or synchronization contract",
+      "keep locale, time zone, identifiers, and initial values deterministic across SSR hydration"
+    ],
+    "must_not": [
+      "leave rejected optimistic values presented as saved",
+      "assume arrival order or last-write-wins is correct",
+      "format server and client values with implicit machine locale"
+    ]
+  },
+  {
+    "id": "behavior-production-mobile-drawer-media",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to harden a production mobile article whose navigation drawer overlays image-led content on notched phones. The current drawer leaks background scroll, loses focus on close, and delays the lead image.",
+    "must": [
+      "keep controls clear of safe-area insets",
+      "define modal focus entry, escape, containment, and return",
+      "scope touch-action and overscroll containment without disabling zoom or browser gestures globally",
+      "reserve responsive media dimensions and prioritize the decision-critical lead image",
+      "provide meaningful image failure and narrow-layout behavior"
+    ],
+    "must_not": [
+      "disable user scaling",
+      "return focus to body after the drawer closes",
+      "preload the whole image gallery or lazy-load the lead image"
+    ]
+  },
+  {
+    "id": "behavior-webgl-prototype-resilience",
+    "mode": "create",
+    "prompt": "Use $ruthless-designer to implement a playable WebGL material prototype with an export action. It must survive unsupported graphics, reduced motion, tab/background transitions, and export failure without producing a blank decorative shell.",
+    "must": [
+      "make the playable artifact visible and nonblank before calling the prototype successful",
+      "feature-detect WebGL and provide an honest static or reduced capability fallback",
+      "preserve product identity and task clarity under reduced motion",
+      "pause or throttle offscreen work and dispose graphics resources on teardown",
+      "preserve the artifact and provide recovery when export fails"
+    ],
+    "must_not": [
+      "treat successful canvas creation as proof of visible output",
+      "burn render cycles while offscreen without product need",
+      "hide export failure in a disappearing toast"
+    ]
+  },
+  {
+    "id": "behavior-motion-implementation-traps",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to broadly redesign and implement a motion-heavy media inspector whose core workflow includes a toolbar with neighboring tooltips, an animated SVG mode glyph, and a shared-layout selection indicator that moves between tools.",
+    "must": [
+      "delay the first pointer tooltip but sharply reduce delay between neighboring triggers while keeping keyboard disclosure immediate",
+      "verify the SVG bounding box, transform-box, transform-origin, and whether a wrapper group is required",
+      "give the shared-layout selection a unique stable identity and coordinate entry and exit order",
+      "animate between compatible values and prevent false replay of saved state with initial false where appropriate",
+      "test the shipped production path and reduced-motion result, profiling representative hardware when complexity or evidence makes performance a risk"
+    ],
+    "must_not": [
+      "force keyboard users through the pointer tooltip delay",
+      "reuse one layout identity for unrelated objects",
+      "treat development-mode stutter or one flagship machine as performance proof"
+    ]
+  },
+  {
+    "id": "behavior-reference-led-product-provenance",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to redesign a product editor from supplied screenshots and a short interaction video. Extract the underlying system without cloning its visual costume.",
+    "must": [
+      "record each decisive source and its role",
+      "preserve viewport, route or state, theme, timestamp or video frame, and crop boundaries",
+      "name the extracted system, constraints, what not to copy, and proof gaps",
+      "convert observations into tokens, components, layout rules, and proof targets",
+      "compare the implemented result against reproducible reference evidence"
+    ],
+    "must_not": [
+      "treat an unlabelled crop as reproducible evidence",
+      "copy the reference costume without adapting its system to the product task",
+      "invent missing source context or provenance"
+    ]
   }
 ]

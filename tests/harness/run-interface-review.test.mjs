@@ -109,7 +109,28 @@ test("a missing target writes a blocked review and exits as invalid input", () =
   const review = readReview(outDir);
   assert.equal(review.target.path, path.resolve(missing));
   assert.equal(review.gates.find((gate) => gate.gate === "static-detector")?.status, "fail");
-  assert.equal(review.score.verdict, "blocked");
+  assert.equal(Object.hasOwn(review, "score"), false);
+  assert.deepEqual(review.assessment, {
+    result: "blocked",
+    highestSeverity: null,
+    observedDimensions: [],
+    unknownDimensions: ["accessibility", "performance", "themingDesignSystem", "responsiveContent", "antiSlop"],
+    evidence: {
+      static: { observation: "blocked", files: 0 },
+      runtime: {
+        observation: "not-observed",
+        capture: "not-captured",
+        comparison: "not-compared",
+        successfulRuns: 0,
+        failedRuns: 0,
+      },
+    },
+    claims: {
+      productionIntegrity: "blocked",
+      taskEffectiveness: "not-assessed",
+      distinctiveness: "not-assessed",
+    },
+  });
   assert.match(review.ledger.blockers[0]?.reason || "", /does not exist/i);
 });
 
@@ -126,9 +147,11 @@ test("a detector scan with zero compatible files cannot certify the target", () 
   const gate = review.gates.find((item) => item.gate === "static-detector");
   assert.equal(gate?.status, "fail");
   assert.match(gate?.detail || "", /zero|no compatible files/i);
-  assert.equal(review.score.verdict, "blocked");
-  assert.equal(review.score.total, null);
-  assert.deepEqual(Object.values(review.score.dimensions), [null, null, null, null, null]);
+  assert.equal(review.assessment.result, "blocked");
+  assert.equal(review.assessment.highestSeverity, null);
+  assert.deepEqual(review.assessment.observedDimensions, []);
+  assert.equal(review.assessment.evidence.static.observation, "blocked");
+  assert.equal(review.assessment.claims.productionIntegrity, "blocked");
 });
 
 test("a blocked detector is reported as blocked evidence", () => {
@@ -144,13 +167,15 @@ test("a blocked detector is reported as blocked evidence", () => {
   assert.equal(result.status, 1, result.stderr || result.stdout);
   const review = readReview(outDir);
   assert.equal(review.gates.find((gate) => gate.gate === "static-detector")?.status, "fail");
-  assert.equal(review.score.verdict, "blocked");
-  assert.equal(review.score.total, null);
+  assert.equal(Object.hasOwn(review, "score"), false);
+  assert.equal(review.assessment.result, "blocked");
+  assert.equal(review.assessment.evidence.static.observation, "blocked");
+  assert.equal(review.assessment.claims.productionIntegrity, "blocked");
   assert.match(review.ledger.blockers[0]?.reason || "", /cannot find module|detector exited/i);
 });
 
-test("an unresolved P1 fails its gate and cannot receive a good verdict", () => {
-  const sandbox = tempDir("p1-score");
+test("an unresolved P1 reports findings and blocks the production-integrity claim", () => {
+  const sandbox = tempDir("p1-assessment");
   const target = path.join(repoRoot, "SKILLS", "ruthless-designer", "fixtures", "deep-review-bad.tsx");
   const outDir = path.join(sandbox, "review");
 
@@ -159,9 +184,12 @@ test("an unresolved P1 fails its gate and cannot receive a good verdict", () => 
   assert.equal(result.status, 0, result.stderr || result.stdout);
   const review = readReview(outDir);
   assert.equal(review.gates.find((gate) => gate.gate === "p1-unresolved")?.status, "fail");
-  assert.equal(review.score.verdict, "poor");
-  assert.ok(!["good", "excellent"].includes(review.score.verdict));
-  assert.ok(Object.values(review.score.dimensions).every((value) => value === null || value <= 3));
+  assert.equal(review.assessment.result, "findings");
+  assert.equal(review.assessment.highestSeverity, "P1");
+  assert.equal(review.assessment.claims.productionIntegrity, "blocked");
+  assert.equal(review.assessment.claims.taskEffectiveness, "not-assessed");
+  assert.equal(review.assessment.claims.distinctiveness, "not-assessed");
+  assert.equal(Object.hasOwn(review, "score"), false);
 });
 
 test("a clean static scan is observed evidence, not visual certification", () => {
@@ -175,35 +203,149 @@ test("a clean static scan is observed evidence, not visual certification", () =>
   assert.equal(result.status, 0, result.stderr || result.stdout);
   const review = readReview(outDir);
   assert.equal(review.gates.find((gate) => gate.gate === "static-detector")?.status, "pass");
-  assert.equal(review.score.verdict, "acceptable");
-  assert.deepEqual(review.score.dimensions, {
-    accessibility: null,
-    performance: null,
-    themingDesignSystem: 3,
-    responsiveContent: null,
-    antiSlop: 3,
-  });
-  assert.equal(review.score.total, 6);
-  assert.equal(review.score.maxTotal, 8);
-  assert.equal(review.score.coverage, 0.4);
+  assert.equal(review.assessment.result, "evidence-collected");
+  assert.deepEqual(review.assessment.observedDimensions, ["themingDesignSystem", "antiSlop"]);
+  assert.deepEqual(review.assessment.unknownDimensions, ["accessibility", "performance", "responsiveContent"]);
+  assert.deepEqual(review.assessment.evidence.static, { observation: "observed", files: 1 });
+  assert.equal(review.assessment.claims.productionIntegrity, "limited");
+  assert.equal(review.assessment.claims.taskEffectiveness, "not-assessed");
+  assert.equal(review.assessment.claims.distinctiveness, "not-assessed");
   assert.equal(review.runtime, null);
+  const summary = JSON.parse(result.stdout);
+  const markdown = fs.readFileSync(path.join(outDir, "README.md"), "utf8");
+  assert.equal(Object.hasOwn(summary, "score"), false);
+  assert.doesNotMatch(result.stdout, /\b(?:score|good|excellent)\b/i);
+  assert.doesNotMatch(markdown, /\b(?:score|good|excellent)\b/i);
 });
 
-test("fail-under-score fails closed when score coverage is incomplete", () => {
-  const sandbox = tempDir("static-fail-under");
+test("fail-under-score is rejected with assessment-era replacements", () => {
+  const sandbox = tempDir("legacy-fail-under");
   const target = path.join(sandbox, "component.tsx");
   const outDir = path.join(sandbox, "review");
   fs.writeFileSync(target, "export const Component = () => <main><h1>Account</h1></main>;\n");
 
   const result = runHarness(["--path", target, "--out", outDir, "--fail-under-score", "1"]);
 
-  assert.equal(result.status, 1, result.stderr || result.stdout);
-  const review = readReview(outDir);
-  assert.equal(review.score.total, 6);
-  assert.equal(review.score.coverage, 0.4);
+  assert.equal(result.status, 2, result.stderr || result.stdout);
+  assert.match(result.stderr, /--fail-under-score.*removed/i);
+  assert.match(result.stderr, /--fail-on/);
+  assert.match(result.stderr, /--require-runtime/);
+  assert.match(result.stderr, /--expect-assessment/);
 });
 
-test("clean static and runtime capture cannot earn a high verdict without comparison", () => {
+test("fail-verdict is rejected with assessment-era replacements", () => {
+  const sandbox = tempDir("legacy-fail-verdict");
+  const target = path.join(sandbox, "component.tsx");
+  fs.writeFileSync(target, "export const Component = () => <main><h1>Account</h1></main>;\n");
+
+  const result = runHarness(["--path", target, "--fail-verdict", "good"]);
+
+  assert.equal(result.status, 2, result.stderr || result.stdout);
+  assert.match(result.stderr, /--fail-verdict.*removed/i);
+  assert.match(result.stderr, /--fail-on/);
+  assert.match(result.stderr, /--require-runtime/);
+  assert.match(result.stderr, /--expect-assessment/);
+});
+
+test("expect-verdict is rejected in favor of expect-assessment", () => {
+  const sandbox = tempDir("legacy-expect-verdict");
+  const target = path.join(sandbox, "component.tsx");
+  fs.writeFileSync(target, "export const Component = () => <main><h1>Account</h1></main>;\n");
+
+  const result = runHarness(["--path", target, "--expect-verdict", "acceptable"]);
+
+  assert.equal(result.status, 2, result.stderr || result.stdout);
+  assert.match(result.stderr, /--expect-verdict.*removed/i);
+  assert.match(result.stderr, /--fail-on/);
+  assert.match(result.stderr, /--require-runtime/);
+  assert.match(result.stderr, /--expect-assessment/);
+});
+
+test("expect-assessment records a passing evidence-collected expectation", () => {
+  const sandbox = tempDir("expect-assessment");
+  const target = path.join(sandbox, "component.tsx");
+  const outDir = path.join(sandbox, "review");
+  fs.writeFileSync(target, "export const Component = () => <main><h1>Account</h1></main>;\n");
+
+  const result = runHarness(["--path", target, "--out", outDir, "--expect-assessment", "evidence-collected"]);
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const review = readReview(outDir);
+  assert.deepEqual(review.expectations.find((item) => item.expectation === "assessment:evidence-collected"), {
+    expectation: "assessment:evidence-collected",
+    status: "pass",
+    detail: "actual evidence-collected",
+  });
+});
+
+test("expect-assessment can smoke-test a known blocked package without hiding its failed gate", () => {
+  const sandbox = tempDir("expect-assessment-blocked");
+  const target = path.join(sandbox, "component.tsx");
+  const outDir = path.join(sandbox, "review");
+  fs.writeFileSync(target, "export const Component = () => <main><h1>Account</h1></main>;\n");
+
+  const result = runHarness([
+    "--path",
+    target,
+    "--out",
+    outDir,
+    "--require-runtime",
+    "--expect-assessment",
+    "blocked",
+  ]);
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const review = readReview(outDir);
+  assert.equal(review.assessment.result, "blocked");
+  assert.equal(review.gates.find((gate) => gate.gate === "runtime-visual")?.status, "fail");
+  assert.deepEqual(review.expectations.find((item) => item.expectation === "assessment:blocked"), {
+    expectation: "assessment:blocked",
+    status: "pass",
+    detail: "actual blocked",
+  });
+
+  const strictResult = runHarness([
+    "--path",
+    target,
+    "--out",
+    path.join(sandbox, "strict-review"),
+    "--require-runtime",
+    "--expect-assessment",
+    "blocked",
+    "--fail",
+  ]);
+  assert.equal(strictResult.status, 1, strictResult.stderr || strictResult.stdout);
+});
+
+test("expect-assessment mismatch records a failure and exits one", () => {
+  const sandbox = tempDir("expect-assessment-mismatch");
+  const target = path.join(sandbox, "component.tsx");
+  const outDir = path.join(sandbox, "review");
+  fs.writeFileSync(target, "export const Component = () => <main><h1>Account</h1></main>;\n");
+
+  const result = runHarness(["--path", target, "--out", outDir, "--expect-assessment", "findings"]);
+
+  assert.equal(result.status, 1, result.stderr || result.stdout);
+  const review = readReview(outDir);
+  assert.deepEqual(review.expectations.find((item) => item.expectation === "assessment:findings"), {
+    expectation: "assessment:findings",
+    status: "fail",
+    detail: "actual evidence-collected",
+  });
+});
+
+test("expect-assessment rejects unknown results as invalid input", () => {
+  const sandbox = tempDir("expect-assessment-invalid");
+  const target = path.join(sandbox, "component.tsx");
+  fs.writeFileSync(target, "export const Component = () => <main><h1>Account</h1></main>;\n");
+
+  const result = runHarness(["--path", target, "--expect-assessment", "excellent"]);
+
+  assert.equal(result.status, 2, result.stderr || result.stdout);
+  assert.match(result.stderr, /blocked, findings, or evidence-collected/i);
+});
+
+test("clean static and runtime evidence remains limited rather than auto-certified", () => {
   const sandbox = tempDir("captured-not-compared");
   const target = path.join(sandbox, "component.tsx");
   const outDir = path.join(sandbox, "review");
@@ -217,9 +359,20 @@ test("clean static and runtime capture cannot earn a high verdict without compar
 
   assert.equal(result.status, 0, result.stderr || result.stdout);
   const review = readReview(outDir);
-  assert.equal(review.score.coverage, 1);
+  assert.equal(review.assessment.result, "evidence-collected");
+  assert.deepEqual(review.assessment.observedDimensions, [
+    "accessibility",
+    "performance",
+    "themingDesignSystem",
+    "responsiveContent",
+    "antiSlop",
+  ]);
+  assert.deepEqual(review.assessment.unknownDimensions, []);
   assert.equal(review.runtime.evidence.comparison, "not-compared");
-  assert.equal(review.score.verdict, "acceptable");
+  assert.equal(review.assessment.evidence.runtime.comparison, "not-compared");
+  assert.equal(review.assessment.claims.productionIntegrity, "limited");
+  assert.equal(review.assessment.claims.taskEffectiveness, "not-assessed");
+  assert.equal(review.assessment.claims.distinctiveness, "not-assessed");
 });
 
 test("textual signature proof fails when every runtime observation failed", () => {
@@ -246,7 +399,10 @@ test("textual signature proof fails when every runtime observation failed", () =
   const review = readReview(outDir);
   assert.equal(review.gates.find((gate) => gate.gate === "runtime-visual")?.status, "fail");
   assert.equal(review.gates.find((gate) => gate.gate === "signature-proof")?.status, "fail");
-  assert.equal(review.score.verdict, "blocked");
+  assert.equal(review.assessment.result, "blocked");
+  assert.equal(review.assessment.highestSeverity, "P1");
+  assert.equal(review.assessment.claims.productionIntegrity, "blocked");
+  assert.equal(review.assessment.evidence.runtime.failedRuns, 1);
   assert.equal(review.runtime.evidence.observation, "failed");
   assert.equal(review.runtime.evidence.capture, "not-captured");
   assert.equal(review.runtime.evidence.comparison, "not-compared");
@@ -328,7 +484,9 @@ test("listing async states without successful action groups does not count as co
   const gate = review.gates.find((item) => item.gate === "async-state-coverage");
   assert.equal(gate?.status, "fail");
   assert.match(gate?.detail || "", /action group|runtime/i);
-  assert.equal(review.score.verdict, "blocked");
+  assert.equal(review.assessment.result, "blocked");
+  assert.equal(review.assessment.highestSeverity, null);
+  assert.equal(review.assessment.claims.productionIntegrity, "blocked");
 });
 
 test("async coverage rejects named action groups with no observable assertion", () => {
@@ -413,7 +571,9 @@ test("a browser launch failure still writes a redacted blocked review", () => {
 
   assert.equal(result.status, 1, result.stderr || result.stdout);
   const review = readReview(outDir);
-  assert.equal(review.score.verdict, "blocked");
+  assert.equal(review.assessment.result, "blocked");
+  assert.equal(review.assessment.highestSeverity, null);
+  assert.equal(review.assessment.claims.productionIntegrity, "blocked");
   assert.equal(review.gates.find((item) => item.gate === "runtime-visual")?.status, "fail");
   assert.match(review.ledger.blockers[0]?.reason || "", /browser launch failed/i);
   assert.doesNotMatch(JSON.stringify(review), /super-secret|api_key=visible|#fragment/);

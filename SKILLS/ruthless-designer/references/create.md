@@ -46,6 +46,7 @@ Do not repaint a broken hierarchy. If the main artifact remains visually subordi
 
 - Use the actual framework and existing dependencies where practical.
 - Fix shared primitives, state models, tokens, and shells when repeated failures share a cause.
+- Intervene at the lowest shared layer that removes every confirmed recurrence; do not rewrite a shell, token set, or state model for one isolated defect.
 - Use one-off overrides only for isolated exceptions.
 - Prefer real product objects, screenshots, datasets, places, media, outputs, and domain language.
 - Use verified assets or generated bitmap assets when imagery carries the promise.

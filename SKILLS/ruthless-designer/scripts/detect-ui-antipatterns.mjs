@@ -43,10 +43,34 @@ const SKIP_DIRS = new Set([
 ]);
 
 const severityRank = { P0: 0, P1: 1, P2: 2, P3: 3 };
+const PATTERN_RULES = rules().map(normalizeRuleMetadata);
+const FILE_RULES = fileRules().map(normalizeRuleMetadata);
+const ALL_RULES = [...PATTERN_RULES, ...FILE_RULES];
+const RULES_BY_ID = new Map(ALL_RULES.map((rule) => [rule.id, rule]));
+
+if (RULES_BY_ID.size !== ALL_RULES.length) {
+  throw new Error("Rule ids must be unique.");
+}
+
 const { options, targets } = parseArgs(process.argv.slice(2));
 
 if (options.gpt || options.gemini) {
   console.error("Warning: --gpt and --gemini are deprecated no-ops; findings are provider-neutral.");
+}
+
+if (options.listRules) {
+  emit(renderRuleList(ALL_RULES, options.format), options.out);
+  process.exit(0);
+}
+
+if (options.explain !== null) {
+  const rule = RULES_BY_ID.get(options.explain);
+  if (!rule) {
+    console.error(`Unknown rule id: ${options.explain}. Run --list-rules to see available ids.`);
+    process.exit(2);
+  }
+  emit(renderRuleExplanation(rule, options.format), options.out);
+  process.exit(0);
 }
 
 if (!targets.length && !options.changedOnly) {
@@ -347,8 +371,10 @@ function rules() {
     {
       id: "framer-motion-shorthand-risk",
       category: "motion",
-      severity: "P2",
-      message: "Framer Motion x/y/scale shorthand can drop frames under load. Use full transform strings for busy-page motion.",
+      severity: "P3",
+      confidence: "low",
+      applicability: "contextual",
+      message: "Framer Motion x/y/scale shorthand is only a performance lead. Profile the interaction under representative load before changing it; shorthand alone is not a defect.",
       patterns: [
         /<motion\.[\w.]+[\s\S]{0,500}(?:animate|initial|exit)=\{\{[\s\S]{0,220}\b(?:x|y|scale)\s*:/gi,
       ],
@@ -478,9 +504,101 @@ function rules() {
   ];
 }
 
+function fileRules() {
+  return [
+    {
+      id: "missing-reduced-motion-guard",
+      category: "accessibility",
+      severity: "P2",
+      message: "Motion-heavy files need a reduced-motion path or a documented reason it is not required.",
+    },
+    {
+      id: "missing-reduced-transparency-fallback",
+      category: "accessibility",
+      severity: "P2",
+      message: "Blurred/translucent chrome needs a solid or higher-contrast fallback when it carries structure or text.",
+    },
+    {
+      id: "will-change-mass-layering",
+      category: "performance",
+      severity: "P2",
+      message: "Many will-change hints in one file can create excessive layers. Keep hints sparse and justified.",
+    },
+    {
+      id: "ungated-hover-motion",
+      category: "motion",
+      severity: "P2",
+      message: "Hover motion should be gated to hover-capable fine pointers so touch users do not get hidden or accidental affordances.",
+    },
+    {
+      id: "gesture-missing-pointer-capture",
+      category: "motion",
+      severity: "P3",
+      message: "Pointer-driven drag/swipe code should usually capture the pointer after drag intent so motion survives leaving bounds.",
+    },
+  ];
+}
+
+function normalizeRuleMetadata(rule) {
+  const normalized = {
+    ...rule,
+    confidence: rule.confidence || defaultConfidence(rule),
+    applicability: rule.applicability || defaultApplicability(rule),
+  };
+  return Object.freeze({
+    ...normalized,
+    exceptions: Object.freeze([...defaultExceptions(normalized), ...(rule.exceptions || [])]),
+  });
+}
+
+function defaultExceptions(rule) {
+  const exceptions = [
+    "Generated, vendor, fixture, and test files are skipped during directory scans unless they are explicitly targeted or --include-ignored is used.",
+  ];
+
+  if (rule.applicability === "contextual") {
+    exceptions.push(
+      "A documented design system or explicit product intent may justify the pattern only when evidence shows the user-facing risk is controlled.",
+    );
+  }
+
+  if (
+    [
+      "layout-transition",
+      "keyframes-dynamic-ui",
+      "framer-motion-shorthand-risk",
+      "gesture-missing-pointer-capture",
+    ].includes(rule.id)
+  ) {
+    exceptions.push(
+      "A framework primitive or library may manage layout animation or pointer capture internally; verify its contract before escalating.",
+    );
+  }
+
+  if (["glass-default", "heavy-blur-effect", "missing-reduced-transparency-fallback"].includes(rule.id)) {
+    exceptions.push(
+      "Decorative blur that carries no structure or text differs from functional chrome; confirm the surface role before escalating.",
+    );
+  }
+
+  if (rule.category === "motion") {
+    exceptions.push(
+      "Judge interaction register, trigger frequency, travel distance, repetition, and measured runtime load in context.",
+    );
+  }
+
+  return exceptions;
+}
+
+function fileRule(id) {
+  const rule = RULES_BY_ID.get(id);
+  if (!rule) throw new Error(`Missing file rule metadata: ${id}`);
+  return rule;
+}
+
 function runPatternRules(file, text) {
   const out = [];
-  for (const rule of rules()) {
+  for (const rule of PATTERN_RULES) {
     for (const pattern of rule.patterns) {
       pattern.lastIndex = 0;
       let count = 0;
@@ -512,12 +630,7 @@ function runFileRules(file, text) {
   if (hasMotion && !hasReducedMotion) {
     out.push(
       toFinding(
-        {
-          id: "missing-reduced-motion-guard",
-          category: "accessibility",
-          severity: "P2",
-          message: "Motion-heavy files need a reduced-motion path or a documented reason it is not required.",
-        },
+        fileRule("missing-reduced-motion-guard"),
         file,
         text,
         significantMotionIndex,
@@ -531,12 +644,7 @@ function runFileRules(file, text) {
   if (hasTranslucentMaterial && !hasTransparencyFallback) {
     out.push(
       toFinding(
-        {
-          id: "missing-reduced-transparency-fallback",
-          category: "accessibility",
-          severity: "P2",
-          message: "Blurred/translucent chrome needs a solid or higher-contrast fallback when it carries structure or text.",
-        },
+        fileRule("missing-reduced-transparency-fallback"),
         file,
         text,
         Math.max(0, text.search(/\bbackdrop-blur\b|backdrop-filter\s*:\s*blur\(|backdropFilter\s*:?\s*["']?[^;"'\n]*blur\(/i)),
@@ -549,12 +657,7 @@ function runFileRules(file, text) {
   if (willChangeMatches.length >= 5) {
     out.push(
       toFinding(
-        {
-          id: "will-change-mass-layering",
-          category: "performance",
-          severity: "P2",
-          message: "Many will-change hints in one file can create excessive layers. Keep hints sparse and justified.",
-        },
+        fileRule("will-change-mass-layering"),
         file,
         text,
         willChangeMatches[0].index ?? 0,
@@ -568,12 +671,7 @@ function runFileRules(file, text) {
   if (hasHoverMotion && !hasHoverGate) {
     out.push(
       toFinding(
-        {
-          id: "ungated-hover-motion",
-          category: "motion",
-          severity: "P2",
-          message: "Hover motion should be gated to hover-capable fine pointers so touch users do not get hidden or accidental affordances.",
-        },
+        fileRule("ungated-hover-motion"),
         file,
         text,
         Math.max(0, text.search(/(?::hover|hover:)[\s\S]{0,220}(?:transform|scale|translate|rotate|animation|transition)/i)),
@@ -588,12 +686,7 @@ function runFileRules(file, text) {
   if (hasPointerGesture && !/setPointerCapture\b/i.test(text)) {
     out.push(
       toFinding(
-        {
-          id: "gesture-missing-pointer-capture",
-          category: "motion",
-          severity: "P3",
-          message: "Pointer-driven drag/swipe code should usually capture the pointer after drag intent so motion survives leaving bounds.",
-        },
+        fileRule("gesture-missing-pointer-capture"),
         file,
         text,
         Math.max(0, text.search(/\bonPointer(?:Down|Move|Up|Cancel)\b|addEventListener\(\s*["']pointer(?:down|move|up|cancel)["']|PointerEvent/i)),
@@ -667,6 +760,8 @@ function parseArgs(args) {
     category: null,
     allowEmpty: false,
     includeIgnored: false,
+    listRules: false,
+    explain: null,
   };
   const targets = [];
 
@@ -681,6 +776,8 @@ function parseArgs(args) {
     else if (arg === "--changed-only") options.changedOnly = true;
     else if (arg === "--allow-empty") options.allowEmpty = true;
     else if (arg === "--include-ignored") options.includeIgnored = true;
+    else if (arg === "--list-rules") options.listRules = true;
+    else if (name === "--explain") options.explain = nextValue();
     else if (name === "--format") options.format = normalizeFormat(nextValue());
     else if (name === "--fail-on") options.failOn = normalizeSeverity(nextValue());
     else if (name === "--out") options.out = nextValue();
@@ -891,6 +988,56 @@ function render(payload, format) {
   return renderText(payload);
 }
 
+function renderRuleList(ruleCatalog, format) {
+  const publicRules = ruleCatalog.map(publicRuleMetadata);
+  if (format === "json") return `${JSON.stringify({ rules: publicRules }, null, 2)}\n`;
+
+  const lines = [`UI anti-pattern rules (${publicRules.length})`];
+  for (const rule of publicRules) {
+    lines.push(
+      `[${rule.severity}] ${rule.id} (${rule.category}; ${rule.confidence} confidence; ${rule.applicability}) - ${rule.message}`,
+    );
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+function renderRuleExplanation(rule, format) {
+  const metadata = publicRuleMetadata(rule);
+  if (format === "json") return `${JSON.stringify(metadata, null, 2)}\n`;
+
+  const lines = [
+    `${metadata.id} [${metadata.severity}]`,
+    `Category: ${metadata.category}`,
+    `Confidence: ${metadata.confidence}`,
+    `Applicability: ${metadata.applicability}`,
+    `Message: ${metadata.message}`,
+    "Exceptions:",
+    ...metadata.exceptions.map((exception) => `- ${exception}`),
+  ];
+  return `${lines.join("\n")}\n`;
+}
+
+function publicRuleMetadata(rule) {
+  return {
+    id: rule.id,
+    category: rule.category,
+    severity: rule.severity,
+    confidence: rule.confidence,
+    applicability: rule.applicability,
+    message: rule.message,
+    exceptions: rule.exceptions,
+  };
+}
+
+function emit(rendered, outputPath) {
+  if (outputPath) {
+    fs.mkdirSync(path.dirname(path.resolve(outputPath)), { recursive: true });
+    fs.writeFileSync(outputPath, rendered);
+    return;
+  }
+  fs.writeSync(process.stdout.fd, rendered);
+}
+
 function renderText(payload) {
   if (!payload.findings.length) return `Scanned ${payload.files} file(s). No findings.\n`;
   const lines = [`Scanned ${payload.files} file(s). ${payload.findings.length} finding(s).`];
@@ -936,5 +1083,5 @@ function publicOptions(value) {
 }
 
 function usage() {
-  console.error("Usage: node detect-ui-antipatterns.mjs [--json|--format=text|md|json] [--fail-on=P1|P2|P3] [--out file] [--allowlist file] [--baseline file] [--changed-only] [--allow-empty] [--include-ignored] [--category name] [--gpt] [--gemini] <file-or-directory>...");
+  console.error("Usage: node detect-ui-antipatterns.mjs [--list-rules | --explain rule-id | <file-or-directory>...] [--json|--format=text|md|json] [--fail-on=P1|P2|P3] [--out file] [--allowlist file] [--baseline file] [--changed-only] [--allow-empty] [--include-ignored] [--category name] [--gpt] [--gemini]");
 }

@@ -8,6 +8,8 @@ Define roles before sizes: display, heading, body, label, data, annotation, code
 
 Fix lonely words, accidental rivers, clipped diacritics, fake small caps, synthetic weights, shifting webfonts, and display faces leaking into controls. Type that photographs well but reads badly is costume jewelry.
 
+Use `text-wrap: balance` for short headings only when the resulting line lengths strengthen the shape; use `pretty` for prose when browser support and layout stability justify it. Inspect fallback wrapping. Neither property rescues weak copy or a container with the wrong measure.
+
 ## Color And Themes
 
 Name roles before values: canvas, surface, text, muted text, edge, accent, focus, selection, and semantic states. Use hue for identity and emphasis, luminance for hierarchy, and saturation sparingly enough that status still means something. Check contrast in actual component states, not just token pairs.
@@ -21,6 +23,8 @@ Derive the grid from content geometry: reading measure, data columns, media rati
 Use a small spacing rhythm, then allow named exceptions for grouping, interruption, or emphasis. Repetition should make relationships legible, not mechanically equal. Check vertical cadence across headings, controls, rows, sections, and sticky regions.
 
 Correct what mathematics gets visibly wrong: icon baselines, circular overshoot, play-arrow centering, mixed-cap labels, button padding, hairline weight, logo clearspace, and media crops. Optical alignment beats a perfect coordinate that looks drunk.
+
+For tightly nested rounded surfaces, start with `outer radius ≈ inner radius + intervening padding`, then correct optically; unrelated radii make the layers look dented. Use `scrollbar-gutter: stable` when scrollbar appearance would shift reading measure, aligned columns, or fixed controls. Do not reserve dead space where overlay scrollbars or the composition make it irrelevant.
 
 ## Icons And Media
 

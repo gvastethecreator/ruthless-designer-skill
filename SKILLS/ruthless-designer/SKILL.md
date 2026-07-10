@@ -15,16 +15,17 @@ Spend the run changing or inspecting the artifact. One planning pass is enough b
 
 Read no reference by default. Load the smallest route that changes the work:
 
-- Greenfield creation or broad redesign: [references/create.md](references/create.md), then [references/direction.md](references/direction.md) when the direction is open or generic.
+- Greenfield creation, broad redesign, or reference-led creation: [references/create.md](references/create.md), then [references/direction.md](references/direction.md) when the brief is open, ambitious, reference-led, broad, or in danger of becoming generic.
 - App, dashboard, editor, tool, admin, or authenticated workflow: [references/product-surfaces.md](references/product-surfaces.md).
+- Production product implementation or any `production-ready` claim: [references/production-hardening.md](references/production-hardening.md).
 - Landing, portfolio, launch, pricing, campaign, cultural/editorial, or persuasion surface: [references/brand-surfaces.md](references/brand-surfaces.md).
 - Charts, tables, metrics, uncertainty, or decision-heavy data: [references/data-information.md](references/data-information.md).
 - Typography, color, grid, media, themes, or systemic visual craft: [references/visual-craft.md](references/visual-craft.md).
 - Audit, roast, screenshot critique, or design verdict: [references/critique.md](references/critique.md).
-- Motion-, gesture-, transition-, canvas-, or animation-heavy work: [references/motion.md](references/motion.md).
+- Motion-, gesture-, transition-, canvas-, or animation-heavy work: [references/motion.md](references/motion.md); when implementing it, also load [references/motion-implementation.md](references/motion-implementation.md).
 - Any final visual-quality claim: [references/proof.md](references/proof.md).
 - Local scans or runnable browser targets: [references/tooling.md](references/tooling.md).
-- If direction remains generic after one sprint, load the three contrasting calibrations in [references/examples.md](references/examples.md) once; they are tests, not templates.
+- If the direction, pattern choice, or signature move remains generic or looks copied after one sprint, load [references/examples.md](references/examples.md) once; its calibrations and contraindications are tests, not templates.
 
 Do not load the whole library. Product work rarely needs brand rules; a static roast rarely needs motion implementation details.
 

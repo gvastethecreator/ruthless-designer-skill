@@ -40,6 +40,11 @@
     "prompt": "Does this landing page actually look good? Be ruthless and cross-reference the screenshot with the code."
   },
   {
+    "id": "trigger-production-redesign",
+    "expected": "trigger",
+    "prompt": "Redesign and implement the entire multilingual account-settings experience as a production-ready product surface. Saving is optimistic, the page is server-rendered, and the same account may be edited in another tab."
+  },
+  {
     "id": "no-trigger-small-padding",
     "expected": "do-not-trigger",
     "prompt": "Increase the button padding from 8px to 10px and keep everything else unchanged."
@@ -88,5 +93,10 @@
     "id": "no-trigger-ruthless-single-component-qa",
     "expected": "do-not-trigger",
     "prompt": "Be ruthless: compare this one button with the reference screenshot and fix its 2px icon misalignment. Keep every other visual unchanged."
+  },
+  {
+    "id": "no-trigger-isolated-production-fix",
+    "expected": "do-not-trigger",
+    "prompt": "Fix only the existing drawer's safe-area padding and focus return bug. Preserve its design and every unrelated behavior."
   }
 ]
