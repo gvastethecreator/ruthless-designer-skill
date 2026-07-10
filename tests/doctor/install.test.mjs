@@ -59,11 +59,73 @@ try {
   assert.match(replacementDryRun.stdout, /replace real directory/i);
   assert.equal(fs.lstatSync(copiedTarget).isSymbolicLink(), false);
 
+  const copyCreationFailure = run(["--source", source, "--target", copiedTarget, "--replace", "--write"], {
+    NODE_ENV: "test",
+    RUTHLESS_DESIGNER_TEST_FAIL_LINK_CREATION: "1",
+  });
+  assert.equal(copyCreationFailure.status, 2);
+  assert.match(copyCreationFailure.stderr, /injected link creation failure/i);
+  assert.equal(fs.lstatSync(copiedTarget).isSymbolicLink(), false, "failed replacement must restore the original directory");
+  assert.equal(fs.readFileSync(path.join(copiedTarget, "stale.md"), "utf8"), "do not silently delete\n");
+  assert.deepEqual(backupEntries(copiedTarget), [], "normal rollback must not leave a backup behind");
+
   const copyReplaced = run(["--source", source, "--target", copiedTarget, "--replace", "--write"]);
   assert.equal(copyReplaced.status, 0, copyReplaced.stderr);
   assert.equal(fs.lstatSync(copiedTarget).isSymbolicLink(), true);
   assert.equal(normalize(fs.realpathSync.native(copiedTarget)), normalize(fs.realpathSync.native(source)));
   assert.equal(fs.existsSync(path.join(source, "stale.md")), false, "replacement must not touch the source");
+  assert.deepEqual(backupEntries(copiedTarget), [], "successful replacement must remove its backup");
+
+  const productionGuardTarget = createSkill(path.join(temp, "production-guard", "ruthless-designer"), "guarded\n");
+  const productionGuard = run(["--source", source, "--target", productionGuardTarget, "--replace", "--write"], {
+    NODE_ENV: "production",
+    RUTHLESS_DESIGNER_TEST_FAIL_LINK_CREATION: "1",
+  });
+  assert.equal(productionGuard.status, 0, productionGuard.stderr);
+  assert.equal(normalize(fs.realpathSync.native(productionGuardTarget)), normalize(fs.realpathSync.native(source)));
+
+  const noFollowTarget = createSkill(path.join(temp, "no-follow", "ruthless-designer"), "cycle\n");
+  const cycleLink = path.join(noFollowTarget, "references", "cycle");
+  linkDirectory(noFollowTarget, cycleLink);
+  const noFollowDryRun = run(["--source", source, "--target", noFollowTarget, "--replace"]);
+  assert.equal(noFollowDryRun.status, 0, noFollowDryRun.stderr);
+  assert.match(noFollowDryRun.stdout, /replace real directory/i);
+  fs.unlinkSync(cycleLink);
+
+  const changedAfterPlanTarget = createSkill(path.join(temp, "changed-after-plan", "ruthless-designer"), "planned\n");
+  const changedAfterPlan = run(["--source", source, "--target", changedAfterPlanTarget, "--replace", "--write"], {
+    NODE_ENV: "test",
+    RUTHLESS_DESIGNER_TEST_MUTATE_TARGET_AFTER_PLAN: "1",
+  });
+  assert.equal(changedAfterPlan.status, 2);
+  assert.match(changedAfterPlan.stderr, /target changed after validation/i);
+  assert.equal(fs.lstatSync(changedAfterPlanTarget).isSymbolicLink(), false);
+  assert.equal(fs.readFileSync(path.join(changedAfterPlanTarget, "SKILL.md"), "utf8"), "mutated\n");
+  assert.deepEqual(backupEntries(changedAfterPlanTarget), [], "pre-mutation abort must not stage a backup");
+
+  const changedBeforeCleanupTarget = createSkill(
+    path.join(temp, "changed-before-cleanup", "ruthless-designer"),
+    "cleanup\n",
+  );
+  const changedBeforeCleanup = run(
+    ["--source", source, "--target", changedBeforeCleanupTarget, "--replace", "--write"],
+    {
+      NODE_ENV: "test",
+      RUTHLESS_DESIGNER_TEST_MUTATE_BACKUP_BEFORE_CLEANUP: "1",
+    },
+  );
+  assert.equal(changedBeforeCleanup.status, 2);
+  assert.match(changedBeforeCleanup.stderr, /backup changed before cleanup/i);
+  assert.match(changedBeforeCleanup.stderr, /backup preserved at:/i);
+  assert.equal(normalize(fs.realpathSync.native(changedBeforeCleanupTarget)), normalize(fs.realpathSync.native(source)));
+  const preservedBackups = backupEntries(changedBeforeCleanupTarget);
+  assert.equal(preservedBackups.length, 1, "changed backup must be preserved for manual recovery");
+  const preservedBackup = path.join(path.dirname(changedBeforeCleanupTarget), preservedBackups[0]);
+  assert.equal(fs.readFileSync(path.join(preservedBackup, "SKILL.md"), "utf8"), "cleanup\n");
+  assert.equal(
+    fs.readFileSync(path.join(preservedBackup, ".ruthless-designer-test-before-cleanup"), "utf8"),
+    "changed before cleanup\n",
+  );
 
   const wrongSource = createSkill(path.join(temp, "wrong-source", "ruthless-designer"), "wrong\n");
   const wrongTarget = path.join(temp, "wrong-link", "ruthless-designer");
@@ -73,10 +135,21 @@ try {
   assert.match(wrongRejected.stderr, /points somewhere else.*--replace/i);
   assert.equal(normalize(fs.realpathSync.native(wrongTarget)), normalize(fs.realpathSync.native(wrongSource)));
 
+  const linkCreationFailure = run(["--source", source, "--target", wrongTarget, "--replace", "--write"], {
+    NODE_ENV: "test",
+    RUTHLESS_DESIGNER_TEST_FAIL_LINK_CREATION: "1",
+  });
+  assert.equal(linkCreationFailure.status, 2);
+  assert.match(linkCreationFailure.stderr, /injected link creation failure/i);
+  assert.equal(fs.lstatSync(wrongTarget).isSymbolicLink(), true, "failed replacement must restore the original link");
+  assert.equal(normalize(fs.realpathSync.native(wrongTarget)), normalize(fs.realpathSync.native(wrongSource)));
+  assert.deepEqual(backupEntries(wrongTarget), [], "link rollback must not leave a backup behind");
+
   const wrongReplaced = run(["--source", source, "--target", wrongTarget, "--replace", "--write"]);
   assert.equal(wrongReplaced.status, 0, wrongReplaced.stderr);
   assert.equal(normalize(fs.realpathSync.native(wrongTarget)), normalize(fs.realpathSync.native(source)));
   assert.equal(fs.readFileSync(path.join(wrongSource, "SKILL.md"), "utf8"), "wrong\n");
+  assert.deepEqual(backupEntries(wrongTarget), [], "successful link replacement must remove its backup");
 
   const repeatedA = path.join(temp, "repeated-a", "ruthless-designer");
   const repeatedB = path.join(temp, "repeated-b", "ruthless-designer");
@@ -185,6 +258,11 @@ function linkDirectory(source, target) {
 
 function normalize(value) {
   return path.resolve(value).replaceAll("\\", "/").toLowerCase();
+}
+
+function backupEntries(target) {
+  const prefix = `.${path.basename(target)}.backup-`;
+  return fs.readdirSync(path.dirname(target)).filter((entry) => entry.startsWith(prefix));
 }
 
 function run(args, env = {}) {

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from "node:fs";
+import { createHash } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
@@ -42,6 +43,7 @@ if (!options.write) {
   process.exit(0);
 }
 
+injectTargetMutationAfterPlanForTests(plans);
 for (const plan of plans) applyPlan(plan, source);
 console.log("Local skill junction topology synchronized.");
 
@@ -214,18 +216,45 @@ function applyPlan(plan, source) {
     return;
   }
 
+  let backup = null;
   if (plan.action === "create") {
     if (lstatOrNull(plan.requestedPath)) fail(`Target appeared after validation; refusing to replace it: ${plan.requestedPath}`);
   } else {
-    assertUnchanged(plan);
-    removeValidatedTarget(plan);
+    backup = moveValidatedTargetToBackup(plan);
   }
 
-  fs.mkdirSync(path.dirname(plan.requestedPath), { recursive: true });
-  fs.symlinkSync(source.realPath, plan.requestedPath, process.platform === "win32" ? "junction" : "dir");
-  const installedRealPath = fs.realpathSync.native(plan.requestedPath);
-  if (!samePath(installedRealPath, source.realPath)) {
-    fail(`Created link does not resolve to canonical source: ${plan.requestedPath} -> ${installedRealPath}`);
+  let createdSnapshot = null;
+  try {
+    fs.mkdirSync(path.dirname(plan.requestedPath), { recursive: true });
+    injectLinkCreationFailureForTests();
+    fs.symlinkSync(source.realPath, plan.requestedPath, process.platform === "win32" ? "junction" : "dir");
+    const installedEntry = fs.lstatSync(plan.requestedPath);
+    createdSnapshot = snapshotEntry(installedEntry, realpathOrNull(plan.requestedPath));
+    const installedRealPath = fs.realpathSync.native(plan.requestedPath);
+    if (!samePath(installedRealPath, source.realPath)) {
+      throw new Error(`Created link does not resolve to canonical source: ${plan.requestedPath} -> ${installedRealPath}`);
+    }
+  } catch (error) {
+    let rollback;
+    try {
+      rollback = rollbackFailedInstall(plan, backup, createdSnapshot);
+    } catch (rollbackError) {
+      rollback = `Rollback failed: ${errorMessage(rollbackError)}`;
+      if (backup) rollback += `\nOriginal preserved at: ${backup.path}`;
+    }
+    fail(`${errorMessage(error)}${rollback ? `\n${rollback}` : ""}`);
+  }
+
+  if (backup) {
+    try {
+      injectBackupMutationBeforeCleanupForTests(backup);
+      removeOwnedBackup(backup);
+    } catch (error) {
+      fail(
+        `Junction was installed and verified, but the original backup could not be removed: ${errorMessage(error)}\n` +
+          `Backup preserved at: ${backup.path}`,
+      );
+    }
   }
 }
 
@@ -233,27 +262,135 @@ function assertUnchanged(plan) {
   const current = lstatOrNull(plan.requestedPath);
   if (!current) fail(`Target disappeared after validation: ${plan.requestedPath}`);
   const snapshot = snapshotEntry(current, realpathOrNull(plan.requestedPath));
-  if (
-    snapshot.symbolicLink !== plan.expected.symbolicLink ||
-    snapshot.directory !== plan.expected.directory ||
-    snapshot.realPath !== plan.expected.realPath ||
-    snapshot.device !== plan.expected.device ||
-    snapshot.inode !== plan.expected.inode
-  ) {
+  if (!snapshotsMatch(snapshot, plan.expected)) {
     fail(`Target changed after validation; refusing to mutate it: ${plan.requestedPath}`);
   }
 }
 
-function removeValidatedTarget(plan) {
-  if (plan.action === "replace-link") {
-    fs.unlinkSync(plan.requestedPath);
-    return;
+function moveValidatedTargetToBackup(plan) {
+  const backupPath = nextBackupPath(plan.requestedPath);
+  try {
+    assertUnchanged(plan);
+    fs.renameSync(plan.requestedPath, backupPath);
+    const entry = fs.lstatSync(backupPath);
+    return {
+      path: backupPath,
+      snapshot: snapshotEntry(entry, realpathOrNull(backupPath)),
+    };
+  } catch (error) {
+    const backupEntry = lstatOrNull(backupPath);
+    if (backupEntry && !lstatOrNull(plan.requestedPath)) {
+      try {
+        fs.renameSync(backupPath, plan.requestedPath);
+      } catch (rollbackError) {
+        fail(
+          `Could not stage the existing target for replacement: ${errorMessage(error)}\n` +
+            `Rollback also failed: ${errorMessage(rollbackError)}\n` +
+            `Original preserved at: ${backupPath}`,
+        );
+      }
+    }
+    fail(`Could not stage the existing target for replacement: ${errorMessage(error)}`);
   }
-  if (plan.action === "replace-directory") {
-    fs.rmSync(plan.requestedPath, { recursive: true, force: false });
-    return;
+}
+
+function rollbackFailedInstall(plan, backup, createdSnapshot) {
+  const current = lstatOrNull(plan.requestedPath);
+  if (current) {
+    const currentSnapshot = snapshotEntry(current, realpathOrNull(plan.requestedPath));
+    if (createdSnapshot && snapshotsMatch(currentSnapshot, createdSnapshot)) {
+      try {
+        fs.unlinkSync(plan.requestedPath);
+      } catch (error) {
+        const backupMessage = backup ? `\nOriginal preserved at: ${backup.path}` : "";
+        return `Rollback could not remove the junction created by this process: ${errorMessage(error)}${backupMessage}`;
+      }
+    } else if (backup) {
+      return (
+        `Rollback did not remove the object now occupying the target path. ` +
+        `The original is preserved at: ${backup.path}`
+      );
+    } else {
+      return "Rollback left the object now occupying the target path untouched.";
+    }
   }
-  fail(`Internal error: unexpected replacement action ${plan.action}`);
+
+  if (!backup) return "No original target required restoration.";
+
+  try {
+    fs.renameSync(backup.path, plan.requestedPath);
+  } catch (error) {
+    const occupied = lstatOrNull(plan.requestedPath);
+    const reason = occupied
+      ? "The target path became occupied during rollback; that object was left untouched."
+      : `The original could not be restored: ${errorMessage(error)}`;
+    return `${reason}\nOriginal preserved at: ${backup.path}`;
+  }
+
+  return "Original target restored.";
+}
+
+function removeOwnedBackup(backup) {
+  const current = lstatOrNull(backup.path);
+  if (!current) throw new Error(`Backup disappeared before cleanup: ${backup.path}`);
+  const currentSnapshot = snapshotEntry(current, realpathOrNull(backup.path));
+  if (!snapshotsMatch(currentSnapshot, backup.snapshot)) {
+    throw new Error(`Backup changed before cleanup; refusing to remove it: ${backup.path}`);
+  }
+  if (current.isSymbolicLink()) fs.unlinkSync(backup.path);
+  else if (current.isDirectory()) fs.rmSync(backup.path, { recursive: true, force: false });
+  else throw new Error(`Backup is neither a directory nor a directory link: ${backup.path}`);
+}
+
+function nextBackupPath(targetPath) {
+  const parent = path.dirname(targetPath);
+  const prefix = `.${path.basename(targetPath)}.backup-${process.pid}-`;
+  for (let attempt = 0; attempt < 1000; attempt += 1) {
+    const candidate = path.join(parent, `${prefix}${attempt}`);
+    if (!lstatOrNull(candidate)) return candidate;
+  }
+  fail(`Could not allocate a sibling backup path for: ${targetPath}`);
+}
+
+function injectLinkCreationFailureForTests() {
+  if (testFaultEnabled("RUTHLESS_DESIGNER_TEST_FAIL_LINK_CREATION")) {
+    throw new Error("Injected link creation failure");
+  }
+}
+
+function injectTargetMutationAfterPlanForTests(plans) {
+  if (!testFaultEnabled("RUTHLESS_DESIGNER_TEST_MUTATE_TARGET_AFTER_PLAN")) return;
+  const plan = plans.find((candidate) => candidate.action === "replace-directory");
+  if (!plan) throw new Error("Test target mutation requested without a real directory replacement plan");
+  fs.writeFileSync(path.join(plan.requestedPath, "SKILL.md"), "mutated\n");
+}
+
+function injectBackupMutationBeforeCleanupForTests(backup) {
+  if (!testFaultEnabled("RUTHLESS_DESIGNER_TEST_MUTATE_BACKUP_BEFORE_CLEANUP")) return;
+  const entry = fs.lstatSync(backup.path);
+  if (entry.isSymbolicLink() || !entry.isDirectory()) {
+    throw new Error("Test backup mutation requires a real directory backup");
+  }
+  fs.writeFileSync(path.join(backup.path, ".ruthless-designer-test-before-cleanup"), "changed before cleanup\n");
+}
+
+function testFaultEnabled(name) {
+  return process.env.NODE_ENV === "test" && process.env[name] === "1";
+}
+
+function snapshotsMatch(left, right) {
+  return (
+    left.symbolicLink === right.symbolicLink &&
+    left.directory === right.directory &&
+    left.realPath === right.realPath &&
+    left.device === right.device &&
+    left.inode === right.inode &&
+    left.treeFingerprint === right.treeFingerprint
+  );
+}
+
+function errorMessage(error) {
+  return error instanceof Error ? error.message : String(error);
 }
 
 function snapshotEntry(entry, realPath) {
@@ -263,7 +400,71 @@ function snapshotEntry(entry, realPath) {
     realPath: realPath ? normalize(realPath) : null,
     device: entry.dev,
     inode: entry.ino,
+    treeFingerprint:
+      entry.isDirectory() && !entry.isSymbolicLink() && realPath ? fingerprintDirectory(realPath) : null,
   };
+}
+
+function fingerprintDirectory(root) {
+  const hash = createHash("sha256");
+  fingerprintNode(root, "", hash);
+  return hash.digest("hex");
+}
+
+function fingerprintNode(absolutePath, relativePath, hash) {
+  const entry = fs.lstatSync(absolutePath);
+  hashField(hash, "path", relativePath.replaceAll(path.sep, "/"));
+
+  if (entry.isSymbolicLink()) {
+    hashField(hash, "type", "link");
+    hashField(hash, "target", fs.readlinkSync(absolutePath));
+    return;
+  }
+
+  if (entry.isDirectory()) {
+    hashField(hash, "type", "directory");
+    const children = fs.readdirSync(absolutePath).sort(compareNames);
+    for (const child of children) {
+      fingerprintNode(path.join(absolutePath, child), path.join(relativePath, child), hash);
+    }
+    return;
+  }
+
+  if (entry.isFile()) {
+    hashField(hash, "type", "file");
+    hashField(hash, "size", String(entry.size));
+    hashFileContents(hash, absolutePath);
+    return;
+  }
+
+  hashField(hash, "type", "special");
+  hashField(hash, "mode", String(entry.mode));
+  hashField(hash, "size", String(entry.size));
+}
+
+function hashFileContents(hash, filePath) {
+  const buffer = Buffer.allocUnsafe(64 * 1024);
+  const descriptor = fs.openSync(filePath, "r");
+  try {
+    let bytesRead;
+    while ((bytesRead = fs.readSync(descriptor, buffer, 0, buffer.length, null)) > 0) {
+      hash.update(buffer.subarray(0, bytesRead));
+    }
+  } finally {
+    fs.closeSync(descriptor);
+  }
+}
+
+function hashField(hash, label, value) {
+  const encoded = Buffer.from(String(value));
+  hash.update(`${label}:${encoded.length}:`);
+  hash.update(encoded);
+}
+
+function compareNames(left, right) {
+  if (left < right) return -1;
+  if (left > right) return 1;
+  return 0;
 }
 
 function resolvePotentialPath(requestedPath) {
