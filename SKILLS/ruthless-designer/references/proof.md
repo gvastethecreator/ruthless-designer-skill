@@ -18,6 +18,8 @@ Choose the smallest proof that could falsify the claim:
 
 More screenshots are not better when they prove nothing meaningful.
 
+For atlases, spritesheets, generated grids, galleries, or repeated media, proof must cover the complete finite set when it is small; otherwise cover every layout/crop class plus the first, last, and known edge cells. Record source grid, expected cell ratio, mapping, rendered ratio, crop/focal behavior, and one narrow-viewport fixture. Fail the asset claim for stretching, neighboring-cell bleed, unintended subject loss, wrong semantic mapping, blank tiles, or proof that only exercises the default item.
+
 ## Judge Three Independent Claims
 
 Do not collapse quality into one flattering score:
@@ -33,6 +35,8 @@ For a claim that users understand or can act effectively, include a minimal huma
 ## Accept Evidence Before Judging
 
 Reject a screenshot or run when it shows the wrong route/window, mismatched viewport/content/state, blank/loading/blocked output, unreadable critical detail, cropped main content, failed action sequence, or a different theme/auth state.
+
+Reject captures named or reported as `error`, any run with a runtime-audit P0/P1, and any harness assessment of `blocked`. Successful action assertions do not overrule a failed visual/runtime audit. Fix the harness or rerun with an independent browser method before marking the artifact or affected claim complete.
 
 Wait for fonts, images, async content, and intended interaction state when they affect the result. Name viewport and state in filenames or the evidence ledger.
 

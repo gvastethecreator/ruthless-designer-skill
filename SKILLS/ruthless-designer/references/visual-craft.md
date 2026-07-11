@@ -30,6 +30,8 @@ For tightly nested rounded surfaces, start with `outer radius ≈ inner radius +
 
 Keep icon family, viewBox, stroke/fill, cap, corner, and visual weight coherent. Use labels for unfamiliar or consequential actions. Reserve dimension before media loads; choose crop and focal point by meaning, not container convenience. Verify resolution, compression, art direction, captions, alt text, masking, and behavior across themes. Do not use stock media as emotional wallpaper when the claim needs product proof.
 
+Treat atlases, spritesheets, contact sheets, and generated grids as structured data, not ordinary backgrounds. Establish the source grid, cell aspect ratio, semantic cell mapping, and intended crop before styling. Do not set both `background-size` axes from an arbitrary container unless the container matches the cell ratio; that silently stretches every subject. Prefer extracted project-local cells, an aspect-ratio-correct viewport, or a non-distorting crop with explicit focal points. Inspect every cell at least once and the smallest/most extreme target viewport; a correct first tile proves nothing about the rest of the atlas.
+
 ## Craft Gate
 
 Inspect at target size, narrow width, zoom, each supported theme, and with real long/short content. Blur or squint to test hierarchy; inspect crisp crops to test finish. Pass only when the system solves the named problem and exceptions are intentional. If the defense is a catalog of gradients, shadows, radii, and micro-animations, no design decision has occurred.
