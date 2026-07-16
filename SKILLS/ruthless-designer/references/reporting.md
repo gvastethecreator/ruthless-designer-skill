@@ -91,6 +91,7 @@ Use blocker, P1, P2, P3, or info. Severity describes the dominant evidenced risk
   "src": "screenshots/before-default.png",
   "alt": "Current command center with equal-weight panels",
   "label": "Before · default",
+  "stage": "before",
   "caption": "Same authenticated fixture used for the redesign.",
   "state": "default",
   "viewport": "1280×800",
@@ -100,14 +101,16 @@ Use blocker, P1, P2, P3, or info. Severity describes the dominant evidenced risk
       "y": 20,
       "width": 30,
       "height": 18,
+      "subject": "Equal-weight incident cards",
       "label": "Repeated panels erase operational priority.",
       "tone": "error"
     },
     {
       "x": 80,
       "y": 12,
-      "label": "Move the active action into the incident lane.",
-      "tone": "proposal"
+      "subject": "Detached action status",
+      "label": "The visible status is separated from the action it governs.",
+      "tone": "warning"
     }
   ]
 }
@@ -115,7 +118,21 @@ Use blocker, P1, P2, P3, or info. Severity describes the dominant evidenced risk
 
 Coordinates are percentages from the screenshot's top-left corner. A point annotation uses x and y. A box also supplies width and height. All values must stay from 0 to 100, and boxes must remain within the screenshot.
 
-Use tones error, warning, proposal, or note. Numbered overlays have a matching text legend so the report remains understandable to screen readers and when annotations are visually dense.
+`stage` is required and must be `before`, `reference`, `proposal`, `after`, or `detail`. Use tones error, warning, proposal, or note. A proposal tone is invalid on before/reference evidence: annotate only what is visibly present there, and put the proposed move in directions/actions or on an actual proposal/after image.
+
+`subject` is required and names the literal element or region inside the marker—such as `Panel LIVE ALERTS`, `Row 04 · payment-core`, or `Recovery button`. `label` states the visible condition and why it matters. Numbered overlays render both values in the matching legend so the reader never has to guess what a marker targets.
+
+### Annotation calibration
+
+Do not estimate percentages from memory or from a thumbnail. For each marker:
+
+1. inspect the source image at native resolution and record its pixel width and height;
+2. identify the exact pixel rectangle or point containing the named subject;
+3. convert with `x% = leftPx / imageWidth × 100`, `y% = topPx / imageHeight × 100`, and the equivalent formula for width/height;
+4. generate the dossier and inspect the rendered screenshot at readable scale;
+5. read each legend item, then trace its number back to the image; fail the report if the box contains a different subject or if the description claims anything not visible inside or immediately adjacent to it.
+
+Use one marker for one literal subject. Split broad claims across focused crops or multiple markers. A box that spans unrelated panels is not evidence; it is decorative geometry.
 
 ### Findings
 
@@ -222,6 +239,7 @@ Before delivery:
 - open report.html locally with network disabled or confirm it has no external dependencies;
 - inspect desktop and narrow widths;
 - verify images, annotations, legend links, anchors, overflow, focus, and print behavior;
+- verify each numbered marker contains the exact `subject` named in its legend and that its `label` describes visible evidence rather than a future solution;
 - verify hostile text is escaped and no absolute secret-bearing URL or query string leaked;
 - verify missing evidence is visible rather than silently omitted;
 - confirm every major proposal is tied to evidence, a product cause, or an explicit hypothesis;
