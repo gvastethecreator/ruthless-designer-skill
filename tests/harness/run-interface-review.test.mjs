@@ -218,11 +218,15 @@ test("a clean static scan is observed evidence, not visual certification", () =>
   assert.equal(review.runtime, null);
   const summary = JSON.parse(result.stdout);
   const markdown = fs.readFileSync(path.join(outDir, "README.md"), "utf8");
+  const dossier = fs.readFileSync(path.join(outDir, "report.md"), "utf8");
   const html = fs.readFileSync(path.join(outDir, "report.html"), "utf8");
   assert.equal(Object.hasOwn(summary, "score"), false);
   assert.match(summary.htmlReport, /report\.html$/);
+  assert.match(summary.markdownReport, /report\.md$/);
   assert.doesNotMatch(result.stdout, /\b(?:score|good|excellent)\b/i);
   assert.doesNotMatch(markdown, /\b(?:score|good|excellent)\b/i);
+  assert.match(dossier, /^# Interface evidence review$/m);
+  assert.match(dossier, /^## Proof ledger$/m);
   assert.match(html, /Interface evidence review/);
   assert.match(html, /Proof ledger/);
   assert.doesNotMatch(html, /<script(?:\s|>)/i);

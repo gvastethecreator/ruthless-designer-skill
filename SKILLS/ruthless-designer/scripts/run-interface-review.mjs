@@ -92,14 +92,16 @@ review.assessment = assessReview(review);
 review.expectations = evaluateExpectations(review, options);
 
 const jsonPath = path.join(outDir, "review.json");
-const markdownPath = path.join(outDir, "README.md");
+const readmePath = path.join(outDir, "README.md");
 const htmlPath = path.join(outDir, "report.html");
+const markdownPath = path.join(outDir, "report.md");
 const reportReview = redactReportValue(review);
 fs.writeFileSync(jsonPath, `${JSON.stringify(reportReview, null, 2)}\n`);
-fs.writeFileSync(markdownPath, renderMarkdown(reportReview, jsonPath));
+fs.writeFileSync(readmePath, renderMarkdown(reportReview, jsonPath));
 const designReport = writeDesignReport({
   manifest: designReportManifestFromReview(reportReview, { baseDir: root }),
   outPath: htmlPath,
+  markdownOutPath: markdownPath,
   baseDir: root,
   embedImages: true,
   strictAssets: false,
@@ -108,6 +110,7 @@ const designReport = writeDesignReport({
 const summary = {
   outDir: path.relative(root, outDir),
   htmlReport: path.relative(root, designReport.outPath),
+  markdownReport: path.relative(root, designReport.markdownPath),
   findings: reportReview.findings.length,
   bySeverity: summarizeSeverity(reportReview.findings),
   assessment: reportReview.assessment,

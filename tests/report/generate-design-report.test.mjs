@@ -134,11 +134,23 @@ test("generates a standalone annotated dossier and escapes hostile text", () => 
   assert.equal(result.status, 0, result.stderr || result.stdout);
   const summary = JSON.parse(result.stdout);
   const html = fs.readFileSync(outPath, "utf8");
+  const markdownPath = path.join(dir, "report.md");
+  const markdown = fs.readFileSync(markdownPath, "utf8");
+  const markdownAsset = path.join(dir, "report-assets", "before-default.png");
+  assert.equal(summary.markdownPath, markdownPath);
+  assert.equal(summary.markdownAssets, 1);
   assert.equal(summary.embeddedImages, 1);
   assert.equal(summary.missingImages, 0);
   assert.match(html, /data:image\/png;base64,/);
   assert.match(html, /left:12\.5%;top:20%;width:30%;height:18%/);
   assert.match(html, /Alert queue &lt;svg onload=alert\(1\)&gt;/);
+  assert.match(html, /<svg class="evidence-source"[^>]+viewBox="0 0 1 1"/);
+  assert.equal((html.match(/class="annotation-loupe tone-/g) || []).length, 2);
+  assert.equal((html.match(/class="loupe-label"/g) || []).length, 2);
+  assert.equal((html.match(/<use href="#source-before-default"/g) || []).length, 2);
+  assert.equal((html.match(/data:image\/png;base64,/g) || []).length, 1);
+  assert.match(html, /<rect class="loupe-target"/);
+  assert.match(html, /<circle class="loupe-target"/);
   assert.match(html, />before</);
   assert.match(html, /Evidence wall/);
   assert.match(html, /Proof ledger/);
@@ -146,8 +158,65 @@ test("generates a standalone annotated dossier and escapes hostile text", () => 
   assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt; evidence/);
   assert.match(html, /@media print/);
   assert.doesNotMatch(html, /<script(?:\s|>)/i);
-  assert.doesNotMatch(html, /<svg(?:\s|>)/i);
+  assert.doesNotMatch(html, /<svg\s+onload/i);
   assert.doesNotMatch(html, /<link[^>]+stylesheet/i);
+  assert.match(markdown, /^# Ops &lt;script&gt;alert\(1\)&lt;\/script&gt;/m);
+  assert.match(markdown, /^## Evidence wall$/m);
+  assert.match(markdown, /^## Findings$/m);
+  assert.match(markdown, /^## Directions$/m);
+  assert.match(markdown, /^## Moves$/m);
+  assert.match(markdown, /^## Do not break$/m);
+  assert.match(markdown, /^## Proof ledger$/m);
+  assert.match(markdown, /\*\*Alert queue &lt;svg onload=alert\(1\)&gt;\*\*/);
+  assert.match(markdown, /`x=12\.5%, y=20%, width=30%, height=18%`/);
+  assert.match(markdown, /!\[[^\]]+\]\(report-assets\/before-default\.png\)/);
+  assert.doesNotMatch(markdown, /data:image\//i);
+  assert.doesNotMatch(markdown, /<script(?:\s|>)/i);
+  assert.equal(fs.readFileSync(markdownAsset).equals(tinyPng), true);
+});
+
+test("supports an explicit Markdown path and materializes embedded evidence losslessly", () => {
+  const dir = sandbox("markdown-out");
+  const manifest = baseManifest();
+  manifest.screenshots[0].src = "data:image/png;base64," + tinyPng.toString("base64");
+  const manifestPath = writeCase(dir, manifest, null);
+  const outPath = path.join(dir, "visual.html");
+  const markdownPath = path.join(dir, "ingestion", "dossier.md");
+
+  const result = runGenerator([
+    "--manifest",
+    manifestPath,
+    "--out",
+    outPath,
+    "--markdown-out",
+    markdownPath,
+    "--strict-assets",
+  ]);
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const summary = JSON.parse(result.stdout);
+  const markdown = fs.readFileSync(markdownPath, "utf8");
+  const assetPath = path.join(dir, "ingestion", "report-assets", "before-default.png");
+  assert.equal(summary.markdownPath, markdownPath);
+  assert.match(markdown, /report-assets\/before-default\.png/);
+  assert.equal(fs.readFileSync(assetPath).equals(tinyPng), true);
+});
+
+test("keeps annotation badges visible when evidence touches a screenshot edge", () => {
+  const dir = sandbox("annotation-edges");
+  const manifest = baseManifest();
+  manifest.screenshots[0].annotations = [
+    { x: 1, y: 1, width: 30, height: 18, subject: "Top-left panel", label: "Visible at the edge.", tone: "error" },
+    { x: 99, y: 99, subject: "Bottom-right control", label: "Visible at the opposite edge.", tone: "warning" },
+  ];
+  const outPath = path.join(dir, "report.html");
+
+  const result = runGenerator(["--manifest", writeCase(dir, manifest), "--out", outPath, "--strict-assets"]);
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const html = fs.readFileSync(outPath, "utf8");
+  assert.match(html, /annotation-box tone-error label-inset-left label-inset-top/);
+  assert.match(html, /annotation-pin tone-warning label-inset-right label-inset-bottom/);
 });
 
 test("requires screenshot stage and a literal subject for every annotation", () => {
@@ -219,10 +288,13 @@ test("renders a visible evidence placeholder when an image is missing", () => {
   assert.equal(result.status, 0, result.stderr || result.stdout);
   const summary = JSON.parse(result.stdout);
   const html = fs.readFileSync(outPath, "utf8");
+  const markdown = fs.readFileSync(path.join(dir, "report.md"), "utf8");
   assert.equal(summary.missingImages, 1);
   assert.match(summary.warnings[0], /missing/i);
   assert.match(html, /Evidence unavailable/);
   assert.match(html, /Artifact warnings/);
+  assert.match(markdown, /Evidence unavailable/);
+  assert.match(markdown, /Artifact warnings/);
 });
 
 test("never fetches remote screenshots or serializes their query strings", () => {
@@ -236,11 +308,15 @@ test("never fetches remote screenshots or serializes their query strings", () =>
   assert.equal(result.status, 0, result.stderr || result.stdout);
   const summary = JSON.parse(result.stdout);
   const html = fs.readFileSync(outPath, "utf8");
+  const markdown = fs.readFileSync(path.join(dir, "report.md"), "utf8");
   assert.equal(summary.missingImages, 1);
   assert.match(html, /Evidence unavailable/);
   assert.match(html, /private\.example\.test\/ops\.png/);
   assert.doesNotMatch(html, /https:\/\/private\.example\.test/);
   assert.doesNotMatch(html, /do-not-serialize/);
+  assert.match(markdown, /private\.example\.test\/ops\.png/);
+  assert.doesNotMatch(markdown, /https:\/\/private\.example\.test/);
+  assert.doesNotMatch(markdown, /do-not-serialize/);
 });
 
 test("renders built-in Spanish report chrome when the manifest language is Spanish", () => {
