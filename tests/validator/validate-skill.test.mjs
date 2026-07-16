@@ -29,6 +29,10 @@ try {
   );
   assertFailure(run(badPrompt), /default_prompt must mention \$ruthless-designer/);
 
+  const oversizedReference = makeSkill("oversized-reference");
+  fs.writeFileSync(path.join(oversizedReference, "references", "proof.md"), `# Proof\n\n${"word ".repeat(2501)}`);
+  assertFailure(run(oversizedReference), /Reference file is too large for progressive disclosure.*split it by decision context/s);
+
   console.log("validator tests passed");
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });

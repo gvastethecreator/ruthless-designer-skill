@@ -235,5 +235,149 @@
       "copy the reference costume without adapting its system to the product task",
       "invent missing source context or provenance"
     ]
+  },
+  {
+    "id": "behavior-finish-craft-gate",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to finish this implemented desktop editor. The concept is strong, but repeated rows drift by a few pixels, gaps are inconsistent, native scrollbars remain, gradients feel accidental, and several hand-drawn SVG icons look cheap. Fix the real causes and prove the final interface from browser captures.",
+    "must": [
+      "run separate structure and finish passes",
+      "measure horizontal and vertical anchors plus repeated spacing relationships",
+      "customize every remaining scroll region without hiding its affordance",
+      "judge gradients by rendered role and execution rather than banning them",
+      "replace or deliberately rebuild weak custom vector icons within a coherent family",
+      "inspect device-scale-factor-2 captures and focused detail crops",
+      "record a finish ledger and continue while any applicable dimension fails"
+    ],
+    "must_not": [
+      "approve the result from source or a clean detector alone",
+      "use a low-resolution full-page thumbnail as finish proof",
+      "stop after local nudges leave the same visible defect",
+      "ban all gradients or hide scrollbars to avoid styling them"
+    ]
+  },
+  {
+    "id": "behavior-context-creative-studio",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to redesign a browser-based color-grading studio used all day by expert editors. The preview, timeline, scopes, inspectors, autosave, undo history, and export flow already exist, but the current shell treats them like a generic analytics dashboard.",
+    "must": [
+      "classify the product as a creative studio rather than a dashboard",
+      "make the current frame timeline and selected object the sovereign artifact",
+      "organize inspector controls by editing intent and selection scope",
+      "preserve undo autosave conflict and export contracts",
+      "prove selected unsaved conflicting collapsed-panel and export-failure states"
+    ],
+    "must_not": [
+      "lead with KPIs or render metrics",
+      "apply marketing-scale typography to repeated controls",
+      "treat one static canvas screenshot as proof of the editing loop"
+    ]
+  },
+  {
+    "id": "behavior-context-command-center",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to redesign a regional fleet command center where operators monitor continuously, acknowledge incidents, assign owners, inspect stale feeds, coordinate handoff, and recover failed actions.",
+    "must": [
+      "distinguish a command center from a passive dashboard",
+      "model normal degraded incident acknowledged assigned recovering and resolved states",
+      "keep freshness ownership evidence and next safe action connected",
+      "reserve high-salience color and motion for response-worthy change",
+      "prove alert flood stale source partial failure handoff and recovery"
+    ],
+    "must_not": [
+      "use sci-fi glow or fake terminal chrome as operational identity",
+      "make every panel equally urgent",
+      "hide stale or failed subsystems behind an aggregate green status"
+    ]
+  },
+  {
+    "id": "behavior-context-web-game-hud",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to redesign the existing HTML/CSS HUD and menus around a cooperative browser game. Do not change its renderer or gameplay systems. The interface must work in calm exploration, noisy combat, controller and keyboard modes, ultrawide and narrow viewports, and long localization.",
+    "must": [
+      "classify live HUD pause inventory and settings as distinct game moments",
+      "protect the gameplay focal area and assign persistent information to safe zones",
+      "tie salience to urgency objective and player intent rather than card size",
+      "verify input glyph switching controller focus localization and representative scene contrast",
+      "route renderer and gameplay-system implementation outside the web UI scope"
+    ],
+    "must_not": [
+      "apply an admin dashboard composition to live play",
+      "validate readability only on a flat or calm background",
+      "put scrolling panels or native app sidebars over the gameplay viewport"
+    ]
+  },
+  {
+    "id": "behavior-context-hybrid-boundaries",
+    "mode": "create",
+    "prompt": "Use $ruthless-designer to create a public launch page for a level-design studio with a real interactive editor preview and an embedded play-test state. Keep persuasion, editor controls, and game HUD behavior coherent without averaging them into one visual register.",
+    "must": [
+      "declare landing studio and game regions with one primary context per moment",
+      "apply brand rules to persuasion product rules to editor controls and game rules to play-test HUD",
+      "choose composition and scrolling behavior separately for each boundary",
+      "preserve a real artifact as proof instead of forging a fake editor",
+      "prove the public first viewport editor interaction and representative play-test state"
+    ],
+    "must_not": [
+      "use one generic dashboard shell across all regions",
+      "let cinematic landing motion infect high-frequency editor controls",
+      "classify the whole product from its dark visual costume"
+    ]
+  },
+  {
+    "id": "behavior-motion-causal-system",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to redesign a motion-heavy incident map. Nodes move between regions, a scene cover masks mode changes, alerts update live, and operators can drag, reverse, cancel, or invoke reduced motion.",
+    "must": [
+      "classify events as feedback state spatial attention or ambient motion",
+      "persist a motion map with purpose frequency origin destination interruption reduced mode and proof",
+      "define one bounded duration easing displacement and attention grammar",
+      "commit mode changes at an observable covered milestone instead of a guessed timeout",
+      "preserve identity and retarget interruption from the current rendered value",
+      "test repeated triggers rapid reversal reduced motion offscreen behavior and cleanup"
+    ],
+    "must_not": [
+      "apply one entrance preset to every element",
+      "hide primary content until JavaScript reveals it",
+      "use constant pulsing or ambient movement as proof of operational activity",
+      "remount components merely to restart animation"
+    ]
+  },
+  {
+    "id": "behavior-html-redesign-dossier",
+    "mode": "critique",
+    "prompt": "Use $ruthless-designer to review this command-center screenshot and implementation, propose the redesign, and deliver a beautiful portable HTML dossier that another designer can continue without this chat.",
+    "must": [
+      "persist report-manifest.json and standalone report.html",
+      "embed local screenshots and use normalized numbered annotations with a matching text legend",
+      "include verdict context evidence systemic findings exact moves do-not-break proof risks and limitations",
+      "escape hostile content and expose missing or corrupt evidence visibly",
+      "open the report at desktop and narrow widths and inspect its print and focus behavior",
+      "keep automated detector findings labeled as leads rather than human visual verdicts"
+    ],
+    "must_not": [
+      "depend on external CSS JavaScript or remote images",
+      "treat the HTML dossier itself as proof that the proposed design works",
+      "silently omit a broken screenshot",
+      "duplicate the entire report into the chat closeout"
+    ]
+  },
+  {
+    "id": "behavior-authorship-causality-gate",
+    "mode": "create",
+    "prompt": "Use $ruthless-designer to create a distinctive logistics control room without the cheap generated look of equal cards, fake terminal chrome, decorative activity, and invented metrics.",
+    "must": [
+      "derive major decisions from the real workflow data pressure audience or spatial model",
+      "identify what a competitor could not reuse after a noun swap",
+      "use a component ecology instead of one repeated card container",
+      "label real synthetic missing and blocked evidence honestly",
+      "make every interactive-looking control functional or explicitly noninteractive",
+      "run the cheap-generation gate across content rhythm motion signature and costly states"
+    ],
+    "must_not": [
+      "replace generic SaaS styling with automatic brutalism beige luxury or sci-fi chrome",
+      "invent customers metrics logs or proof",
+      "defend distinction with only fonts colors gradients or effects"
+    ]
   }
 ]

@@ -20,6 +20,21 @@
     "prompt": "Build a playable shader tool where the canvas dominates and the controls feel like an instrument rather than a form."
   },
   {
+    "id": "trigger-creative-studio",
+    "expected": "trigger",
+    "prompt": "Invent and build a complete browser-based music production studio where the timeline, current sound, tools, inspectors, shortcuts, save state, and export feel like one coherent instrument."
+  },
+  {
+    "id": "trigger-command-center",
+    "expected": "trigger",
+    "prompt": "Broadly redesign this fleet command center so continuous monitoring, incident ownership, source freshness, keyboard triage, handoff, and recovery determine the entire visual system."
+  },
+  {
+    "id": "trigger-web-game-hud",
+    "expected": "trigger",
+    "prompt": "Create a complete visual direction for a cooperative browser game's HUD, pause, inventory, map, and results UI without changing its renderer or gameplay systems."
+  },
+  {
     "id": "trigger-broad-redesign",
     "expected": "trigger",
     "prompt": "This product works but the entire interface direction is wrong. Reimagine the shell and primary workflow without losing the routes or data model."
@@ -38,6 +53,16 @@
     "id": "trigger-visual-verdict",
     "expected": "trigger",
     "prompt": "Does this landing page actually look good? Be ruthless and cross-reference the screenshot with the code."
+  },
+  {
+    "id": "trigger-motion-system-redesign",
+    "expected": "trigger",
+    "prompt": "Redesign the complete motion language of this spatial command interface. Its scene covers, live alerts, direct manipulation, reduced-motion path, and interrupted transitions currently feel unrelated and cheap."
+  },
+  {
+    "id": "trigger-html-design-dossier",
+    "expected": "trigger",
+    "prompt": "Review these screenshots and source, propose a full redesign, and give me a polished standalone HTML report with annotated evidence, alternatives, exact fixes, and proof targets."
   },
   {
     "id": "trigger-production-redesign",

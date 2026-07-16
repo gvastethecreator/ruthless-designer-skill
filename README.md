@@ -36,6 +36,10 @@ Do not use it for isolated component fixes, small visual bugs, accessibility/per
 - Separates `observed`, `captured`, `compared`, `passed`, and `blocked` evidence.
 - Judges production integrity, task effectiveness, and distinctiveness independently.
 - Treats static detector output as a lead, never a visual verdict.
+- Models motion as feedback, state, spatial continuity, attention, or ambient behavior with interruption, repeated-use, reduced-mode, and cleanup proof.
+- Makes alignment anchors, relationship-based spacing, repeated-series parity, safe areas, and scroll ownership measurable finish gates.
+- Rejects cheap generation through product causality, real content, component ecology, and non-website surface contracts rather than a fashion blacklist.
+- Produces standalone HTML design dossiers with embedded screenshots, normalized annotations, exact fixes, preservation decisions, and proof limits.
 
 ## Install
 
@@ -144,6 +148,18 @@ The report uses a nonnumeric `assessment`: `blocked` when a required evidence ga
 Gate automation with `--fail-on`, `--require-runtime`, `--require-signature`, and fixture-only `--expect-assessment`. The old `--fail-under-score`, `--fail-verdict`, and `--expect-verdict` flags are rejected because their numeric/verdict model claimed precision the harness did not possess.
 
 Runtime screenshots and logs can contain private product data. The harness removes URL credentials, query strings, fragments, bearer tokens, and common secret assignments from its reports, but review artifacts before sharing them.
+
+## Standalone Design Dossiers
+
+Material critiques, screenshot reviews, design proposals, and redesign proposals can be delivered as portable evidence dossiers. Write the structured manifest, then generate strict standalone HTML:
+
+~~~bash
+node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest ./output/ruthless-designer/app-shell/report-manifest.json --out ./output/ruthless-designer/app-shell/report.html --strict-assets
+~~~
+
+The generator validates annotation geometry and cross-references, escapes hostile text, embeds supported local images, fails strict mode on missing/corrupt/external assets, remains readable without JavaScript, and prints cleanly. Draft mode exposes missing or remote evidence as a sanitized visible warning instead of silently omitting or fetching it.
+
+The runtime harness also writes report.html automatically beside review.json and README.md. That automated dossier remains an evidence pack: it does not turn detector output or a captured screenshot into a human design verdict.
 
 ## Check The Active Installation
 

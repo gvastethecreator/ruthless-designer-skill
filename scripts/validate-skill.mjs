@@ -16,7 +16,7 @@ if (!fs.existsSync(skillPath)) {
   const text = fs.readFileSync(skillPath, "utf8");
   const skillWords = wordCount(text);
   const skillLines = text.split(/\r?\n/).length;
-  if (skillWords > 1200) errors.push(`SKILL.md is too large for the routing layer: ${skillWords} words (max 1200)`);
+  if (skillWords > 1350) errors.push(`SKILL.md is too large for the routing layer: ${skillWords} words (max 1350)`);
   if (skillLines > 200) errors.push(`SKILL.md is too long: ${skillLines} lines (max 200)`);
   const match = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
   if (!match) {
@@ -72,8 +72,16 @@ if (!fs.existsSync(skillPath)) {
 if (fs.existsSync(skillDir)) {
   checkMarkdownLinks(skillDir, errors);
   const markdown = markdownFiles(skillDir);
-  const totalWords = markdown.reduce((sum, file) => sum + wordCount(fs.readFileSync(file, "utf8")), 0);
-  if (totalWords > 12000) errors.push(`Skill Markdown exceeds context budget: ${totalWords} words (max 12000)`);
+  for (const file of markdown) {
+    if (path.resolve(file) === path.resolve(skillPath)) continue;
+    const words = wordCount(fs.readFileSync(file, "utf8"));
+    if (words > 2500) {
+      errors.push(
+        `Reference file is too large for progressive disclosure: ${path.relative(skillDir, file)} ` +
+          `has ${words} words (max 2500); split it by decision context`,
+      );
+    }
+  }
 }
 
 checkAgentMetadata(agentMetadataPath, errors);

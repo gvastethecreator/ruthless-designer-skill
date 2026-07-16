@@ -24,6 +24,12 @@ if (!triggerCounts.trigger || !triggerCounts["do-not-trigger"]) {
   errors.push("trigger-cases.json must contain positive and negative cases");
 }
 
+for (const id of ["trigger-creative-studio", "trigger-command-center", "trigger-web-game-hud"]) {
+  if (!triggers.some((test) => test.id === id && test.expected === "trigger")) {
+    errors.push(`trigger-cases.json must cover ${id} as a trigger`);
+  }
+}
+
 for (const test of behavior) {
   requireString(test, "id", "behavior");
   requireString(test, "mode", test.id || "behavior");
@@ -33,6 +39,15 @@ for (const test of behavior) {
   if (!String(test.prompt || "").includes("$ruthless-designer")) {
     errors.push(`${test.id || "behavior"}: prompt must invoke $ruthless-designer explicitly`);
   }
+}
+
+for (const id of [
+  "behavior-context-creative-studio",
+  "behavior-context-command-center",
+  "behavior-context-web-game-hud",
+  "behavior-context-hybrid-boundaries",
+]) {
+  if (!behavior.some((test) => test.id === id)) errors.push(`behavior-cases.json must cover ${id}`);
 }
 
 if (errors.length) {
