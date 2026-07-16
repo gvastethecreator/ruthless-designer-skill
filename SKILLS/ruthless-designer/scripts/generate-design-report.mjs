@@ -34,6 +34,23 @@ const LABELS_EN = {
   evidenceTitle: "Evidence wall",
   unavailable: "Evidence unavailable",
   noAnnotations: "No annotation geometry supplied. Inspect at readable scale before claiming comparison.",
+  annotationZoom: "Evidence zoom",
+  annotations: "Annotations",
+  claim: "Claim",
+  geometry: "Geometry",
+  asset: "Asset",
+  summaryTitle: "Summary",
+  metadataTitle: "Metadata",
+  noneRecorded: "None recorded.",
+  mode: "Mode",
+  language: "Language",
+  stage: "Stage",
+  state: "State",
+  viewport: "Viewport",
+  caption: "Caption",
+  artifactNote: "Artifact note",
+  linkedEvidence: "Linked evidence",
+  thesis: "Thesis",
   findingsKicker: "Systemic causes",
   findingsTitle: "Findings that force a move",
   seeEvidence: "See linked evidence ↗",
@@ -113,6 +130,23 @@ const LABELS_ES = {
   evidenceTitle: "Muro de evidencia",
   unavailable: "Evidencia no disponible",
   noAnnotations: "No se suministró geometría de anotación. Inspeccionar a escala legible antes de afirmar una comparación.",
+  annotationZoom: "Zoom de evidencia",
+  annotations: "Anotaciones",
+  claim: "Afirmación",
+  geometry: "Geometría",
+  asset: "Recurso",
+  summaryTitle: "Resumen",
+  metadataTitle: "Metadatos",
+  noneRecorded: "No se registraron elementos.",
+  mode: "Modo",
+  language: "Idioma",
+  stage: "Etapa",
+  state: "Estado",
+  viewport: "Viewport",
+  caption: "Descripción",
+  artifactNote: "Nota del recurso",
+  linkedEvidence: "Evidencia vinculada",
+  thesis: "Tesis",
   findingsKicker: "Causas sistémicas",
   findingsTitle: "Hallazgos que obligan a actuar",
   seeEvidence: "Ver evidencia vinculada ↗",
@@ -173,6 +207,7 @@ const LABELS_ES = {
 export function generateDesignReport({
   manifestPath,
   outPath,
+  markdownOutPath,
   embedImages = true,
   strictAssets = false,
 } = {}) {
@@ -189,6 +224,7 @@ export function generateDesignReport({
   return writeDesignReport({
     manifest: input,
     outPath: absoluteOut,
+    markdownOutPath,
     baseDir: path.dirname(absoluteManifest),
     embedImages,
     strictAssets,
@@ -198,12 +234,16 @@ export function generateDesignReport({
 export function writeDesignReport({
   manifest,
   outPath,
+  markdownOutPath,
   baseDir = process.cwd(),
   embedImages = true,
   strictAssets = false,
 } = {}) {
   if (!outPath) throw new Error("Missing outPath");
   const absoluteOut = path.resolve(outPath);
+  const absoluteMarkdownOut = path.resolve(markdownOutPath || companionMarkdownPath(absoluteOut));
+  if (path.extname(absoluteMarkdownOut).toLowerCase() !== ".md") throw new Error("Markdown output must use a .md extension");
+  if (absoluteMarkdownOut === absoluteOut) throw new Error("Markdown output path must differ from the HTML output path");
   const normalized = normalizeManifest(manifest);
   const warnings = [];
   const screenshots = normalized.screenshots.map((item) =>
@@ -215,19 +255,54 @@ export function writeDesignReport({
       warnings,
     }),
   );
-  const report = { ...normalized, screenshots };
+  const markdownAssets = prepareMarkdownAssets(screenshots, absoluteMarkdownOut);
+  const report = { ...normalized, screenshots: markdownAssets.screenshots };
   const html = renderDesignReport(report, warnings);
+  const markdown = renderDesignReportMarkdown(report, warnings);
   fs.mkdirSync(path.dirname(absoluteOut), { recursive: true });
+  fs.mkdirSync(path.dirname(absoluteMarkdownOut), { recursive: true });
+  if (markdownAssets.files.length) fs.mkdirSync(markdownAssets.assetsDir, { recursive: true });
+  for (const asset of markdownAssets.files) fs.writeFileSync(asset.path, asset.bytes);
   fs.writeFileSync(absoluteOut, html, "utf8");
+  fs.writeFileSync(absoluteMarkdownOut, markdown, "utf8");
   return {
     outPath: absoluteOut,
+    markdownPath: absoluteMarkdownOut,
+    markdownAssets: markdownAssets.files.length,
+    markdownAssetsDir: markdownAssets.files.length ? markdownAssets.assetsDir : null,
     mode: report.mode,
     findings: report.findings.length,
-    screenshots: screenshots.length,
-    embeddedImages: screenshots.filter((item) => item.embedded).length,
-    missingImages: screenshots.filter((item) => !item.available).length,
+    screenshots: report.screenshots.length,
+    embeddedImages: report.screenshots.filter((item) => item.embedded).length,
+    missingImages: report.screenshots.filter((item) => !item.available).length,
     warnings,
   };
+}
+
+function companionMarkdownPath(htmlPath) {
+  const extension = path.extname(htmlPath);
+  return (extension ? htmlPath.slice(0, -extension.length) : htmlPath) + ".md";
+}
+
+function prepareMarkdownAssets(screenshots, markdownOutPath) {
+  const assetsDir = path.join(path.dirname(markdownOutPath), "report-assets");
+  const files = [];
+  const prepared = screenshots.map((item) => {
+    if (!item.available || !item.sourceBytes || !item.sourceMime) return { ...item, markdownSrc: "" };
+    const extension = extensionForMime(item.sourceMime);
+    const filename = item.id + extension;
+    files.push({ path: path.join(assetsDir, filename), bytes: item.sourceBytes });
+    return { ...item, markdownSrc: "report-assets/" + filename };
+  });
+  return { screenshots: prepared, files, assetsDir };
+}
+
+function extensionForMime(mime) {
+  if (mime === "image/jpeg") return ".jpg";
+  if (mime === "image/gif") return ".gif";
+  if (mime === "image/webp") return ".webp";
+  if (mime === "image/avif") return ".avif";
+  return ".png";
 }
 
 export function designReportManifestFromReview(review, { baseDir = process.cwd() } = {}) {
@@ -383,6 +458,182 @@ export function renderDesignReport(report, warnings = []) {
     "</html>",
   ].join("\n");
   return html + "\n";
+}
+
+export function renderDesignReportMarkdown(report, warnings = []) {
+  const copy = report.labels;
+  const lines = [
+    "# " + markdownInline(report.title),
+    "",
+    "## " + markdownInline(copy.verdict),
+    "",
+    "> **[" + markdownInline(report.verdict.severity) + "] " + markdownInline(report.verdict.label) + "**",
+    "> " + markdownInline(report.verdict.summary),
+    "",
+    "- **" + markdownInline(copy.mode) + ":** " + markdownInline(copy["mode" + report.mode[0].toUpperCase() + report.mode.slice(1)]),
+    "- **" + markdownInline(copy.language) + ":** " + markdownInline(report.language),
+    "",
+    "## " + markdownInline(copy.summaryTitle),
+    "",
+  ];
+
+  appendMarkdownList(lines, report.summary, copy.noneRecorded);
+  lines.push("", "## " + markdownInline(copy.briefKicker), "");
+  appendMarkdownRecord(lines, report.context, copy);
+
+  lines.push("", "## " + markdownInline(copy.evidenceTitle), "");
+  if (!report.screenshots.length) {
+    lines.push("- " + markdownInline(copy.noneRecorded));
+  } else {
+    report.screenshots.forEach((item, screenshotIndex) => {
+      lines.push(
+        "### E" + String(screenshotIndex + 1).padStart(2, "0") + " — " + markdownInline(item.label),
+        "",
+        "- **" + markdownInline(copy.stage) + ":** " + markdownInline(localizedScreenshotStage(item.stage, copy)),
+      );
+      if (item.state) lines.push("- **" + markdownInline(copy.state) + ":** " + markdownInline(item.state));
+      if (item.viewport) lines.push("- **" + markdownInline(copy.viewport) + ":** " + markdownInline(item.viewport));
+      if (item.caption) lines.push("- **" + markdownInline(copy.caption) + ":** " + markdownInline(item.caption));
+      if (item.markdownSrc) {
+        lines.push(
+          "- **" + markdownInline(copy.asset) + ":** `" + item.markdownSrc + "`",
+          "",
+          "![" + markdownInline(item.alt) + "](" + item.markdownSrc + ")",
+        );
+      } else {
+        lines.push(
+          "- **" + markdownInline(copy.asset) + ":** " + markdownInline(copy.unavailable),
+          "- **" + markdownInline(copy.artifactNote) + ":** " + markdownInline(item.assetNote),
+        );
+      }
+      lines.push("", "#### " + markdownInline(copy.annotations), "");
+      if (!item.annotations.length) {
+        lines.push("- " + markdownInline(copy.noAnnotations));
+      } else {
+        item.annotations.forEach((annotation, annotationIndex) => {
+          lines.push(
+            String(annotationIndex + 1) + ". **" + markdownInline(annotation.subject) + "** (`" + annotation.tone + "`)",
+            "   - **" + markdownInline(copy.claim) + ":** " + markdownInline(annotation.label),
+            "   - **" + markdownInline(copy.geometry) + ":** `" + annotationGeometry(annotation) + "`",
+          );
+        });
+      }
+      lines.push("");
+    });
+  }
+
+  lines.push("## " + markdownInline(copy.findingsNav), "");
+  if (!report.findings.length) {
+    lines.push("- " + markdownInline(copy.noneRecorded));
+  } else {
+    report.findings.forEach((item, index) => {
+      lines.push(
+        "### F" + String(index + 1).padStart(2, "0") + " · " + markdownInline(item.severity) + " — " + markdownInline(item.title),
+        "",
+        "- **" + markdownInline(copy.evidence) + ":** " + markdownInline(item.evidence),
+        "- **" + markdownInline(copy.userDamage) + ":** " + markdownInline(item.damage),
+        "- **" + markdownInline(copy.structuralCause) + ":** " + markdownInline(item.cause),
+        "- **" + markdownInline(copy.exactMove) + ":** " + markdownInline(item.solution),
+      );
+      if (item.roast) lines.push("- **" + markdownInline(copy.earnedRoast) + ":** " + markdownInline(item.roast));
+      if (item.screenshotId) {
+        const evidenceIndex = report.screenshots.findIndex((screenshot) => screenshot.id === item.screenshotId);
+        lines.push("- **" + markdownInline(copy.linkedEvidence) + ":** E" + String(evidenceIndex + 1).padStart(2, "0") + " (`" + item.screenshotId + "`)");
+      }
+      lines.push("");
+    });
+  }
+
+  lines.push("## " + markdownInline(copy.directionsNav), "");
+  if (!report.directions.length) {
+    lines.push("- " + markdownInline(copy.noneRecorded));
+  } else {
+    report.directions.forEach((item, index) => {
+      lines.push(
+        "### D" + String(index + 1).padStart(2, "0") + " · " + markdownInline(localizedDirectionStatus(item.status, copy)) + " — " + markdownInline(item.name),
+        "",
+        "- **" + markdownInline(copy.thesis) + ":** " + markdownInline(item.thesis),
+      );
+      if (item.signature) lines.push("- **" + markdownInline(copy.signature) + ":** " + markdownInline(item.signature));
+      lines.push("- **" + markdownInline(copy.decision) + ":** " + markdownInline(item.why), "");
+    });
+  }
+
+  lines.push("## " + markdownInline(copy.movesNav), "");
+  if (!report.actions.length) {
+    lines.push("- " + markdownInline(copy.noneRecorded));
+  } else {
+    report.actions.forEach((item) => {
+      lines.push(
+        "### " + markdownInline(item.priority) + " — " + markdownInline(item.title),
+        "",
+        markdownInline(item.detail),
+      );
+      if (item.proof) lines.push("", "- **" + markdownInline(copy.proof) + ":** " + markdownInline(item.proof));
+      lines.push("");
+    });
+  }
+
+  lines.push("## " + markdownInline(copy.preserveNav), "");
+  appendMarkdownList(lines, report.preserve, copy.noneRecorded);
+
+  lines.push("", "## " + markdownInline(copy.proofTitle), "");
+  if (!report.proof.length) {
+    lines.push("- " + markdownInline(copy.noneRecorded));
+  } else {
+    report.proof.forEach((item, index) => {
+      lines.push(
+        String(index + 1) + ". **" + markdownInline(item.label) + "** — `" + markdownInline(localizedProofStatus(item.status, copy)) + "`",
+        "   - " + markdownInline(item.detail),
+      );
+      if (item.artifact) lines.push("   - **" + markdownInline(copy.artifact) + ":** " + markdownInline(item.artifact));
+    });
+  }
+
+  lines.push("", "## " + markdownInline(copy.risks), "");
+  appendMarkdownList(lines, report.risks, copy.noneRecorded);
+  lines.push("", "## " + markdownInline(copy.limitations), "");
+  appendMarkdownList(lines, report.limitations, copy.noneRecorded);
+  lines.push("", "## " + markdownInline(copy.warnings), "");
+  appendMarkdownList(lines, warnings, copy.noneRecorded);
+  lines.push("", "## " + markdownInline(copy.metadataTitle), "");
+  appendMarkdownRecord(lines, report.metadata, copy);
+  return lines.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+}
+
+function appendMarkdownList(lines, items, fallback) {
+  if (!items.length) {
+    lines.push("- " + markdownInline(fallback));
+    return;
+  }
+  for (const item of items) lines.push("- " + markdownInline(item));
+}
+
+function appendMarkdownRecord(lines, record, copy) {
+  const entries = Object.entries(record);
+  if (!entries.length) {
+    lines.push("- " + markdownInline(copy.noneRecorded));
+    return;
+  }
+  for (const [key, value] of entries) {
+    lines.push("- **" + markdownInline(localizedKey(key, copy)) + ":** " + markdownInline(value));
+  }
+}
+
+function annotationGeometry(annotation) {
+  const point = "x=" + annotation.x + "%, y=" + annotation.y + "%";
+  return annotation.width === null ? point + ", point" : point + ", width=" + annotation.width + "%, height=" + annotation.height + "%";
+}
+
+function markdownInline(value) {
+  return String(value ?? "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\\/g, "\\\\")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/([`*_\[\]#|])/g, "\\$1");
 }
 
 function normalizeManifest(input) {
@@ -604,7 +855,13 @@ function resolveScreenshot(item, context) {
       return unavailableScreenshot(item, "Embedded screenshot data is corrupt or its MIME type is incorrect", context);
     }
     if (bytes.length > MAX_IMAGE_BYTES) return unavailableScreenshot(item, "Embedded screenshot exceeds the 25 MB limit", context);
-    return { ...item, renderedSrc: source, available: true, embedded: true, assetNote: "embedded data" };
+    return resolvedScreenshot(item, {
+      renderedSrc: source,
+      embedded: true,
+      assetNote: "embedded data",
+      bytes,
+      mime: detected,
+    });
   }
   if (/^https?:\/\//i.test(source)) {
     const note = "External screenshot is not portable and was not loaded: " + sourceLabel;
@@ -618,22 +875,37 @@ function resolveScreenshot(item, context) {
   const mime = sniffImageMime(bytes);
   if (!mime) return unavailableScreenshot(item, "Screenshot asset is corrupt or unsupported: " + sourceLabel, context);
   if (context.embedImages) {
-    return {
-      ...item,
+    return resolvedScreenshot(item, {
       renderedSrc: "data:" + mime + ";base64," + bytes.toString("base64"),
-      available: true,
       embedded: true,
       assetNote: path.basename(absolute) + " · embedded",
-    };
+      bytes,
+      mime,
+    });
   }
   const relative = path.relative(context.outDir, absolute).replaceAll("\\", "/");
   context.warnings.push("Local screenshot was linked instead of embedded: " + sourceLabel);
-  return {
-    ...item,
+  return resolvedScreenshot(item, {
     renderedSrc: encodeURI(relative),
-    available: true,
     embedded: false,
     assetNote: path.basename(absolute) + " · linked",
+    bytes,
+    mime,
+  });
+}
+
+function resolvedScreenshot(item, { renderedSrc, embedded, assetNote, bytes, mime }) {
+  const dimensions = readImageDimensions(bytes, mime);
+  return {
+    ...item,
+    renderedSrc,
+    available: true,
+    embedded,
+    assetNote,
+    sourceBytes: bytes,
+    sourceMime: mime,
+    pixelWidth: dimensions?.width || null,
+    pixelHeight: dimensions?.height || null,
   };
 }
 
@@ -653,7 +925,17 @@ function safeAssetLabel(source) {
 function unavailableScreenshot(item, message, context) {
   if (context.strictAssets) throw new Error(message);
   context.warnings.push(message);
-  return { ...item, renderedSrc: "", available: false, embedded: false, assetNote: message };
+  return {
+    ...item,
+    renderedSrc: "",
+    available: false,
+    embedded: false,
+    assetNote: message,
+    sourceBytes: null,
+    sourceMime: null,
+    pixelWidth: null,
+    pixelHeight: null,
+  };
 }
 
 function sniffImageMime(bytes) {
@@ -664,6 +946,76 @@ function sniffImageMime(bytes) {
   if (bytes.length >= 12 && bytes.subarray(0, 4).toString("ascii") === "RIFF" && bytes.subarray(8, 12).toString("ascii") === "WEBP") return "image/webp";
   if (bytes.length >= 12 && bytes.subarray(4, 12).toString("ascii").startsWith("ftypavi")) return "image/avif";
   return null;
+}
+
+function readImageDimensions(bytes, mime) {
+  try {
+    if (mime === "image/png" && bytes.length >= 24) {
+      return validImageDimensions(bytes.readUInt32BE(16), bytes.readUInt32BE(20));
+    }
+    if (mime === "image/gif" && bytes.length >= 10) {
+      return validImageDimensions(bytes.readUInt16LE(6), bytes.readUInt16LE(8));
+    }
+    if (mime === "image/jpeg") return readJpegDimensions(bytes);
+    if (mime === "image/webp") return readWebpDimensions(bytes);
+    if (mime === "image/avif") return readAvifDimensions(bytes);
+  } catch {}
+  return null;
+}
+
+function readJpegDimensions(bytes) {
+  const startOfFrame = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
+  let offset = 2;
+  while (offset + 8 < bytes.length) {
+    if (bytes[offset] !== 0xff) {
+      offset += 1;
+      continue;
+    }
+    const marker = bytes[offset + 1];
+    offset += 2;
+    if (marker === 0xd8 || marker === 0xd9) continue;
+    if (offset + 2 > bytes.length) return null;
+    const length = bytes.readUInt16BE(offset);
+    if (length < 2 || offset + length > bytes.length) return null;
+    if (startOfFrame.has(marker) && length >= 7) {
+      return validImageDimensions(bytes.readUInt16BE(offset + 5), bytes.readUInt16BE(offset + 3));
+    }
+    offset += length;
+  }
+  return null;
+}
+
+function readWebpDimensions(bytes) {
+  const chunk = bytes.subarray(12, 16).toString("ascii");
+  if (chunk === "VP8X" && bytes.length >= 30) {
+    return validImageDimensions(bytes.readUIntLE(24, 3) + 1, bytes.readUIntLE(27, 3) + 1);
+  }
+  if (chunk === "VP8 " && bytes.length >= 30 && bytes.subarray(23, 26).equals(Buffer.from([0x9d, 0x01, 0x2a]))) {
+    return validImageDimensions(bytes.readUInt16LE(26) & 0x3fff, bytes.readUInt16LE(28) & 0x3fff);
+  }
+  if (chunk === "VP8L" && bytes.length >= 25 && bytes[20] === 0x2f) {
+    const width = 1 + (((bytes[22] & 0x3f) << 8) | bytes[21]);
+    const height = 1 + (((bytes[24] & 0x0f) << 10) | (bytes[23] << 2) | (bytes[22] >> 6));
+    return validImageDimensions(width, height);
+  }
+  return null;
+}
+
+function readAvifDimensions(bytes) {
+  let offset = 0;
+  while (offset + 20 <= bytes.length) {
+    const index = bytes.indexOf("ispe", offset, "ascii");
+    if (index === -1 || index + 16 > bytes.length) return null;
+    const dimensions = validImageDimensions(bytes.readUInt32BE(index + 8), bytes.readUInt32BE(index + 12));
+    if (dimensions) return dimensions;
+    offset = index + 4;
+  }
+  return null;
+}
+
+function validImageDimensions(width, height) {
+  if (!Number.isInteger(width) || !Number.isInteger(height) || width <= 0 || height <= 0 || width > 100000 || height > 100000) return null;
+  return { width, height };
 }
 
 function renderBrief(report, copy) {
@@ -691,9 +1043,9 @@ function renderScreenshot(item, index, copy) {
     .map((value) => "<span>" + escapeHtml(value) + "</span>")
     .join("");
   const media = item.available
-    ? '<img src="' + escapeAttr(item.renderedSrc) + '" alt="' + escapeAttr(item.alt) + '">'
+    ? renderEvidenceSource(item)
     : '<div class="evidence-missing"><strong>' + escapeHtml(copy.unavailable) + "</strong><span>" + escapeHtml(item.assetNote) + "</span></div>";
-  const annotations = item.annotations
+  const annotations = (item.available ? item.annotations : [])
     .map((annotation, annotationIndex) => {
       const style =
         "left:" +
@@ -703,7 +1055,8 @@ function renderScreenshot(item, index, copy) {
         "%;" +
         (annotation.width === null ? "" : "width:" + annotation.width + "%;height:" + annotation.height + "%;");
       const shapeClass = annotation.width === null ? "annotation-pin" : "annotation-box";
-      return '<span class="' + shapeClass + " tone-" + escapeAttr(annotation.tone) + '" style="' + style + '" aria-hidden="true"><b>' + (annotationIndex + 1) + "</b></span>";
+      const edgeClasses = annotationEdgeClasses(annotation);
+      return '<span class="' + shapeClass + " tone-" + escapeAttr(annotation.tone) + edgeClasses + '" style="' + style + '" aria-hidden="true"><b>' + (annotationIndex + 1) + "</b></span>";
     })
     .join("");
   const legend = item.annotations.length
@@ -719,7 +1072,9 @@ function renderScreenshot(item, index, copy) {
             escapeHtml(annotation.subject) +
             "</strong><span>" +
             richText(annotation.label) +
-            "</span></div></li>",
+            "</span>" +
+            renderAnnotationLoupe(item, annotation, copy) +
+            "</div></li>",
         )
         .join("") +
       "</ol>"
@@ -743,6 +1098,138 @@ function renderScreenshot(item, index, copy) {
     escapeHtml(item.assetNote) +
     "</p></figure>"
   );
+}
+
+function annotationEdgeClasses(annotation) {
+  const classes = [];
+  if (annotation.x < 4) classes.push("label-inset-left");
+  if (annotation.y < 4) classes.push("label-inset-top");
+  if (annotation.width === null && annotation.x > 96) classes.push("label-inset-right");
+  if (annotation.width === null && annotation.y > 96) classes.push("label-inset-bottom");
+  return classes.length ? " " + classes.join(" ") : "";
+}
+
+function renderEvidenceSource(item) {
+  if (!item.pixelWidth || !item.pixelHeight) {
+    return '<img src="' + escapeAttr(item.renderedSrc) + '" alt="' + escapeAttr(item.alt) + '">';
+  }
+  return (
+    '<svg class="evidence-source" viewBox="0 0 ' +
+    item.pixelWidth +
+    " " +
+    item.pixelHeight +
+    '" width="' +
+    item.pixelWidth +
+    '" height="' +
+    item.pixelHeight +
+    '" overflow="hidden" role="img" aria-label="' +
+    escapeAttr(item.alt) +
+    '"><image id="source-' +
+    escapeAttr(item.id) +
+    '" href="' +
+    escapeAttr(item.renderedSrc) +
+    '" width="' +
+    item.pixelWidth +
+    '" height="' +
+    item.pixelHeight +
+    '"></image></svg>'
+  );
+}
+
+function renderAnnotationLoupe(item, annotation, copy) {
+  if (!item.available || !item.pixelWidth || !item.pixelHeight) return "";
+  const geometry = annotationLoupeGeometry(item, annotation);
+  const label = copy.annotationZoom + ": " + annotation.subject;
+  const target = annotation.width === null
+    ? '<circle class="loupe-target" cx="' + formatSvgNumber(geometry.targetX) + '" cy="' + formatSvgNumber(geometry.targetY) + '" r="' + formatSvgNumber(geometry.radius) + '"></circle>'
+    : '<rect class="loupe-target" x="' + formatSvgNumber(geometry.targetX) + '" y="' + formatSvgNumber(geometry.targetY) + '" width="' + formatSvgNumber(geometry.targetWidth) + '" height="' + formatSvgNumber(geometry.targetHeight) + '"></rect>';
+  return (
+    '<span class="loupe-label">' +
+    escapeHtml(copy.annotationZoom) +
+    '</span><svg class="annotation-loupe tone-' +
+    escapeAttr(annotation.tone) +
+    '" viewBox="' +
+    [geometry.viewX, geometry.viewY, geometry.viewWidth, geometry.viewHeight].map(formatSvgNumber).join(" ") +
+    '" overflow="hidden" role="img" aria-label="' +
+    escapeAttr(label) +
+    '"><title>' +
+    escapeHtml(label) +
+    '</title><use href="#source-' +
+    escapeAttr(item.id) +
+    '"></use>' +
+    target +
+    "</svg>"
+  );
+}
+
+function annotationLoupeGeometry(item, annotation) {
+  const imageWidth = item.pixelWidth;
+  const imageHeight = item.pixelHeight;
+  const targetX = (annotation.x / 100) * imageWidth;
+  const targetY = (annotation.y / 100) * imageHeight;
+  if (annotation.width === null) {
+    const viewWidth = Math.min(imageWidth, imageWidth * 0.36);
+    const viewHeight = Math.min(imageHeight, imageHeight * 0.36);
+    const view = fitLoupeView(
+      targetX - viewWidth / 2,
+      targetY - viewHeight / 2,
+      viewWidth,
+      viewHeight,
+      imageWidth,
+      imageHeight,
+    );
+    return {
+      ...view,
+      targetX,
+      targetY,
+      radius: Math.max(Math.min(imageWidth, imageHeight) * 0.018, 0.02),
+    };
+  }
+  const targetWidth = (annotation.width / 100) * imageWidth;
+  const targetHeight = (annotation.height / 100) * imageHeight;
+  const padX = Math.max(targetWidth * 0.22, imageWidth * 0.025);
+  const padY = Math.max(targetHeight * 0.22, imageHeight * 0.025);
+  const viewX = Math.max(0, targetX - padX);
+  const viewY = Math.max(0, targetY - padY);
+  const view = fitLoupeView(
+    viewX,
+    viewY,
+    Math.min(imageWidth, targetX + targetWidth + padX) - viewX,
+    Math.min(imageHeight, targetY + targetHeight + padY) - viewY,
+    imageWidth,
+    imageHeight,
+  );
+  return {
+    ...view,
+    targetX,
+    targetY,
+    targetWidth,
+    targetHeight,
+  };
+}
+
+function fitLoupeView(x, y, width, height, imageWidth, imageHeight) {
+  const targetAspect = 16 / 9;
+  let viewWidth = width;
+  let viewHeight = height;
+  if (viewWidth / viewHeight < targetAspect) viewWidth = Math.min(imageWidth, viewHeight * targetAspect);
+  else viewHeight = Math.min(imageHeight, viewWidth / targetAspect);
+  const centerX = x + width / 2;
+  const centerY = y + height / 2;
+  return {
+    viewX: clamp(centerX - viewWidth / 2, 0, imageWidth - viewWidth),
+    viewY: clamp(centerY - viewHeight / 2, 0, imageHeight - viewHeight),
+    viewWidth,
+    viewHeight,
+  };
+}
+
+function clamp(value, minimum, maximum) {
+  return Math.min(Math.max(value, minimum), maximum);
+}
+
+function formatSvgNumber(value) {
+  return Number(value.toFixed(4)).toString();
 }
 
 function renderFindings(findings, copy) {
@@ -989,13 +1476,14 @@ function escapeAttr(value) {
 }
 
 function parseArgs(args) {
-  const options = { manifestPath: null, outPath: null, embedImages: true, strictAssets: false };
+  const options = { manifestPath: null, outPath: null, markdownOutPath: null, embedImages: true, strictAssets: false };
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
     const [name, inlineValue] = argument.split("=", 2);
     const next = () => inlineValue ?? args[++index];
     if (name === "--manifest") options.manifestPath = next();
     else if (name === "--out") options.outPath = next();
+    else if (name === "--markdown-out") options.markdownOutPath = next();
     else if (argument === "--no-embed-images") options.embedImages = false;
     else if (argument === "--strict-assets") options.strictAssets = true;
     else if (argument === "--help" || argument === "-h") options.help = true;
@@ -1008,9 +1496,10 @@ function parseArgs(args) {
 
 function usage() {
   return [
-    "Usage: node generate-design-report.mjs --manifest <report.json> [--out <report.html>]",
+    "Usage: node generate-design-report.mjs --manifest <report.json> [--out <report.html>] [--markdown-out <report.md>]",
     "",
     "Options:",
+    "  --markdown-out      Override the automatic Markdown companion path.",
     "  --strict-assets      Fail when a screenshot is missing, corrupt, unsupported, or external.",
     "  --no-embed-images    Link local screenshots instead of embedding them. The report is no longer portable.",
   ].join("\n");
@@ -1070,8 +1559,8 @@ const REPORT_CSS = [
   ".evidence-index { padding:4px 7px; background:var(--ink); color:var(--acid); font:700 11px ui-monospace,Consolas,monospace; }",
   ".evidence-tags { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:6px; }",
   ".evidence-tags span { padding:3px 7px; border:1px solid var(--line); color:var(--muted); font-size:11px; }",
-  ".evidence-media { position:relative; min-height:180px; overflow:hidden; background:#d9d7cf; }",
-  ".evidence-media img { display:block; width:100%; height:auto; }",
+  ".evidence-media { position:relative; overflow:hidden; background:#d9d7cf; }",
+  ".evidence-media img,.evidence-source { display:block; width:100%; height:auto; }",
   ".evidence-missing { display:grid; place-items:center; align-content:center; min-height:340px; padding:28px; background:repeating-linear-gradient(135deg,#e8e5dc,#e8e5dc 12px,#dcd9cf 12px,#dcd9cf 24px); text-align:center; }",
   ".evidence-missing strong { font:500 34px Georgia,serif; }",
   ".evidence-missing span { max-width:60ch; margin-top:8px; color:var(--muted); }",
@@ -1079,6 +1568,14 @@ const REPORT_CSS = [
   ".annotation-pin { width:28px; height:28px; margin:-14px 0 0 -14px; border-radius:50%; background:var(--danger); box-shadow:0 0 0 4px rgba(255,255,255,.82); }",
   ".annotation-box { min-width:28px; min-height:28px; background:rgba(255,94,73,.035); box-shadow:0 0 0 2px rgba(255,255,255,.82); }",
   ".annotation-pin b,.annotation-box b { position:absolute; top:-14px; left:-14px; display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:var(--danger); font:800 12px Arial,sans-serif; }",
+  ".annotation-box.label-inset-left b { left:3px; }",
+  ".annotation-box.label-inset-top b { top:3px; }",
+  ".annotation-pin.label-inset-left { margin-left:0; }",
+  ".annotation-pin.label-inset-left b { left:0; }",
+  ".annotation-pin.label-inset-top { margin-top:0; }",
+  ".annotation-pin.label-inset-top b { top:0; }",
+  ".annotation-pin.label-inset-right { margin-left:-28px; }",
+  ".annotation-pin.label-inset-bottom { margin-top:-28px; }",
   ".tone-warning { border-color:var(--amber); }",
   ".annotation-box.tone-warning { background:rgba(240,173,50,.035); }",
   ".annotation-pin.tone-warning,.tone-warning b { background:var(--amber); color:var(--ink); }",
@@ -1093,6 +1590,19 @@ const REPORT_CSS = [
   ".annotation-legend li b { display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--danger); color:white; font-size:11px; }",
   ".annotation-legend li strong { display:block; margin-bottom:3px; font-size:12px; letter-spacing:.08em; line-height:1.25; text-transform:uppercase; }",
   ".annotation-legend li span { display:block; }",
+  ".annotation-legend li > div { min-width:0; }",
+  ".annotation-legend li:last-child:nth-child(odd) { grid-column:1 / -1; }",
+  ".annotation-legend li:last-child:nth-child(odd) > div { display:grid; grid-template-columns:minmax(230px,.42fr) minmax(0,1fr); grid-template-rows:auto auto 1fr; column-gap:20px; align-items:start; }",
+  ".annotation-legend li:last-child:nth-child(odd) > div > strong { grid-column:1; grid-row:1; }",
+  ".annotation-legend li:last-child:nth-child(odd) > div > span:not(.loupe-label) { grid-column:1; grid-row:2 / 4; }",
+  ".annotation-legend li:last-child:nth-child(odd) > div > .loupe-label { grid-column:2; grid-row:1; margin-top:0; }",
+  ".annotation-legend li:last-child:nth-child(odd) > div > .annotation-loupe { grid-column:2; grid-row:2 / 4; }",
+  ".loupe-label { margin-top:12px; color:var(--muted); font:800 10px ui-monospace,Consolas,monospace; letter-spacing:.11em; text-transform:uppercase; }",
+  ".annotation-loupe { display:block; width:100%; height:auto; margin-top:5px; overflow:hidden; border:1px solid currentColor; background:#d9d7cf; color:var(--danger); isolation:isolate; }",
+  ".annotation-loupe .loupe-target { fill:rgba(255,255,255,.08); stroke:currentColor; stroke-width:3; vector-effect:non-scaling-stroke; }",
+  ".annotation-loupe.tone-warning { color:var(--amber); }",
+  ".annotation-loupe.tone-proposal { color:var(--blue); }",
+  ".annotation-loupe.tone-note { color:var(--ink); }",
   ".annotation-legend li.tone-warning b { background:var(--amber); color:var(--ink); }",
   ".annotation-legend li.tone-proposal b { background:var(--blue); }",
   ".annotation-legend li.tone-note b { background:var(--ink); }",
@@ -1154,7 +1664,7 @@ const REPORT_CSS = [
   ".risk-grid li + li { margin-top:9px; }",
   "footer { display:flex; justify-content:space-between; gap:20px; padding:18px 32px; background:var(--ink); color:white; font-size:11px; letter-spacing:.09em; text-transform:uppercase; }",
   "@media (max-width:900px) { :root{--rail:0px;} .report-shell{display:block;} .report-nav{display:none;} .header-grid{grid-template-columns:1fr;margin-top:40px;} .context-grid,.direction-grid{grid-template-columns:repeat(2,minmax(0,1fr));} .risk-grid{grid-template-columns:1fr;} }",
-  "@media (max-width:640px) { .report-header{padding:18px 18px 26px;} h1{font-size:50px;} .dossier-section{padding:44px 18px 56px;} .section-kicker{top:48px;right:18px;font-size:44px;} .section-heading{padding-right:62px;} .summary-stack,.context-grid,.finding-grid,.direction-grid,.string-cards,.annotation-legend{grid-template-columns:1fr;} .evidence-card{box-shadow:5px 5px 0 var(--ink);} .evidence-card figcaption{align-items:flex-start;flex-direction:column;} .evidence-tags{justify-content:flex-start;} .finding>header{grid-template-columns:1fr;} .action-list li{grid-template-columns:52px 1fr;} footer{flex-direction:column;padding:18px;} }",
+  "@media (max-width:640px) { .report-header{padding:18px 18px 26px;} h1{font-size:50px;} .dossier-section{padding:44px 18px 56px;} .section-kicker{top:48px;right:18px;font-size:44px;} .section-heading{padding-right:62px;} .summary-stack,.context-grid,.finding-grid,.direction-grid,.string-cards,.annotation-legend{grid-template-columns:1fr;} .annotation-legend li:last-child:nth-child(odd)>div{display:block;} .evidence-card{box-shadow:5px 5px 0 var(--ink);} .evidence-card figcaption{align-items:flex-start;flex-direction:column;} .evidence-tags{justify-content:flex-start;} .finding>header{grid-template-columns:1fr;} .action-list li{grid-template-columns:52px 1fr;} footer{flex-direction:column;padding:18px;} }",
   "@media print { html{background:white;} body::before,.report-nav,.skip-link{display:none;} .report-shell{display:block;} .report-header,.dossier-section{break-inside:avoid;} .evidence-card,.finding,.direction,table{break-inside:avoid;} .report-header{padding:18mm 14mm;} .dossier-section{padding:12mm 14mm;} .section-kicker{right:14mm;} footer{background:white;color:var(--ink);border-top:1px solid var(--ink);} }",
   "@media (prefers-reduced-motion:reduce) { html{scroll-behavior:auto;} }",
 ].join("\n");
