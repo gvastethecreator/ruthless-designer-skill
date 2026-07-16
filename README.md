@@ -157,7 +157,7 @@ Material critiques, screenshot reviews, design proposals, and redesign proposals
 node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest ./output/ruthless-designer/app-shell/report-manifest.json --out ./output/ruthless-designer/app-shell/report.html --strict-assets
 ~~~
 
-The generator validates annotation geometry and cross-references, escapes hostile text, embeds supported local images, fails strict mode on missing/corrupt/external assets, remains readable without JavaScript, and prints cleanly. Draft mode exposes missing or remote evidence as a sanitized visible warning instead of silently omitting or fetching it.
+The generator validates annotation geometry and cross-references, requires every marker to name its literal visible subject, and rejects proposal callouts on before/reference evidence. It also escapes hostile text, embeds supported local images, fails strict mode on missing/corrupt/external assets, remains readable without JavaScript, and prints cleanly. Draft mode exposes missing or remote evidence as a sanitized visible warning instead of silently omitting or fetching it.
 
 The runtime harness also writes report.html automatically beside review.json and README.md. That automated dossier remains an evidence pack: it does not turn detector output or a captured screenshot into a human design verdict.
 

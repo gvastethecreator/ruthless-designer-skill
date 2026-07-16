@@ -8,6 +8,8 @@ const MODES = new Set(["critique", "proposal", "redesign"]);
 const SEVERITIES = new Set(["blocker", "P1", "P2", "P3", "info"]);
 const PROOF_STATES = new Set(["passed", "failed", "blocked", "n/a", "unknown"]);
 const DIRECTION_STATES = new Set(["selected", "rejected", "explored"]);
+const SCREENSHOT_STAGES = new Set(["before", "reference", "proposal", "after", "detail"]);
+const ANNOTATION_TONES = new Set(["error", "warning", "proposal", "note"]);
 const MAX_TEXT = 12000;
 const MAX_IMAGE_BYTES = 25 * 1024 * 1024;
 const LABELS_EN = {
@@ -82,6 +84,11 @@ const LABELS_EN = {
   blocked: "blocked",
   notApplicable: "n/a",
   unknown: "unknown",
+  stageBefore: "before",
+  stageReference: "reference",
+  stageProposal: "proposal",
+  stageAfter: "after",
+  stageDetail: "detail",
 };
 const LABELS_ES = {
   ...LABELS_EN,
@@ -156,6 +163,11 @@ const LABELS_ES = {
   blocked: "bloqueado",
   notApplicable: "n/a",
   unknown: "desconocido",
+  stageBefore: "antes",
+  stageReference: "referencia",
+  stageProposal: "propuesta",
+  stageAfter: "después",
+  stageDetail: "detalle",
 };
 
 export function generateDesignReport({
@@ -234,6 +246,7 @@ export function designReportManifestFromReview(review, { baseDir = process.cwd()
         " by " +
         textOr(result.viewport?.height, "?"),
       label: textOr(result.state, "default") + " · " + textOr(result.viewport?.width, "?") + "×" + textOr(result.viewport?.height, "?"),
+      stage: "before",
       state: textOr(result.state, "default"),
       viewport: textOr(result.viewport?.width, "?") + "×" + textOr(result.viewport?.height, "?"),
       annotations: [],
@@ -435,15 +448,16 @@ function normalizeScreenshots(value) {
       src: requiredText(item.src, "screenshots[" + index + "].src", MAX_IMAGE_BYTES * 2),
       alt: requiredText(item.alt, "screenshots[" + index + "].alt", 500),
       label: optionalText(item.label, id, 240),
+      stage: requiredEnum(item.stage, "screenshots[" + index + "].stage", SCREENSHOT_STAGES),
       caption: optionalText(item.caption, "", MAX_TEXT),
       state: optionalText(item.state, "", 160),
       viewport: optionalText(item.viewport, "", 160),
-      annotations: normalizeAnnotations(item.annotations, index),
+      annotations: normalizeAnnotations(item.annotations, index, item.stage),
     };
   });
 }
 
-function normalizeAnnotations(value, screenshotIndex) {
+function normalizeAnnotations(value, screenshotIndex, stage) {
   return optionalArray(value, "annotations").map((item, index) => {
     objectAt(item, "screenshots[" + screenshotIndex + "].annotations[" + index + "]");
     const x = percent(item.x, "annotation.x");
@@ -452,13 +466,18 @@ function normalizeAnnotations(value, screenshotIndex) {
     const height = item.height === undefined ? null : percent(item.height, "annotation.height");
     if ((width === null) !== (height === null)) throw new Error("Annotation width and height must be provided together");
     if (width !== null && (x + width > 100 || y + height > 100)) throw new Error("Annotation box exceeds screenshot bounds");
+    const tone = optionalEnum(item.tone, "annotation.tone", ANNOTATION_TONES, "error");
+    if ((stage === "before" || stage === "reference") && tone === "proposal") {
+      throw new Error("Proposal annotations are not allowed on before or reference screenshots; put the proposal on a proposal/after screenshot or in directions/actions");
+    }
     return {
       x,
       y,
       width,
       height,
+      subject: requiredText(item.subject, "annotation.subject", 200),
       label: requiredText(item.label, "annotation.label", 500),
-      tone: optionalEnum(item.tone, "annotation.tone", new Set(["error", "warning", "proposal", "note"]), "error"),
+      tone,
     };
   });
 }
@@ -667,7 +686,10 @@ function renderEvidence(screenshots, copy) {
 }
 
 function renderScreenshot(item, index, copy) {
-  const labels = [item.state, item.viewport].filter(Boolean).map((value) => "<span>" + escapeHtml(value) + "</span>").join("");
+  const labels = [localizedScreenshotStage(item.stage, copy), item.state, item.viewport]
+    .filter(Boolean)
+    .map((value) => "<span>" + escapeHtml(value) + "</span>")
+    .join("");
   const media = item.available
     ? '<img src="' + escapeAttr(item.renderedSrc) + '" alt="' + escapeAttr(item.alt) + '">'
     : '<div class="evidence-missing"><strong>' + escapeHtml(copy.unavailable) + "</strong><span>" + escapeHtml(item.assetNote) + "</span></div>";
@@ -687,7 +709,18 @@ function renderScreenshot(item, index, copy) {
   const legend = item.annotations.length
     ? '<ol class="annotation-legend">' +
       item.annotations
-        .map((annotation, annotationIndex) => '<li class="tone-' + escapeAttr(annotation.tone) + '"><b>' + (annotationIndex + 1) + "</b><span>" + richText(annotation.label) + "</span></li>")
+        .map(
+          (annotation, annotationIndex) =>
+            '<li class="tone-' +
+            escapeAttr(annotation.tone) +
+            '"><b>' +
+            (annotationIndex + 1) +
+            "</b><div><strong>" +
+            escapeHtml(annotation.subject) +
+            "</strong><span>" +
+            richText(annotation.label) +
+            "</span></div></li>",
+        )
         .join("") +
       "</ol>"
     : '<p class="no-annotations">' + escapeHtml(copy.noAnnotations) + "</p>";
@@ -916,6 +949,16 @@ function localizedProofStatus(value, copy) {
   }[value] || value;
 }
 
+function localizedScreenshotStage(value, copy) {
+  return {
+    before: copy.stageBefore,
+    reference: copy.stageReference,
+    proposal: copy.stageProposal,
+    after: copy.stageAfter,
+    detail: copy.stageDetail,
+  }[value] || value;
+}
+
 function humanize(value) {
   return String(value)
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -1034,17 +1077,22 @@ const REPORT_CSS = [
   ".evidence-missing span { max-width:60ch; margin-top:8px; color:var(--muted); }",
   ".annotation-pin,.annotation-box { position:absolute; z-index:2; border:3px solid var(--danger); color:white; }",
   ".annotation-pin { width:28px; height:28px; margin:-14px 0 0 -14px; border-radius:50%; background:var(--danger); box-shadow:0 0 0 4px rgba(255,255,255,.82); }",
-  ".annotation-box { min-width:28px; min-height:28px; background:rgba(255,94,73,.11); box-shadow:0 0 0 2px rgba(255,255,255,.7); }",
+  ".annotation-box { min-width:28px; min-height:28px; background:rgba(255,94,73,.035); box-shadow:0 0 0 2px rgba(255,255,255,.82); }",
   ".annotation-pin b,.annotation-box b { position:absolute; top:-14px; left:-14px; display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:var(--danger); font:800 12px Arial,sans-serif; }",
-  ".tone-warning { border-color:var(--amber); background-color:rgba(240,173,50,.12); }",
-  ".tone-warning b { background:var(--amber); color:var(--ink); }",
-  ".tone-proposal { border-color:var(--blue); background-color:rgba(57,119,246,.12); }",
-  ".tone-proposal b { background:var(--blue); }",
-  ".tone-note { border-color:var(--ink); background-color:rgba(18,19,15,.1); }",
-  ".tone-note b { background:var(--ink); }",
+  ".tone-warning { border-color:var(--amber); }",
+  ".annotation-box.tone-warning { background:rgba(240,173,50,.035); }",
+  ".annotation-pin.tone-warning,.tone-warning b { background:var(--amber); color:var(--ink); }",
+  ".tone-proposal { border-color:var(--blue); }",
+  ".annotation-box.tone-proposal { background:rgba(57,119,246,.035); }",
+  ".annotation-pin.tone-proposal,.tone-proposal b { background:var(--blue); }",
+  ".tone-note { border-color:var(--ink); }",
+  ".annotation-box.tone-note { background:rgba(18,19,15,.025); }",
+  ".annotation-pin.tone-note,.tone-note b { background:var(--ink); }",
   ".annotation-legend { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; margin:0; padding:0; border-top:1px solid var(--line); list-style:none; background:var(--line); }",
   ".annotation-legend li { display:grid; grid-template-columns:30px 1fr; gap:12px; padding:15px; background:var(--sheet); }",
   ".annotation-legend li b { display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--danger); color:white; font-size:11px; }",
+  ".annotation-legend li strong { display:block; margin-bottom:3px; font-size:12px; letter-spacing:.08em; line-height:1.25; text-transform:uppercase; }",
+  ".annotation-legend li span { display:block; }",
   ".annotation-legend li.tone-warning b { background:var(--amber); color:var(--ink); }",
   ".annotation-legend li.tone-proposal b { background:var(--blue); }",
   ".annotation-legend li.tone-note b { background:var(--ink); }",

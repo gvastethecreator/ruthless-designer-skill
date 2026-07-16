@@ -50,11 +50,12 @@ function baseManifest(imageName = "capture.png") {
         src: imageName,
         alt: "Current command center with several equal-weight panels",
         label: "Before · default",
+        stage: "before",
         state: "default",
         viewport: "1280×800",
         annotations: [
-          { x: 12.5, y: 20, width: 30, height: 18, label: "Repeated equal-weight panels erase priority.", tone: "error" },
-          { x: 80, y: 12, label: "Alert status is detached from its action.", tone: "proposal" },
+          { x: 12.5, y: 20, width: 30, height: 18, subject: "Alert queue", label: "Repeated equal-weight panels erase priority.", tone: "error" },
+          { x: 80, y: 12, subject: "Action rail", label: "Alert status is detached from its action.", tone: "warning" },
         ],
       },
     ],
@@ -124,6 +125,7 @@ test("generates a standalone annotated dossier and escapes hostile text", () => 
   const manifest = baseManifest();
   manifest.title = "Ops <script>alert(1)</script>";
   manifest.findings[0].evidence = "<img src=x onerror=alert(1)> evidence";
+  manifest.screenshots[0].annotations[0].subject = "Alert queue <svg onload=alert(1)>";
   const manifestPath = writeCase(dir, manifest);
   const outPath = path.join(dir, "report.html");
 
@@ -136,13 +138,75 @@ test("generates a standalone annotated dossier and escapes hostile text", () => 
   assert.equal(summary.missingImages, 0);
   assert.match(html, /data:image\/png;base64,/);
   assert.match(html, /left:12\.5%;top:20%;width:30%;height:18%/);
+  assert.match(html, /Alert queue &lt;svg onload=alert\(1\)&gt;/);
+  assert.match(html, />before</);
   assert.match(html, /Evidence wall/);
   assert.match(html, /Proof ledger/);
   assert.match(html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
   assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt; evidence/);
   assert.match(html, /@media print/);
   assert.doesNotMatch(html, /<script(?:\s|>)/i);
+  assert.doesNotMatch(html, /<svg(?:\s|>)/i);
   assert.doesNotMatch(html, /<link[^>]+stylesheet/i);
+});
+
+test("requires screenshot stage and a literal subject for every annotation", () => {
+  const missingStageDir = sandbox("annotation-missing-stage");
+  const missingStage = baseManifest();
+  delete missingStage.screenshots[0].stage;
+  const missingStageResult = runGenerator([
+    "--manifest",
+    writeCase(missingStageDir, missingStage),
+    "--out",
+    path.join(missingStageDir, "report.html"),
+  ]);
+
+  assert.equal(missingStageResult.status, 2, missingStageResult.stderr || missingStageResult.stdout);
+  assert.match(missingStageResult.stderr, /screenshots\[0\]\.stage/i);
+
+  const missingSubjectDir = sandbox("annotation-missing-subject");
+  const missingSubject = baseManifest();
+  delete missingSubject.screenshots[0].annotations[0].subject;
+  const missingSubjectResult = runGenerator([
+    "--manifest",
+    writeCase(missingSubjectDir, missingSubject),
+    "--out",
+    path.join(missingSubjectDir, "report.html"),
+  ]);
+
+  assert.equal(missingSubjectResult.status, 2, missingSubjectResult.stderr || missingSubjectResult.stdout);
+  assert.match(missingSubjectResult.stderr, /annotation\.subject/i);
+});
+
+test("rejects proposal callouts on before or reference evidence", () => {
+  for (const stage of ["before", "reference"]) {
+    const dir = sandbox("proposal-on-" + stage);
+    const manifest = baseManifest();
+    manifest.screenshots[0].stage = stage;
+    manifest.screenshots[0].annotations[0].tone = "proposal";
+    const result = runGenerator([
+      "--manifest",
+      writeCase(dir, manifest),
+      "--out",
+      path.join(dir, "report.html"),
+    ]);
+
+    assert.equal(result.status, 2, result.stderr || result.stdout);
+    assert.match(result.stderr, /proposal annotations are not allowed/i);
+  }
+
+  const proposalDir = sandbox("proposal-on-proposal");
+  const proposalManifest = baseManifest();
+  proposalManifest.screenshots[0].stage = "proposal";
+  proposalManifest.screenshots[0].annotations[0].tone = "proposal";
+  const proposalResult = runGenerator([
+    "--manifest",
+    writeCase(proposalDir, proposalManifest),
+    "--out",
+    path.join(proposalDir, "report.html"),
+  ]);
+
+  assert.equal(proposalResult.status, 0, proposalResult.stderr || proposalResult.stdout);
 });
 
 test("renders a visible evidence placeholder when an image is missing", () => {
@@ -201,6 +265,7 @@ test("renders built-in Spanish report chrome when the manifest language is Spani
   assert.doesNotMatch(html, />Archetype</);
   assert.doesNotMatch(html, />selected</);
   assert.match(html, /Autónomo · imprimible · sin recursos externos/);
+  assert.match(html, />antes</);
 });
 
 test("strict asset mode rejects missing and corrupt screenshots", () => {

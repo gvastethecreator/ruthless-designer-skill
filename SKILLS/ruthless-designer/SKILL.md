@@ -105,7 +105,7 @@ Inspect what rendered, not what the code was supposed to render.
 Lead with the result or the biggest design crime.
 
 - Creation/redesign: name the design read, killed defaults, chosen direction, signature move, artifact/files changed, proof, and remaining risk.
-- Material critique/proposal: persist report-manifest.json plus standalone annotated report.html and link it.
+- Material critique/proposal: persist report-manifest.json plus standalone annotated report.html and link it. Every screenshot marker must name its literal visible subject, match that subject at rendered scale, and keep future proposals off before/reference evidence.
 - Critique: perform a visual-first inspection at readable scale before tracing source. Group symptoms by systemic cause, then pair each major finding with `evidence -> user damage -> structural cause -> exact fix -> one earned roast`. Include a required `do not break` section, the finish ledger, up to five cuts—never pad the list—and a brutal verdict.
 - Blocked work: say `implemented, not fully verified` or `reviewed, blocked by ...`; do not call it done.
 
