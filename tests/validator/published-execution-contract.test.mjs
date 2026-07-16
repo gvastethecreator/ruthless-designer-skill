@@ -12,6 +12,9 @@ test("broad redesign isolates surfaces and requires builder-owned activation art
   assert.match(skill, /Split unrelated surfaces into isolated builders/i);
   assert.match(contract, /Five unrelated interfaces require five isolated builders/i);
   for (const artifact of ["context-card.json", "direction-cards.json", "kill-list.json", "proof/before.png", "proof/after.png", "proof/detail.png", "finish-ledger.json"]) assert.match(contract, new RegExp(escape(artifact)));
+  for (const artifact of ["context-card.md", "direction-cards.md", "kill-list.md", "finish-ledger.md"]) assert.match(contract, new RegExp(escape(artifact)));
+  assert.match(contract, /Markdown companion[^.]+same facts/i);
+  assert.match(skill, /report-manifest\.json[^.]+report\.md[^.]+report\.html/i);
   assert.match(contract, /same builder captures[^.]+judges[^.]+corrects[^.]+recaptures/i);
   assert.match(contract, /Native default chrome is a failed finish state/i);
   assert.match(contract, /Do not `STOP`[^.]+required artifact is absent/i);

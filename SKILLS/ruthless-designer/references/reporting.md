@@ -1,15 +1,19 @@
-# HTML Design Dossiers
+# Design Dossiers: Markdown + HTML
 
-Use this route when the deliverable is a material critique, screenshot review, design proposal, or redesign proposal. The dossier is a portable decision artifact: evidence, diagnosis, proposed moves, preservation contract, and proof targets in one standalone HTML file.
+Use this route when the deliverable is a material critique, screenshot review, design proposal, or redesign proposal. The dossier is one decision artifact in two synchronized views: ingestion-first Markdown for fast correction and standalone HTML for visual inspection. Both contain the evidence, diagnosis, proposed moves, preservation contract, and proof targets.
 
 Do not generate a dossier for a tiny implementation note, a routine status update, or code-only work with no visual proposal. Do generate one when the user must evaluate, approve, compare, hand off, or continue the design later.
 
 ## Required Artifacts
 
-Persist both:
+Persist the complete dossier:
 
 - report-manifest.json: structured, reviewable source;
-- report.html: standalone rendered dossier.
+- report.md: deterministic, ingestion-first report with explicit evidence geometry;
+- report-assets/: lossless local evidence referenced by report.md;
+- report.html: standalone visual dossier with full-image overlays and annotation zooms.
+
+The manifest is the source of truth. Generate both views in one command; never hand-edit one report into a different conclusion.
 
 Use the bundled generator:
 
@@ -17,7 +21,9 @@ Use the bundled generator:
 node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest output/ruthless-designer/<slug>/report-manifest.json --out output/ruthless-designer/<slug>/report.html --strict-assets
 ~~~
 
-The full review harness emits report.html automatically beside review.json and README.md:
+The generator automatically derives `report.md` from `report.html`. Use `--markdown-out <path.md>` only when the caller needs another stable path.
+
+The full review harness emits `report.md`, `report-assets/`, and `report.html` automatically beside `review.json` and its compact `README.md` index:
 
 ~~~powershell
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --out output/ruthless-designer/<slug> --detail-capture
@@ -25,7 +31,7 @@ node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-
 
 Use strict assets for the final dossier. Draft mode may show an explicit evidence placeholder and warning when a capture is missing or corrupt. Never let a broken image icon masquerade as evidence.
 
-Local PNG, JPEG, GIF, WebP, and AVIF screenshots are embedded by default. External image URLs fail in strict mode because they make the artifact non-portable; draft mode renders a sanitized evidence placeholder and never fetches them. The no-embed-images flag is only for controlled local drafts; disclose that the report will break when moved away from its linked files.
+Local PNG, JPEG, GIF, WebP, and AVIF screenshots are embedded in HTML by default and copied byte-for-byte into `report-assets/` for Markdown. Markdown never receives a data URI. External image URLs fail in strict mode because they make the artifact non-portable; draft mode renders a sanitized evidence placeholder in both reports and never fetches them. The no-embed-images flag affects the HTML draft only; Markdown still receives local sidecar evidence. Disclose when the HTML will break after moving away from linked files.
 
 ## Choose The Report Mode
 
@@ -120,7 +126,7 @@ Coordinates are percentages from the screenshot's top-left corner. A point annot
 
 `stage` is required and must be `before`, `reference`, `proposal`, `after`, or `detail`. Use tones error, warning, proposal, or note. A proposal tone is invalid on before/reference evidence: annotate only what is visibly present there, and put the proposed move in directions/actions or on an actual proposal/after image.
 
-`subject` is required and names the literal element or region inside the marker—such as `Panel LIVE ALERTS`, `Row 04 · payment-core`, or `Recovery button`. `label` states the visible condition and why it matters. Numbered overlays render both values in the matching legend so the reader never has to guess what a marker targets.
+`subject` is required and names the literal element or region inside the marker—such as `Panel LIVE ALERTS`, `Row 04 · payment-core`, or `Recovery button`. `label` states the visible condition and why it matters. Numbered overlays render both values in the matching legend. When image dimensions are available, each legend entry also renders an automatic context-padded evidence zoom from the exact same coordinates and image source. Markdown records the same subject, tone, claim, and normalized geometry.
 
 ### Annotation calibration
 
@@ -129,8 +135,8 @@ Do not estimate percentages from memory or from a thumbnail. For each marker:
 1. inspect the source image at native resolution and record its pixel width and height;
 2. identify the exact pixel rectangle or point containing the named subject;
 3. convert with `x% = leftPx / imageWidth × 100`, `y% = topPx / imageHeight × 100`, and the equivalent formula for width/height;
-4. generate the dossier and inspect the rendered screenshot at readable scale;
-5. read each legend item, then trace its number back to the image; fail the report if the box contains a different subject or if the description claims anything not visible inside or immediately adjacent to it.
+4. generate the dossier and inspect the full rendered screenshot plus every automatic evidence zoom at readable scale;
+5. read each legend item, trace its number back to the full image, and cross-check the matching Markdown geometry; fail the report if any view points to a different subject or if the description claims anything not visible inside or immediately adjacent to it.
 
 Use one marker for one literal subject. Split broad claims across focused crops or multiple markers. A box that spans unrelated panels is not evidence; it is decorative geometry.
 
@@ -228,7 +234,7 @@ A strong dossier answers in this order:
 7. What proof would make the new claim pass?
 8. What remains risky, missing, synthetic, or blocked?
 
-The HTML is not decoration around a chat response. It is the durable handoff. Keep the chat closeout short and link the artifact.
+The Markdown is the ingestion and correction handoff. The HTML is the visual inspection handoff. Neither is decoration around a chat response, and neither may contradict the other. Keep the chat closeout short and link both artifacts.
 
 ## Report Quality Gate
 
@@ -237,12 +243,15 @@ Before delivery:
 - validate the manifest with the generator;
 - run strict asset mode;
 - open report.html locally with network disabled or confirm it has no external dependencies;
+- ingest report.md independently and confirm it contains every section, finding, decision, proof state, limitation, warning, annotation subject, tone, and geometry;
+- confirm report.md uses only relative `report-assets/` paths, contains no data URI, and every referenced asset exists;
 - inspect desktop and narrow widths;
-- verify images, annotations, legend links, anchors, overflow, focus, and print behavior;
-- verify each numbered marker contains the exact `subject` named in its legend and that its `label` describes visible evidence rather than a future solution;
+- verify images, annotations, evidence zooms, legend links, anchors, overflow, focus, and print behavior;
+- verify each numbered marker and evidence zoom contain the exact `subject` named in the legend and that its `label` describes visible evidence rather than a future solution;
+- compare report.md and report.html section counts, ids, statuses, and conclusions; any drift is a failed generation;
 - verify hostile text is escaped and no absolute secret-bearing URL or query string leaked;
 - verify missing evidence is visible rather than silently omitted;
 - confirm every major proposal is tied to evidence, a product cause, or an explicit hypothesis;
 - confirm the proof ledger limits the final claim.
 
-The report fails when it is pretty but generic, when annotations are unreadable, when screenshots are thumbnails, when a missing image disappears without warning, when source paths or secrets leak, when a proposal lacks a real product cause, or when the dossier itself is presented as proof that the design works.
+The report fails when it is pretty but generic, when annotations or zooms target the wrong subject, when screenshots are thumbnails, when Markdown cannot be ingested without the HTML, when the two views drift, when a missing image disappears without warning, when source paths or secrets leak, when a proposal lacks a real product cause, or when the dossier itself is presented as proof that the design works.

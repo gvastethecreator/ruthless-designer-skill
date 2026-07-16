@@ -16,7 +16,7 @@ Choose the smallest proof that could falsify the claim:
 - Immersive runtime: visible render, foreground readability, mobile/static fallback, reduced motion, offscreen pause, cleanup path, and console/WebGL state.
 - Static-only review: source and detector findings with runtime/visual proof explicitly blocked.
 - Context-specific claim: use the [product context](product-contexts.md) card and prove the costly state, input, spatial, and update behavior that distinguishes this archetype from generic web UI.
-- Material proposal/review: generate the standalone dossier from [reporting.md](reporting.md), then inspect the HTML itself at desktop and narrow widths. The dossier packages evidence; it does not upgrade an unproven design claim.
+- Material proposal/review: generate the synchronized dossier from [reporting.md](reporting.md), inspect the HTML itself at desktop and narrow widths, then ingest the Markdown independently and cross-check subjects, geometry, findings, proof states, and asset paths. The dossier packages evidence; it does not upgrade an unproven design claim.
 
 More screenshots are not better when they prove nothing meaningful.
 
