@@ -46,6 +46,10 @@ const metrics = {
   clippedText: [],
   imageIssues: [],
   contrastIssues: [],
+  nativeScrollbarRisks: process.env.FAKE_NATIVE_SCROLLBAR ? [{ node: "div.panel", scrollHeight: 900, clientHeight: 300 }] : [],
+  iconAlignmentIssues: process.env.FAKE_ICON_MISALIGNMENT ? [{ control: "button.save", deltaY: 6, iconSize: "20x20" }] : [],
+  repeatedSpacingIssues: process.env.FAKE_SPACING_DRIFT ? [{ container: "ul.items", gaps: [8, 15], spread: 7 }] : [],
+  gradientSurfaces: process.env.FAKE_GRADIENT ? ["section.hero"] : [],
   animationAudit: { total: 0, running: 0, offscreenRunningCount: 0, offscreenRunning: [] },
   canvasDetails: [],
   longTasks: [],
@@ -58,7 +62,8 @@ module.exports = {
     async launch() {
       if (process.env.FAKE_PLAYWRIGHT_MODE === "launch-error") throw new Error("browser launch failed token=super-secret");
       return {
-        async newPage() {
+        async newPage(options) {
+          if (process.env.FAKE_PAGE_OPTIONS) fs.writeFileSync(process.env.FAKE_PAGE_OPTIONS, JSON.stringify(options));
           return {
             mouse: { async wheel() {} },
             on() {},
@@ -213,9 +218,14 @@ test("a clean static scan is observed evidence, not visual certification", () =>
   assert.equal(review.runtime, null);
   const summary = JSON.parse(result.stdout);
   const markdown = fs.readFileSync(path.join(outDir, "README.md"), "utf8");
+  const html = fs.readFileSync(path.join(outDir, "report.html"), "utf8");
   assert.equal(Object.hasOwn(summary, "score"), false);
+  assert.match(summary.htmlReport, /report\.html$/);
   assert.doesNotMatch(result.stdout, /\b(?:score|good|excellent)\b/i);
   assert.doesNotMatch(markdown, /\b(?:score|good|excellent)\b/i);
+  assert.match(html, /Interface evidence review/);
+  assert.match(html, /Proof ledger/);
+  assert.doesNotMatch(html, /<script(?:\s|>)/i);
 });
 
 test("fail-under-score is rejected with assessment-era replacements", () => {
@@ -618,4 +628,41 @@ test("hit-area findings separate minimum review from comfort advisory", () => {
   assert.match(advisory?.message || "", /advisory|not a uniform WCAG failure/i);
   assert.equal(minimum?.severity, "P2");
   assert.match(minimum?.message || "", /exceptions|review/i);
+});
+
+test("detail capture requests DPR 2 browser evidence and records it in context", () => {
+  const sandbox = tempDir("detail-capture");
+  const fakePlaywright = makeFakePlaywright(sandbox);
+  const outDir = path.join(sandbox, "review");
+  const pageOptions = path.join(sandbox, "page-options.json");
+
+  const result = runHarness(["--url", "https://example.test", "--out", outDir, "--viewport", "320x480", "--detail-capture"], {
+    env: { PLAYWRIGHT_PATH: fakePlaywright, FAKE_PAGE_OPTIONS: pageOptions },
+  });
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.equal(JSON.parse(fs.readFileSync(pageOptions, "utf8")).deviceScaleFactor, 2);
+  assert.equal(readReview(outDir).ledger.context.deviceScaleFactor, 2);
+});
+
+test("runtime finish diagnostics expose scrollbar, icon, spacing, and gradient review leads", () => {
+  const sandbox = tempDir("finish-diagnostics");
+  const fakePlaywright = makeFakePlaywright(sandbox);
+  const outDir = path.join(sandbox, "review");
+
+  const result = runHarness(["--url", "https://example.test", "--out", outDir, "--viewport", "320x480"], {
+    env: {
+      PLAYWRIGHT_PATH: fakePlaywright,
+      FAKE_NATIVE_SCROLLBAR: "1",
+      FAKE_ICON_MISALIGNMENT: "1",
+      FAKE_SPACING_DRIFT: "1",
+      FAKE_GRADIENT: "1",
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const ids = readReview(outDir).findings.map((finding) => finding.id);
+  for (const id of ["native-scrollbar-runtime", "icon-text-misalignment", "inconsistent-repeated-spacing", "gradient-finish-review"]) {
+    assert.ok(ids.includes(id), `expected ${id}`);
+  }
 });
