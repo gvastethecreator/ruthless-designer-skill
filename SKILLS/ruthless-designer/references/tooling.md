@@ -47,7 +47,7 @@ The deprecated `--gpt` and `--gemini` flags are accepted only for compatibility 
 Use the harness for a combined static/runtime evidence package:
 
 ```powershell
-node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --out output/ruthless-designer/<slug> --fail-on=P1 --require-runtime
+node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --out output/ruthless-designer/<slug> --fail-on=P1 --require-runtime --detail-capture
 ```
 
 Use static-only mode when no URL exists, then state runtime/visual proof is blocked:
@@ -65,6 +65,7 @@ Useful gates:
 - `--require-signature --signature-proof <text> --signature-selector <selector>`: require a named signature claim, successful runtime screenshots, and an observable visible target. A selector proves presence, not visual excellence.
 - `--expect-finding <rule-id>` and `--expect-assessment=blocked|findings|evidence-collected`: smoke-test known fixtures.
 - `--viewport <width>x<height>`: target a specific viewport.
+- `--detail-capture`: render browser evidence at device scale factor `2` so small alignment, icon, spacing, and scrollbar defects remain inspectable.
 
 The report records a nonnumeric assessment:
 
@@ -81,6 +82,28 @@ The retired `--fail-verdict`, `--fail-under-score`, and `--expect-verdict` flags
 Captured screenshots prove capture, not visual comparison. Inspect them manually or compare them against before/reference artifacts before claiming fidelity or improvement.
 
 This harness does not orchestrate multi-tab conflicts, server-side authorization, replay/idempotency, or every offline/network race. Exercise those contracts in the application's own integration or end-to-end runner, then attach the commands and artifacts to the same evidence ledger.
+
+The harness now writes report.html alongside review.json and README.md. It translates collected evidence into a portable dossier but labels automated findings as leads and preserves human-judgment limits. A corrupt or missing screenshot appears as a visible evidence placeholder rather than disappearing.
+
+## Standalone Proposal Report
+
+For critique, proposal, and redesign deliverables, create report-manifest.json using [reporting.md](reporting.md), then run:
+
+~~~powershell
+node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest output/ruthless-designer/<slug>/report-manifest.json --out output/ruthless-designer/<slug>/report.html --strict-assets
+~~~
+
+The generator:
+
+- validates mode, finding severity, proof states, screenshot IDs, and annotation bounds;
+- escapes all text instead of accepting arbitrary HTML;
+- embeds supported local screenshots for portability;
+- rejects missing, corrupt, unsupported, or external screenshots in strict mode;
+- provides numbered visual annotations with a matching text legend;
+- renders without JavaScript or external styles;
+- exposes risks, limitations, and artifact warnings.
+
+Use no-embed-images only for a controlled local draft and disclose the portability loss. Open the final artifact at desktop and narrow widths, confirm print behavior when handoff needs it, and inspect annotations at readable scale.
 
 ## Interaction States
 

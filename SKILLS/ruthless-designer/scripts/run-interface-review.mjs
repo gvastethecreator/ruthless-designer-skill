@@ -5,6 +5,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
+import { designReportManifestFromReview, writeDesignReport } from "./generate-design-report.mjs";
 
 const require = createRequire(import.meta.url);
 const severityRank = { P0: 0, P1: 1, P2: 2, P3: 3 };
@@ -44,6 +45,7 @@ const review = {
       states: options.states.length ? options.states : ["default"],
       waitUntil: options.waitUntil,
       settleMs: options.settleMs,
+      deviceScaleFactor: options.deviceScaleFactor,
       clsThreshold: options.clsThreshold,
       signatureProof: options.signatureProof || null,
     },
@@ -91,12 +93,21 @@ review.expectations = evaluateExpectations(review, options);
 
 const jsonPath = path.join(outDir, "review.json");
 const markdownPath = path.join(outDir, "README.md");
+const htmlPath = path.join(outDir, "report.html");
 const reportReview = redactReportValue(review);
 fs.writeFileSync(jsonPath, `${JSON.stringify(reportReview, null, 2)}\n`);
 fs.writeFileSync(markdownPath, renderMarkdown(reportReview, jsonPath));
+const designReport = writeDesignReport({
+  manifest: designReportManifestFromReview(reportReview, { baseDir: root }),
+  outPath: htmlPath,
+  baseDir: root,
+  embedImages: true,
+  strictAssets: false,
+});
 
 const summary = {
   outDir: path.relative(root, outDir),
+  htmlReport: path.relative(root, designReport.outPath),
   findings: reportReview.findings.length,
   bySeverity: summarizeSeverity(reportReview.findings),
   assessment: reportReview.assessment,
@@ -278,7 +289,7 @@ function runtimeEvidenceForResults(results) {
 }
 
 async function inspectViewport(browser, viewport, actionGroup) {
-  const page = await browser.newPage({ viewport });
+  const page = await browser.newPage({ viewport, deviceScaleFactor: options.deviceScaleFactor });
   const consoleErrors = [];
   const requestFailures = [];
   const badResponses = [];
@@ -409,6 +420,99 @@ async function inspectViewport(browser, viewport, actionGroup) {
         })
         .filter((img) => !img.widthAttr || !img.heightAttr || img.alt === null || img.naturalWidth === 0)
         .slice(0, 12);
+      const labelFor = (node) => {
+        const id = node.id ? `#${node.id}` : "";
+        const classes = typeof node.className === "string" ? node.className.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((name) => `.${name}`).join("") : "";
+        return `${node.tagName.toLowerCase()}${id}${classes}`.slice(0, 120);
+      };
+      const styleRules = [];
+      const collectRules = (rules) => {
+        for (const rule of rules || []) {
+          if (rule.cssRules) collectRules(rule.cssRules);
+          else if (rule.selectorText && rule.style) styleRules.push(rule);
+        }
+      };
+      for (const sheet of document.styleSheets) {
+        try { collectRules(sheet.cssRules); } catch {}
+      }
+      const matchesScrollbarRule = (node) => styleRules.some((rule) => String(rule.selectorText).split(",").some((selector) => {
+        const base = selector.split("::")[0].trim();
+        const mentionsScrollbar = /::-(?:webkit-)?scrollbar/i.test(selector) || rule.style.getPropertyValue("scrollbar-width") || rule.style.getPropertyValue("scrollbar-color");
+        if (!mentionsScrollbar) return false;
+        try { return !base || base === "*" || node.matches(base); } catch { return false; }
+      }));
+      const scrollCandidates = [...new Set([document.scrollingElement, ...document.querySelectorAll("body *")].filter(Boolean))];
+      const nativeScrollbarRisks = scrollCandidates
+        .filter((node) => {
+          const style = getComputedStyle(node);
+          const rootScrollable = node === document.scrollingElement && (document.documentElement.scrollHeight > window.innerHeight + 1 || document.documentElement.scrollWidth > window.innerWidth + 1);
+          const y = node.scrollHeight > node.clientHeight + 1 && ["auto", "scroll"].includes(style.overflowY);
+          const x = node.scrollWidth > node.clientWidth + 1 && ["auto", "scroll"].includes(style.overflowX);
+          return visible(node) && (rootScrollable || y || x);
+        })
+        .filter((node) => {
+          const style = getComputedStyle(node);
+          const standardCustom = (style.scrollbarWidth && style.scrollbarWidth !== "auto") || (style.scrollbarColor && style.scrollbarColor !== "auto");
+          return !standardCustom && !matchesScrollbarRule(node);
+        })
+        .slice(0, 12)
+        .map((node) => ({
+          node: labelFor(node),
+          scrollWidth: node.scrollWidth,
+          clientWidth: node.clientWidth,
+          scrollHeight: node.scrollHeight,
+          clientHeight: node.clientHeight,
+        }));
+      const textRect = (node) => {
+        const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+        const rects = [];
+        while (walker.nextNode()) {
+          const textNode = walker.currentNode;
+          if (!textNode.textContent.trim() || textNode.parentElement?.closest("svg")) continue;
+          const range = document.createRange();
+          range.selectNodeContents(textNode);
+          for (const rect of range.getClientRects()) if (rect.width > 0 && rect.height > 0) rects.push(rect);
+        }
+        if (!rects.length) return null;
+        return {
+          top: Math.min(...rects.map((rect) => rect.top)),
+          bottom: Math.max(...rects.map((rect) => rect.bottom)),
+        };
+      };
+      const iconAlignmentIssues = [...document.querySelectorAll("button, a, [role='button'], [role='menuitem']")]
+        .filter(visible)
+        .map((control) => {
+          const icon = control.querySelector("svg, [data-icon], img.icon");
+          const text = textRect(control);
+          if (!icon || !text || !visible(icon)) return null;
+          const iconBox = icon.getBoundingClientRect();
+          if (iconBox.width > 64 || iconBox.height > 64) return null;
+          const delta = Math.abs((iconBox.top + iconBox.bottom) / 2 - (text.top + text.bottom) / 2);
+          return delta > 4 ? { control: labelFor(control), deltaY: Number(delta.toFixed(2)), iconSize: `${Math.round(iconBox.width)}x${Math.round(iconBox.height)}` } : null;
+        })
+        .filter(Boolean)
+        .slice(0, 12);
+      const repeatedSpacingIssues = [...document.querySelectorAll("ul, ol, [role='list'], [data-ui-list]")]
+        .filter(visible)
+        .map((container) => {
+          const items = [...container.children].filter(visible);
+          if (items.length < 3) return null;
+          const boxes = items.map((item) => item.getBoundingClientRect()).sort((a, b) => a.top - b.top);
+          if (boxes.some((box, index) => index > 0 && box.top < boxes[index - 1].bottom - 1)) return null;
+          const gaps = boxes.slice(1).map((box, index) => Number((box.top - boxes[index].bottom).toFixed(2)));
+          const spread = Math.max(...gaps) - Math.min(...gaps);
+          return spread > 3 ? { container: labelFor(container), gaps, spread: Number(spread.toFixed(2)) } : null;
+        })
+        .filter(Boolean)
+        .slice(0, 12);
+      const gradientSurfaces = [...document.querySelectorAll("body *")]
+        .filter(visible)
+        .filter((node) => {
+          const style = getComputedStyle(node);
+          return /gradient\(/i.test(style.backgroundImage) || style.backgroundClip === "text" || style.webkitBackgroundClip === "text";
+        })
+        .slice(0, 20)
+        .map((node) => labelFor(node));
       const parseColor = (value) => {
         const match = String(value).match(/rgba?\(([^)]+)\)/);
         if (!match) return null;
@@ -527,6 +631,10 @@ async function inspectViewport(browser, viewport, actionGroup) {
         unnamedButtons,
         clippedText,
         imageIssues,
+        nativeScrollbarRisks,
+        iconAlignmentIssues,
+        repeatedSpacingIssues,
+        gradientSurfaces,
         contrastIssues,
         animationAudit: {
           total: animations.length,
@@ -624,6 +732,10 @@ function runtimeFindings(viewport, state, metrics, consoleErrors, requestFailure
     );
   }
   if (metrics.clippedText.length) push("clipped-text", "P2", "resilience", "Text appears clipped or horizontally overflowing.", JSON.stringify(metrics.clippedText[0]));
+  if (metrics.nativeScrollbarRisks?.length) push("native-scrollbar-runtime", "P2", "quality", "A rendered scroll region still relies on an uncustomized native scrollbar; style it minimally without hiding or breaking the affordance.", JSON.stringify(metrics.nativeScrollbarRisks[0]));
+  if (metrics.iconAlignmentIssues?.length) push("icon-text-misalignment", "P2", "quality", "A rendered control icon is vertically misaligned with its text; confirm the crop and repair the shared control/icon primitive.", JSON.stringify(metrics.iconAlignmentIssues[0]));
+  if (metrics.repeatedSpacingIssues?.length) push("inconsistent-repeated-spacing", "P2", "quality", "A repeated rendered list has materially inconsistent sibling gaps; confirm intentional grouping or repair the spacing source.", JSON.stringify(metrics.repeatedSpacingIssues[0]));
+  if (metrics.gradientSurfaces?.length) push("gradient-finish-review", "P3", "quality", "Rendered gradients are present. Inspect their role, stops, contrast, banding, clipping, and fallback; their presence alone is not a failure.", JSON.stringify(metrics.gradientSurfaces.slice(0, 3)));
   if (metrics.imageIssues.length) push("runtime-image-issues", "P2", "performance", "Visible images have missing alt/dimensions or broken natural size.", JSON.stringify(metrics.imageIssues[0]));
   if (metrics.contrastIssues?.length) push("low-contrast-text", "P1", "accessibility", "Visible text appears below WCAG contrast threshold.", JSON.stringify(metrics.contrastIssues[0]));
   if (metrics.animationAudit?.offscreenRunningCount) push("offscreen-running-animation", "P2", "performance", "Animations are running outside the viewport; pause offscreen decorative motion.", JSON.stringify(metrics.animationAudit.offscreenRunning[0]));
@@ -1027,6 +1139,7 @@ function parseArgs(args) {
     timeout: 15000,
     waitUntil: "domcontentloaded",
     settleMs: 500,
+    deviceScaleFactor: 1,
     clsThreshold: 0.1,
     strictCls: false,
     register: null,
@@ -1068,6 +1181,7 @@ function parseArgs(args) {
     else if (name === "--timeout") options.timeout = Number(nextValue());
     else if (name === "--wait-until") options.waitUntil = normalizeWaitUntil(nextValue());
     else if (name === "--settle-ms") options.settleMs = Number(nextValue());
+    else if (arg === "--detail-capture") options.deviceScaleFactor = 2;
     else if (name === "--cls-threshold") options.clsThreshold = Number(nextValue());
     else if (arg === "--strict-cls") options.strictCls = true;
     else if (name === "--register") options.register = nextValue();
@@ -1108,6 +1222,10 @@ function parseArgs(args) {
   }
   if (!Number.isFinite(options.settleMs) || options.settleMs < 0) {
     console.error(`Invalid --settle-ms ${options.settleMs}; expected a non-negative number`);
+    process.exit(2);
+  }
+  if (!Number.isFinite(options.deviceScaleFactor) || options.deviceScaleFactor < 1 || options.deviceScaleFactor > 4) {
+    console.error(`Invalid device scale factor ${options.deviceScaleFactor}; expected a number from 1 to 4`);
     process.exit(2);
   }
   if (!Number.isFinite(options.clsThreshold) || options.clsThreshold < 0 || options.clsThreshold > 1) {
@@ -1223,5 +1341,5 @@ function redactReportValue(value) {
 }
 
 function usage() {
-  console.error("Usage: node run-interface-review.mjs --path <file-or-dir> [--url <local-url>] [--out <dir>] [--actions actions.json] [--action-group name=actions.json] [--viewport 1280x800] [--cls-threshold 0.1|--strict-cls] [--fail-on=P1|P2|P3] [--require-runtime] [--require-signature] [--signature-proof text --signature-selector selector] [--expect-finding rule-id] [--expect-assessment=blocked|findings|evidence-collected] [--fail]");
+  console.error("Usage: node run-interface-review.mjs --path <file-or-dir> [--url <local-url>] [--out <dir>] [--actions actions.json] [--action-group name=actions.json] [--viewport 1280x800] [--detail-capture] [--cls-threshold 0.1|--strict-cls] [--fail-on=P1|P2|P3] [--require-runtime] [--require-signature] [--signature-proof text --signature-selector selector] [--expect-finding rule-id] [--expect-assessment=blocked|findings|evidence-collected] [--fail]");
 }

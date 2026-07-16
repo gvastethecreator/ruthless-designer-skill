@@ -15,10 +15,12 @@ Choose the smallest proof that could falsify the claim:
 - Motion/gesture: trigger, pointer-down response, repeated/interrupted trigger, reduced motion, origin, duration/easing, slow drag, fast flick, reversal, and release outside bounds.
 - Immersive runtime: visible render, foreground readability, mobile/static fallback, reduced motion, offscreen pause, cleanup path, and console/WebGL state.
 - Static-only review: source and detector findings with runtime/visual proof explicitly blocked.
+- Context-specific claim: use the [product context](product-contexts.md) card and prove the costly state, input, spatial, and update behavior that distinguishes this archetype from generic web UI.
+- Material proposal/review: generate the standalone dossier from [reporting.md](reporting.md), then inspect the HTML itself at desktop and narrow widths. The dossier packages evidence; it does not upgrade an unproven design claim.
 
 More screenshots are not better when they prove nothing meaningful.
 
-For atlases, spritesheets, generated grids, galleries, or repeated media, proof must cover the complete finite set when it is small; otherwise cover every layout/crop class plus the first, last, and known edge cells. Record source grid, expected cell ratio, mapping, rendered ratio, crop/focal behavior, and one narrow-viewport fixture. Fail the asset claim for stretching, neighboring-cell bleed, unintended subject loss, wrong semantic mapping, blank tiles, or proof that only exercises the default item.
+For atlases or repeated media, cover the complete small set or every crop class plus first, last, and edge cells. Record grid, ratio, mapping, crop/focal behavior, and a narrow fixture; fail stretching, bleed, subject loss, wrong mapping, blank tiles, or default-item-only proof.
 
 ## Judge Three Independent Claims
 
@@ -30,15 +32,11 @@ Do not collapse quality into one flattering score:
 
 Record `passed | limited | blocked` for each and state the evidence. A surface may be production-ready yet aesthetically timid. A spectacular direction may still be unsafe garbage. Do not let either borrow the other's grade.
 
-For a claim that users understand or can act effectively, include a minimal human comprehension check: give at least one representative person who did not build the artifact the relevant screen/state, ask what it is, what matters now, and what they would do next, then record answers, hesitation, errors, and task outcome. Use first-click or a short key-task attempt when action matters. One person is a smoke test, not validation; without it, describe the intended hierarchy but do not claim human comprehension.
+Claims of human comprehension need at least one representative non-builder: ask what this is, what matters, and what comes next; record hesitation, errors, and task outcome. One person is only a smoke test. Without it, describe intended hierarchy, not proven comprehension.
 
 ## Accept Evidence Before Judging
 
-Reject a screenshot or run when it shows the wrong route/window, mismatched viewport/content/state, blank/loading/blocked output, unreadable critical detail, cropped main content, failed action sequence, or a different theme/auth state.
-
-Reject captures named or reported as `error`, any run with a runtime-audit P0/P1, and any harness assessment of `blocked`. Successful action assertions do not overrule a failed visual/runtime audit. Fix the harness or rerun with an independent browser method before marking the artifact or affected claim complete.
-
-Wait for fonts, images, async content, and intended interaction state when they affect the result. Name viewport and state in filenames or the evidence ledger.
+Reject wrong route/window, mismatched context, blank/loading/blocked output, unreadable detail, cropped content, failed actions, `error` captures, runtime P0/P1, or blocked assessments. Wait for fonts, images, async content, and intended interaction state. A passing assertion cannot overrule failed visual/runtime evidence; repair or rerun it.
 
 A screenshot captured is not a screenshot compared. Record whether evidence was:
 
@@ -47,7 +45,7 @@ A screenshot captured is not a screenshot compared. Record whether evidence was:
 - `compared`: source/before and result/after were evaluated against defined criteria.
 - `passed`: no actionable in-scope blocker/major finding remains.
 
-Do not skip from captured to passed.
+Do not skip from `captured` to `passed`; name viewport and state in the filename or ledger.
 
 ## Compare The Right Surfaces
 
@@ -62,6 +60,10 @@ Inspect:
 - Interaction: affordance, focus, pending/disabled, recovery, interruption, and feedback.
 
 Use focused crops or component inspection when a full-page image makes the relevant detail unreadable.
+
+For final claims, complete the ledger. Use DPR `2+` for controls, icons, alignment, rows, or scrollbars; low-resolution evidence cannot prove unresolved detail.
+
+For repeated geometry, attach the anchor map, gap or baseline deltas, and focused crop from [geometry-and-rhythm.md](geometry-and-rhythm.md). For material motion, attach the event map plus interruption, repeated-use, and reduced-mode evidence from [motion.md](motion.md). “Feels smoother” and “spacing improved” are not falsifiable claims.
 
 ## Evidence Ledger
 
@@ -123,6 +125,8 @@ Before stopping, answer:
 - Which killed default stayed dead?
 - Did the signature move survive desktop and narrow/mobile?
 - Did the main path and one meaningful edge/recovery state pass?
+- Did the context-specific costly moment pass, and did every bounded hybrid region keep its own interaction rules?
+- Did the finish ledger pass alignment, spacing rhythm, overflow/scrollbars, gradients, icons/vector craft, and capture legibility?
 - What evidence supports each claim?
 - What remains unverified?
 

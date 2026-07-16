@@ -6,8 +6,8 @@ Use this route for greenfield interfaces and redesigns large enough to change hi
 
 Record only facts that change the design:
 
-- Product and audience.
-- Surface and primary user task.
+- Product archetype, audience, user mode, and bounded hybrid regions.
+- Primary artifact, task, frequency, pressure, input, and spatial model.
 - Repeated use or one-time persuasion.
 - Static concept, interactive prototype, or production implementation.
 - Existing code, system, assets, copy, data, references, and runnable states.
@@ -17,13 +17,13 @@ Ask one question only when the missing answer splits the work into incompatible 
 
 ## Greenfield Order
 
-1. Name the product intent and primary task.
+1. Complete the context card and name the product intent, primary task, and costly states.
 2. Decide what must be loud, quiet, hidden, and delayed.
 3. Choose product, brand, or hybrid register.
 4. Kill the obvious category default and the fashionable second default.
-5. Select a product-specific direction and one signature move.
+5. Select a context-specific composition, direction, and one signature move.
 6. Define information architecture before surface styling.
-7. Define layout grid, type roles, spacing rhythm, palette roles, surface model, component vocabulary, states, and motion grammar.
+7. Define layout grid, alignment anchors, relationship-based spacing, density, palette/type/surface roles, component ecology, states, and motion grammar.
 8. Build the core path with realistic content.
 9. Prove the result at the target viewports and states.
 
@@ -53,6 +53,8 @@ Do not repaint a broken hierarchy. If the main artifact remains visually subordi
 - State an asset gap instead of faking proof with div art, decorative SVG dashboards, fake terminals, invented customers, or imaginary metrics.
 - Keep product controls restrained even when the surrounding brand surface is expressive.
 - Make responsive behavior structural: collapse, reorder, change navigation, transform tables, or reprioritize. Do not merely stack every card.
+- For dense or spatial work, persist the geometry ledger from [geometry-and-rhythm.md](geometry-and-rhythm.md); for material motion, persist the event map from [motion.md](motion.md).
+- Run the causality and cheap-generation gate in [authorship-and-specificity.md](authorship-and-specificity.md) before calling a direction distinctive.
 
 ## State Contract
 
@@ -75,6 +77,8 @@ For brand surfaces, design:
 - Mobile first viewport.
 
 Do not call missing states polish. They are the product under pressure.
+
+For a command center, also prove live update, freshness, ownership, alert priority, and recovery without geometry drift. For a studio, prove selection change, direct manipulation, undo/recovery, and inspector stability. For a HUD, prove the busiest play state, safe areas, glance legibility, input mode, and an aspect-ratio change. These are product states, not decorative variants.
 
 ## Artifact Loop
 
@@ -104,3 +108,5 @@ proof target:
 ```
 
 Stop when every in-scope blocker and major finding is fixed or explicitly scoped, the main path and a meaningful edge/recovery state are proven, and the final artifact visibly beats its baseline or competent default.
+
+When the deliverable is a proposal or review rather than direct implementation, persist the manifest and standalone HTML dossier defined in [reporting.md](reporting.md). The report must contain the context, observed evidence, selected direction or exact redesign, preservation contract, proof targets, and visible limitations.

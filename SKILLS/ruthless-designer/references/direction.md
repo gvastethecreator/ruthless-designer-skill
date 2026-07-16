@@ -59,6 +59,8 @@ Build one. Merge only when the merge makes hierarchy sharper, not safer.
 
 Select the direction that makes the task fastest to understand, gives the surface a defensible reason to look this way, survives real states and narrow viewports, and has a visible signature move. Reject anything that needs fake assets, hides the product behind theater, or could belong to a competitor after a noun swap.
 
+Run [authorship-and-specificity.md](authorship-and-specificity.md) against the selected card. Record which product, data, workflow, audience, material, proof, or interaction constraint caused each major decision. If the card survives only as a palette and type treatment, it is not a direction.
+
 ## Kill Reflexes
 
 Name both predictable failures:
@@ -134,3 +136,5 @@ desktop/mobile proof:
 ```
 
 Pass only when a skeptical reviewer can name what makes the surface specific without hearing the design-process explanation.
+
+For proposal delivery, put all three viable cards, the explicit selection, rejection reasons, signature move, assets/state gaps, and proof targets into the dossier defined by [reporting.md](reporting.md). Do not hide discarded options when the user must approve the decision.
