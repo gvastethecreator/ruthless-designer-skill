@@ -39,7 +39,7 @@ Do not use it for isolated component fixes, small visual bugs, accessibility/per
 - Models motion as feedback, state, spatial continuity, attention, or ambient behavior with interruption, repeated-use, reduced-mode, and cleanup proof.
 - Makes alignment anchors, relationship-based spacing, repeated-series parity, safe areas, and scroll ownership measurable finish gates.
 - Rejects cheap generation through product causality, real content, component ecology, and non-website surface contracts rather than a fashion blacklist.
-- Produces standalone HTML design dossiers with embedded screenshots, normalized annotations, exact fixes, preservation decisions, and proof limits.
+- Produces synchronized ingestion-first Markdown and standalone HTML design dossiers with lossless evidence, exact annotation zooms, normalized geometry, exact fixes, preservation decisions, and proof limits.
 
 ## Install
 
@@ -151,15 +151,15 @@ Runtime screenshots and logs can contain private product data. The harness remov
 
 ## Standalone Design Dossiers
 
-Material critiques, screenshot reviews, design proposals, and redesign proposals can be delivered as portable evidence dossiers. Write the structured manifest, then generate strict standalone HTML:
+Material critiques, screenshot reviews, design proposals, and redesign proposals can be delivered as synchronized evidence dossiers. Write the structured manifest, then generate strict ingestion-first Markdown plus standalone HTML:
 
 ~~~bash
 node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest ./output/ruthless-designer/app-shell/report-manifest.json --out ./output/ruthless-designer/app-shell/report.html --strict-assets
 ~~~
 
-The generator validates annotation geometry and cross-references, requires every marker to name its literal visible subject, and rejects proposal callouts on before/reference evidence. It also escapes hostile text, embeds supported local images, fails strict mode on missing/corrupt/external assets, remains readable without JavaScript, and prints cleanly. Draft mode exposes missing or remote evidence as a sanitized visible warning instead of silently omitting or fetching it.
+The generator always writes `report.md` beside `report.html` (or accepts `--markdown-out <path.md>`), copies local evidence losslessly into `report-assets/`, and keeps both views on the same normalized manifest. It validates annotation geometry and cross-references, requires every marker to name its literal visible subject, rejects proposal callouts on before/reference evidence, and renders exact context-padded annotation zooms when dimensions are available. It also escapes hostile text, embeds supported local images in HTML, fails strict mode on missing/corrupt/external assets, remains readable without JavaScript, and prints cleanly. Draft mode exposes missing or remote evidence in both reports as a sanitized visible warning instead of silently omitting or fetching it.
 
-The runtime harness also writes report.html automatically beside review.json and README.md. That automated dossier remains an evidence pack: it does not turn detector output or a captured screenshot into a human design verdict.
+The runtime harness also writes `report.md`, `report-assets/`, and `report.html` automatically beside `review.json` and the compact `README.md` index. That automated dossier remains an evidence pack: it does not turn detector output or a captured screenshot into a human design verdict.
 
 ## Check The Active Installation
 

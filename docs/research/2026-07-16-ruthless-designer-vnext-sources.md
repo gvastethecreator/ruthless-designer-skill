@@ -14,7 +14,7 @@ The useful common thread is not a preferred font, palette, framework, or page sk
 5. prove claims with rendered evidence, including the costly state and repeated use;
 6. present proposals as decisions tied to evidence, not moodboard prose.
 
-This becomes four vNext additions: a motion contract, a geometry/rhythm contract, a cheap-generation gate, and a deterministic standalone HTML evidence report.
+This becomes four vNext additions: a motion contract, a geometry/rhythm contract, a cheap-generation gate, and synchronized deterministic evidence reports—ingestion-first Markdown plus standalone visual HTML from one manifest.
 
 ## Sources and provenance
 
@@ -66,7 +66,7 @@ The gate should ask whether the product, data, workflow, audience, or material c
 
 ### The proposal report is part of the design work
 
-A review or redesign proposal needs a portable evidence artifact, not only chat prose. The chosen direction is a forensic dossier: executive verdict, evidence stage, numbered screenshot annotations, systemic findings, exact moves, preserved strengths, alternative directions when relevant, finish/proof ledger, risks, and limitations. It must escape hostile text, embed local images, remain readable without scripts, print cleanly, and expose missing evidence visibly.
+A review or redesign proposal needs a portable evidence artifact, not only chat prose. The chosen direction is a forensic dossier with synchronized Markdown and HTML views: executive verdict, evidence stage, numbered screenshot annotations, systemic findings, exact moves, preserved strengths, alternative directions when relevant, finish/proof ledger, risks, and limitations. It must escape hostile text, embed local images in HTML, materialize lossless sidecars for Markdown, remain readable without scripts, print cleanly, and expose missing evidence visibly.
 
 ## Rules intentionally rejected
 
@@ -83,9 +83,9 @@ A review or redesign proposal needs a portable evidence artifact, not only chat 
 
 - Add `references/geometry-and-rhythm.md` and route it only for dense, aligned, spatial, or finish-sensitive work.
 - Rewrite the motion reference around an explicit motion map and proof protocol; keep implementation traps separate.
-- Add `references/reporting.md` and a deterministic `generate-design-report.mjs` CLI.
-- Make the existing review harness optionally emit the same HTML format from its collected evidence.
-- Add hostile-input, missing/corrupt-asset, annotation-geometry, portability, and harness-integration tests.
+- Add `references/reporting.md` and a deterministic `generate-design-report.mjs` CLI that emits `report.md` and `report.html` from one normalized manifest.
+- Make the existing review harness emit the same Markdown and HTML views from its collected evidence.
+- Add hostile-input, missing/corrupt-asset, annotation-geometry, sidecar fidelity, portability, loupe, and harness-integration tests.
 - Add behavior/trigger evaluations for command centers, HUDs, motion-heavy redesigns, geometry drift, and report-producing reviews.
 
 ## Limitations

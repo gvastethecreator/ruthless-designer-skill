@@ -45,13 +45,13 @@ Reject narrow work from this route. For a button fix, isolated responsive bug, a
 
 ### READ
 
-Inspect the actual source of truth before choosing style:
+Inspect the source before choosing style:
 
 - Identify archetype, user mode, primary artifact, frequency, pressure, input, spatial model, states, and constraints; inspect source, assets, screenshots, references, and runtime.
 - Preserve IA, routes, voice, analytics, forms, legal/SEO content, and accessibility wins unless scoped.
 - Ask one question only when two plausible answers would create incompatible products. Otherwise make the strongest assumption and state it.
 
-Finish with the context card and a one-line design read: `archetype + user mode + primary artifact + pressure + spatial model + proof target`. For implementation, persist `context-card.json` before editing.
+Finish with the context card and one-line design read: `archetype + user mode + primary artifact + pressure + spatial model + proof target`. Before implementation, persist matching `context-card.json` and `context-card.md`.
 
 ### CHOOSE
 
@@ -59,7 +59,7 @@ Choose the argument before decorating it.
 
 - Pick `product`, `brand`, or `hybrid` register.
 - Kill the obvious category reflex and its fashionable replacement.
-- For open or ambitious work, generate three incompatible directions, persist `direction-cards.json` plus `kill-list.json`, select one, and state why it serves the task better.
+- For open or ambitious work, persist three incompatible options in `direction-cards.json` and `direction-cards.md`, plus `kill-list.json` and `kill-list.md`; select one for this task.
 - Choose one primary signature move tied to the product artifact, workflow, data, proof, material, audience, or interaction. Kill it if removing it only makes the page simpler; decoration is not a signature.
 - Define hierarchy, composition, type/palette roles, surfaces, spacing, components, states, and motion.
 - Select a composition whose interaction and scrolling model belongs to the classified archetype; assign hybrid rules by region instead of averaging them.
@@ -105,7 +105,7 @@ Inspect what rendered, not what the code was supposed to render.
 Lead with the result or the biggest design crime.
 
 - Creation/redesign: name the design read, killed defaults, chosen direction, signature move, artifact/files changed, proof, and remaining risk.
-- Material critique/proposal: persist report-manifest.json plus standalone annotated report.html and link it. Every screenshot marker must name its literal visible subject, match that subject at rendered scale, and keep future proposals off before/reference evidence.
+- Material critique/proposal: persist `report-manifest.json`, `report.md`, lossless `report-assets/`, and annotated `report.html` from one manifest; link both reports. Markers must name and match their literal visible subject in the full image and evidence zoom; keep future proposals off before/reference evidence.
 - Critique: perform a visual-first inspection at readable scale before tracing source. Group symptoms by systemic cause, then pair each major finding with `evidence -> user damage -> structural cause -> exact fix -> one earned roast`. Include a required `do not break` section, the finish ledger, up to five cuts—never pad the list—and a brutal verdict.
 - Blocked work: say `implemented, not fully verified` or `reviewed, blocked by ...`; do not call it done.
 

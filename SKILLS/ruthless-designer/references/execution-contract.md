@@ -12,19 +12,21 @@ Shared primitives may stay together only when one causal decision and one proof 
 
 Use coordinator-provided paths when present. Otherwise keep temporary evidence outside product source and report exact paths.
 
-Before implementation, produce `context-card.json` with work-unit id, archetype, secondary regions, user mode, primary artifact, frequency, pressure, input, spatial model, costly states, constraints, preserved contracts and proof matrix.
+Before implementation, produce `context-card.json` and `context-card.md` with work-unit id, archetype, secondary regions, user mode, primary artifact, frequency, pressure, input, spatial model, costly states, constraints, preserved contracts and proof matrix.
 
 For open, ambitious, reference-led or broad work, produce:
 
-- `direction-cards.json`: three incompatible directions with argument, composition, interaction, visual language, signature, responsive/scroll model, asset plan and primary risk;
-- `kill-list.json`: category reflex, fashionable replacement, generic composition, fake-proof move and disposable decoration that will not survive;
+- `direction-cards.json` plus `direction-cards.md`: three incompatible directions with argument, composition, interaction, visual language, signature, responsive/scroll model, asset plan and primary risk;
+- `kill-list.json` plus `kill-list.md`: category reflex, fashionable replacement, generic composition, fake-proof move and disposable decoration that will not survive;
 - selected direction and the reason it wins for this exact context.
 
 Every rendered implementation also produces:
 
 - `proof/before.png` and `proof/after.png` at the same route, viewport, state, theme, content and auth context;
 - `proof/detail.png` or named DPR 2 crops for alignment, spacing, dense controls, scrollbar, gradient and icon/vector inspection;
-- `finish-ledger.json` with context-fit, hierarchy, alignment, spacing-rhythm, overflow, scrollbars, gradients, icons-vector-craft, content-integrity, capture-legibility and responsive-detail.
+- `finish-ledger.json` plus `finish-ledger.md` with context-fit, hierarchy, alignment, spacing-rhythm, overflow, scrollbars, gradients, icons-vector-craft, content-integrity, capture-legibility and responsive-detail.
+
+Every durable JSON decision artifact requires a Markdown companion with the same facts, ids, ordering, statuses, evidence paths and blockers. JSON remains the structured source; Markdown is the ingestion and correction surface. Do not add interpretation to only one format or let the mirrors drift.
 
 Each finish entry records `passed | failed | not-applicable | blocked`, evidence, observation and corrective action. Alignment, spacing, overflow, content integrity, capture legibility and responsive detail cannot be not-applicable. Existing scroll requires a minimal theme-aware custom scrollbar unless platform constraints make styling impossible. Native default chrome is a failed finish state. Icons and gradients may be not applicable only when absent; improvised vectors never pass because they merely exist.
 
