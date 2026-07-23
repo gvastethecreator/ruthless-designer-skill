@@ -82,7 +82,7 @@ Use $ruthless-designer to reimagine this editor. Keep routes and shortcuts, but 
 Use $ruthless-designer to roast this screenshot and implementation. Give me the real design crime, source cause, up to five cuts without filler, what must not break, and the better redesign.
 ```
 
-The skill answers in the user's language. It does not use praise sandwiches, corporate filler, or generic advice such as "improve hierarchy" without naming what must dominate and what must die.
+The skill answers in the user's language. It does not use praise sandwiches, corporate filler, or generic advice such as "improve hierarchy" without naming what must dominate and what must die. Its language gate preserves product voice, names sources, cuts generated-writing patterns, and makes the smallest effective edit across UI copy, briefs, critiques, reports, and handoffs.
 
 ## Validate The Package
 
@@ -198,7 +198,7 @@ The installer validates every destination before mutating any of them, rejects n
 ## Project Structure
 
 - [`SKILL.md`](./SKILLS/ruthless-designer/SKILL.md): compact trigger, voice, state machine, and route selector.
-- [`references/`](./SKILLS/ruthless-designer/references): creation, direction, product, production hardening, brand, data/information, visual craft, critique, motion implementation, proof, tooling, and contrasting examples.
+- [`references/`](./SKILLS/ruthless-designer/references): creation, direction, product, production hardening, brand, data/information, visual craft, language/authorship, critique, motion implementation, proof, tooling, and contrasting examples.
 - [`scripts/`](./SKILLS/ruthless-designer/scripts): dependency-free static detector and runtime evidence harness.
 - [`tests/`](./tests): positive, negative, adversarial, validator, doctor, and installer regression tests.
 - [`evals/`](./evals): trigger and behavioral contracts for clean-context forward testing.
