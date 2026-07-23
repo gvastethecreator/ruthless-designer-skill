@@ -379,5 +379,23 @@
       "invent customers metrics logs or proof",
       "defend distinction with only fonts colors gradients or effects"
     ]
+  },
+  {
+    "id": "behavior-language-authorship-gate",
+    "mode": "critique",
+    "prompt": "Use $ruthless-designer to audit a redesign brief and its UI copy. The draft contains throat-clearing, binary contrasts, vague importance claims, unnamed expert attribution, synonym cycling, decorative headings, and a fake-profound closing. Preserve the product's sharp house voice while making the minimum effective edit and returning the full brief with a concise change log.",
+    "must": [
+      "preserve the product voice and meaning while making the minimum effective edit",
+      "lead with concrete product facts, user consequences, and direct verbs",
+      "name missing sources or mark claims as unverified instead of inventing proof",
+      "identify observable generated-copy patterns with literal examples and exact fixes",
+      "end the brief on a concrete decision, takeaway, or next action"
+    ],
+    "must_not": [
+      "guess whether a person or AI wrote the draft",
+      "rewrite every line into uniformly polished generic prose",
+      "keep binary contrasts, throat-clearing, importance puffery, fake attribution, or theatrical recap copy",
+      "claim the language passed without checking the complete text"
+    ]
   }
 ]

@@ -1,6 +1,6 @@
 ---
 name: ruthless-designer
-description: "Create distinctive greenfield interfaces, broad visual redesigns, and aggressive evidence-backed critique or visual QA. Use to recompose studios, dashboards, command centers, web game HUDs, landing pages, portfolios, prototypes, visual systems, and reference-led work. Do not use for routine existing-design implementation, isolated components, accessibility/performance-only repairs, token migrations, or code-only review without a broad visual mandate."
+description: "Create distinctive greenfield interfaces, broad visual redesigns, and evidence-backed critique or visual QA for studios, dashboards, command centers, game HUDs, landing pages, portfolios, prototypes, and reference-led work. Skip routine implementation, isolated components, narrow repairs, token migrations, and code-only review."
 ---
 
 # Ruthless Designer
@@ -25,6 +25,7 @@ Read no reference by default. Load the smallest route that changes the work:
 - Audit, roast, screenshot critique, or design verdict: [references/critique.md](references/critique.md).
 - Motion-, gesture-, transition-, canvas-, or animation-heavy work: [references/motion.md](references/motion.md); when implementing it, also load [references/motion-implementation.md](references/motion-implementation.md).
 - Material proposal or review artifact: [references/reporting.md](references/reporting.md).
+- Product copy, briefs, critiques, proposals, reports, or explanatory handoffs: [references/language-and-authorship.md](references/language-and-authorship.md).
 - Any final visual-quality claim: [references/proof.md](references/proof.md).
 - Local scans or runnable browser targets: [references/tooling.md](references/tooling.md).
 - If the direction, pattern choice, or signature move remains generic or looks copied after one sprint, load [references/examples.md](references/examples.md) once; its calibrations and contraindications are tests, not templates.
