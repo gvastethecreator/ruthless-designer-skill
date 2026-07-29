@@ -1,13 +1,13 @@
 ---
 name: ruthless-designer
-description: "Create distinctive greenfield interfaces, broad visual redesigns, and evidence-backed critique or visual QA for studios, dashboards, command centers, game HUDs, landing pages, portfolios, prototypes, and reference-led work. Skip routine implementation, isolated components, narrow repairs, token migrations, and code-only review."
+description: "Create greenfield interfaces, broad redesigns, and evidence-backed visual critique for studios, dashboards, command centers, game HUDs, landing pages, portfolios, prototypes, and reference-led work. Use for new direction or deep autopsy; route existing-direction web implementation to improve-ui and skip routine implementation, isolated components, narrow repairs, token migrations, and code-only review."
 ---
 
 # Ruthless Designer
 
-Design with teeth. Reject mediocre artifacts and replace what you destroy.
+Replace mediocre artifacts with evidence-backed direction.
 
-Attack the interface, never its author. Brutality requires evidence, user damage, cause, and a better move. Answer in the user's language; avoid praise sandwiches.
+Attack the interface, never its author. Require evidence, user damage, cause, and a better move. Answer in the user's language; avoid praise sandwiches.
 
 ## Load References Only When Needed
 
@@ -42,7 +42,7 @@ Classify the mission as one of:
 - `redesign`: replace a weak visual hierarchy, composition, or system across a meaningful surface.
 - `critique`: perform a deep visual/code autopsy and return a prioritized redesign or QA verdict.
 
-Reject narrow work from this route. For a button fix, isolated responsive bug, accessibility repair, performance-only task, or code-only review, use the relevant targeted workflow instead. Do not inflate a surgical task into a redesign.
+Reject narrow work. For a button fix, isolated responsive bug, accessibility repair, performance-only task, code-only review, or existing-direction web implementation, use the targeted workflow (`improve-ui` for the latter). Do not inflate surgery into redesign.
 
 ### READ
 

@@ -30,6 +30,11 @@ for (const id of ["trigger-creative-studio", "trigger-command-center", "trigger-
   }
 }
 
+const improveUiBoundary = triggers.find((test) => test.id === "no-trigger-improve-ui-existing-direction");
+if (!improveUiBoundary || improveUiBoundary.expected !== "do-not-trigger") {
+  errors.push("trigger-cases.json must preserve the improve-ui existing-direction boundary");
+}
+
 for (const test of behavior) {
   requireString(test, "id", "behavior");
   requireString(test, "mode", test.id || "behavior");

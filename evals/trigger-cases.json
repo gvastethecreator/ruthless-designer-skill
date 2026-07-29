@@ -123,5 +123,10 @@
     "id": "no-trigger-isolated-production-fix",
     "expected": "do-not-trigger",
     "prompt": "Fix only the existing drawer's safe-area padding and focus return bug. Preserve its design and every unrelated behavior."
+  },
+  {
+    "id": "no-trigger-improve-ui-existing-direction",
+    "expected": "do-not-trigger",
+    "prompt": "Improve this existing web dashboard's settings flow with source-backed fixes and runtime proof. Preserve its visual direction, routes, and design system; do not invent a new redesign."
   }
 ]
