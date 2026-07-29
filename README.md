@@ -84,6 +84,8 @@ Use $ruthless-designer to roast this screenshot and implementation. Give me the 
 
 The skill answers in the user's language. It does not use praise sandwiches, corporate filler, or generic advice such as "improve hierarchy" without naming what must dominate and what must die. Its language gate preserves product voice, names sources, cuts generated-writing patterns, and makes the smallest effective edit across UI copy, briefs, critiques, reports, and handoffs.
 
+Use `improve-ui` when the existing interface direction should stay intact and the task is a source-backed, verified implementation improvement. Use `ruthless-designer` when the task needs a new direction, a broad redesign, or a deep visual autopsy that can justify replacing the current structure.
+
 ## Validate The Package
 
 Run the complete local gate:
