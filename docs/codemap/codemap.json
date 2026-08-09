@@ -1,0 +1,187 @@
+{
+  "generated_at": "2026-08-08T09:57:21Z",
+  "generated_from_commit": "09ab25571dccbd4d44ba45753e7622471e90f0f5",
+  "scope": [
+    "."
+  ],
+  "nodes": [
+    {
+      "id": "repository",
+      "path": "README.md",
+      "role": "Owns the tracked files for the repository module.",
+      "type": "module",
+      "boundary": "Repository",
+      "entrypoints": [
+        "README.md:Ruthless Designer"
+      ],
+      "tests": [],
+      "constraints": [
+        "This baseline uses tracked source and explicit dependency references only."
+      ],
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "README.md",
+            "symbol": "Ruthless Designer"
+          }
+        ]
+      }
+    },
+    {
+      "id": "scripts",
+      "path": "scripts",
+      "role": "Owns the tracked files for the scripts module.",
+      "type": "service",
+      "boundary": "Scripts",
+      "entrypoints": [
+        "scripts/doctor-skill.mjs:defaultTargets"
+      ],
+      "tests": [],
+      "constraints": [
+        "This baseline uses tracked source and explicit dependency references only."
+      ],
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "scripts/doctor-skill.mjs",
+            "symbol": "defaultTargets"
+          }
+        ]
+      }
+    },
+    {
+      "id": "skills",
+      "path": "SKILLS",
+      "role": "Owns the tracked files for the SKILLS module.",
+      "type": "module",
+      "boundary": "Skills",
+      "entrypoints": [
+        "SKILLS/ruthless-designer/SKILL.md:Ruthless Designer"
+      ],
+      "tests": [],
+      "constraints": [
+        "This baseline uses tracked source and explicit dependency references only."
+      ],
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "SKILLS/ruthless-designer/SKILL.md",
+            "symbol": "Ruthless Designer"
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "repository",
+      "to": "scripts",
+      "type": "calls",
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "package.json",
+            "symbol": "scripts/validate-skill.mjs"
+          },
+          {
+            "path": "package.json",
+            "symbol": "scripts/validate-evals.mjs"
+          },
+          {
+            "path": "package.json",
+            "symbol": "scripts/run-tests.mjs"
+          },
+          {
+            "path": "package.json",
+            "symbol": "scripts/doctor-skill.mjs"
+          },
+          {
+            "path": "package.json",
+            "symbol": "scripts/install-local-skill.mjs"
+          }
+        ]
+      }
+    },
+    {
+      "from": "repository",
+      "to": "skills",
+      "type": "calls",
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "package.json",
+            "symbol": "SKILLS/ruthless-designer/scripts/run-interface-review.mjs"
+          }
+        ]
+      }
+    },
+    {
+      "from": "repository",
+      "to": "skills",
+      "type": "reads",
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "README.md",
+            "symbol": "./SKILLS/ruthless-designer/SKILL.md"
+          }
+        ]
+      }
+    },
+    {
+      "from": "skills",
+      "to": "repository",
+      "type": "reads",
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "SKILLS/ruthless-designer/references/reporting.md",
+            "symbol": "README.md"
+          }
+        ]
+      }
+    }
+  ],
+  "flows": [
+    {
+      "trigger": "Tracked reference SKILLS/ruthless-designer/references/reporting.md:README.md",
+      "steps": [
+        "skills",
+        "repository",
+        "scripts"
+      ],
+      "outcome": "The verified dependency path reaches scripts through 2 step(s)."
+    },
+    {
+      "trigger": "Tracked reference package.json:scripts/validate-skill.mjs",
+      "steps": [
+        "repository",
+        "scripts"
+      ],
+      "outcome": "The verified dependency path reaches scripts through 1 step(s)."
+    },
+    {
+      "trigger": "Tracked reference package.json:SKILLS/ruthless-designer/scripts/run-interface-review.mjs",
+      "steps": [
+        "repository",
+        "skills"
+      ],
+      "outcome": "The verified dependency path reaches skills through 1 step(s)."
+    },
+    {
+      "trigger": "Tracked reference SKILLS/ruthless-designer/references/reporting.md:README.md to repository",
+      "steps": [
+        "skills",
+        "repository"
+      ],
+      "outcome": "The verified dependency path reaches repository through 1 step(s)."
+    }
+  ]
+}
