@@ -16,6 +16,7 @@ Read no reference by default. Load the smallest route that changes the work:
 - Greenfield creation, broad redesign, or reference-led creation: [references/execution-contract.md](references/execution-contract.md), [references/create.md](references/create.md), then [references/direction.md](references/direction.md) when the brief is open, ambitious, reference-led, broad, or in danger of becoming generic.
 - Any nontrivial product direction: classify with [references/product-contexts.md](references/product-contexts.md); for broad composition use [references/composition-patterns.md](references/composition-patterns.md), and challenge generic choices with [references/context-examples.md](references/context-examples.md).
 - App, dashboard, editor, tool, admin, or authenticated workflow: [references/product-surfaces.md](references/product-surfaces.md).
+- Onboarding, settings, search, permissions, destructive actions, or interruption-heavy flows: [references/human-interface-craft.md](references/human-interface-craft.md).
 - Production product implementation or any `production-ready` claim: [references/production-hardening.md](references/production-hardening.md).
 - Landing, portfolio, launch, pricing, campaign, cultural/editorial, or persuasion surface: [references/brand-surfaces.md](references/brand-surfaces.md).
 - Charts, tables, metrics, uncertainty, or decision-heavy data: [references/data-information.md](references/data-information.md).
@@ -61,10 +62,11 @@ Choose the argument before decorating it.
 - Pick `product`, `brand`, or `hybrid` register.
 - Kill the obvious category reflex and its fashionable replacement.
 - For open or ambitious work, persist three incompatible options in `direction-cards.json` and `direction-cards.md`, plus `kill-list.json` and `kill-list.md`; select one for this task.
-- Choose one primary signature move tied to the product artifact, workflow, data, proof, material, audience, or interaction. Kill it if removing it only makes the page simpler; decoration is not a signature.
+- Choose one primary signature move tied to the product artifact, workflow, data, proof, material, audience, or interaction. Kill it if removing it only makes the page simpler; decoration is not a signature. A restyled standard control is not a signature.
 - Define hierarchy, composition, type/palette roles, surfaces, spacing, components, states, and motion.
 - Select a composition whose interaction and scrolling model belongs to the classified archetype; assign hybrid rules by region instead of averaging them.
 - Define the visible alignment anchors, scroll ownership, scrollbar treatment, gradient role, and icon source before implementation can improvise them.
+- Before implementation, persist the choices as `build-inventory.md` next to the context card: one row per dimension above plus the signature move, each with its intended move. No dimension stays silent. The inventory is the ambition contract; without it, a build shrinks to the two safest edits.
 
 If a competitor could use the result by swapping the logo and nouns, the direction is still generic. Cut again.
 
@@ -79,6 +81,7 @@ Build the real artifact when implementation is requested and the repo is editabl
 - Preserve product discipline inside forms, tables, settings, and repeated controls even when the surrounding surface is expressive.
 - Prefer the project's icon system or a coherent library. Do not draw disposable inline SVG icons by instinct; a custom vector must earn its geometry and pass the finish gate at its real rendered sizes.
 - Keep one primary archetype or tightly coupled flow per work unit. Split unrelated surfaces into isolated builders; a batch is an experiment envelope, not permission for one worker to genericize every product.
+- Execute the full build inventory, not its safest subset. If reverting the two smallest changes leaves the artifact acceptable, the direction was not executed.
 
 For critique-only work, replace implementation with a concrete redesign: exact cuts, hierarchy, layout, system changes, source causes, and proof targets. State what already works and must not be broken. Never end at "improve spacing."
 
@@ -94,18 +97,19 @@ Inspect what rendered, not what the code was supposed to render.
 - Treat a captured screenshot as evidence captured, not evidence passed. Inspect or compare it.
 - Run `structure` and `finish` passes. Record alignment, spacing, overflow/scrollbars, gradients, icon craft, optical centering, and capture legibility as `passed | failed | n/a | blocked`; use DPR `2` or crops for small details.
 - Mark missing runtime, state, or visual evidence as blocked. Never convert absence of evidence into a high score or "production-ready."
+- Grade every build-inventory row `done | blocked | cut` with a reason for each `blocked` or `cut`. An ungraded or silently dropped row blocks STOP.
 
 ### CONTINUE, RESET, OR STOP
 
 - `CONTINUE`: fix the highest-impact open issue, then prove again. Keep the active backlog short and ordered by user damage.
 - `RESET`: after two valid `flat` or `worse` comparisons leave the same root cause intact, stop polishing. Delete the failed structure, keep what still works, choose a new direction, and rebuild. If the verdict came from missing content, bad fixtures, or invalid proof, repair the evidence instead of thrashing the design.
-- `STOP`: stop only when no in-scope blocker or context mismatch remains, required execution artifacts exist, requested states and viewports are proven, every applicable finish dimension passed, and the final claim matches the evidence. Otherwise state the blocker or scope limit.
+- `STOP`: stop only when no in-scope blocker or context mismatch remains, required execution artifacts exist, every build-inventory row is graded, requested states and viewports are proven, every applicable finish dimension passed, and the final claim matches the evidence. Otherwise state the blocker or scope limit.
 
 ## Output Contract
 
 Lead with the result or the biggest design crime.
 
-- Creation/redesign: name the design read, killed defaults, chosen direction, signature move, artifact/files changed, proof, and remaining risk.
+- Creation/redesign: name the design read, killed defaults, chosen direction, signature move, build-inventory row status, artifact/files changed, proof, and remaining risk.
 - Material critique/proposal: persist `report-manifest.json`, `report.md`, lossless `report-assets/`, and annotated `report.html` from one manifest; link both reports. Markers must name and match their literal visible subject in the full image and evidence zoom; keep future proposals off before/reference evidence.
 - Critique: perform a visual-first inspection at readable scale before tracing source. Group symptoms by systemic cause, then pair each major finding with `evidence -> user damage -> structural cause -> exact fix -> one earned roast`. Include a required `do not break` section, the finish ledger, up to five cuts—never pad the list—and a brutal verdict.
 - Blocked work: say `implemented, not fully verified` or `reviewed, blocked by ...`; do not call it done.

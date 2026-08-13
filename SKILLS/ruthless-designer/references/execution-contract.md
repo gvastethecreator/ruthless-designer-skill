@@ -14,6 +14,8 @@ Use coordinator-provided paths when present. Otherwise keep temporary evidence o
 
 Before implementation, produce `context-card.json` and `context-card.md` with work-unit id, archetype, secondary regions, user mode, primary artifact, frequency, pressure, input, spatial model, costly states, constraints, preserved contracts and proof matrix.
 
+Also produce `build-inventory.md`: one row per chosen dimension (hierarchy, composition, type roles, palette/surfaces, spacing, components, states, motion, copy) plus the signature move, each with its intended move. The final report grades every row `done | blocked | cut` with a reason for each `blocked` or `cut`.
+
 For open, ambitious, reference-led or broad work, produce:
 
 - `direction-cards.json` plus `direction-cards.md`: three incompatible directions with argument, composition, interaction, visual language, signature, responsive/scroll model, asset plan and primary risk;

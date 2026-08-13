@@ -16,6 +16,8 @@ Name roles before values: canvas, surface, text, muted text, edge, accent, focus
 
 Build light, dark, and high-contrast themes as separate perceptual systems. Dark mode is not inverted light mode: elevation, borders, images, shadows, charts, and semantic colors need retuning. Test forced colors and reduced transparency when applicable. Never let a decorative palette turn error, success, and selection into the same neon soup.
 
+Keep chrome (nav, toolbars, persistent controls) quieter than the content it serves. Use translucency only when the same spatial object stays visible behind it and type stays legible. Honor reduced transparency with a solid fallback. Do not pick a material for the color it casts, and do not spread system-glass costume across cards, tables, or marketing modules.
+
 ## Grid, Rhythm, And Optical Fit
 
 For dense, repeated, spatial, command-center, HUD, or finish-sensitive work, use the full measurement and safe-area contract in [geometry-and-rhythm.md](geometry-and-rhythm.md).
@@ -44,4 +46,4 @@ Treat atlases and generated grids as structured data. Define grid, cell ratio, s
 
 ## Craft Gate
 
-Inspect at target size, narrow width, zoom, each supported theme, and with real long/short content. Blur or squint to test hierarchy; inspect crisp crops to test finish. Pass only when the system solves the named problem and exceptions are intentional. If the defense is a catalog of gradients, shadows, radii, and micro-animations, no design decision has occurred.
+Inspect at target size, narrow width, zoom, each supported theme, and with real long/short content. Blur or squint to test hierarchy; inspect crisp crops to test finish. Pass only when the system solves the named problem and exceptions are intentional. If the defense is a catalog of gradients, shadows, radii, and micro-animations, no design decision has occurred. For chrome-versus-content, user-controlled text size, and anti-iOS-costume tests, load [human-interface-craft.md](human-interface-craft.md).

@@ -91,7 +91,7 @@ Use `improve-ui` when the existing interface direction should stay intact and th
 Run the complete local gate:
 
 ```bash
-npm run check
+pnpm run check
 ```
 
 That command validates the skill and metadata, validates the evaluation specifications, runs detector/harness/installer regression tests, and exercises the deliberately bad smoke fixture.
@@ -99,10 +99,10 @@ That command validates the skill and metadata, validates the evaluation specific
 Individual commands:
 
 ```bash
-npm run validate
-npm run evals
+pnpm run validate
+pnpm run evals
 npm test
-npm run smoke
+pnpm run smoke
 ```
 
 ## Static Detector
@@ -168,7 +168,7 @@ The runtime harness also writes `report.md`, `report-assets/`, and `report.html`
 Codex may be loading a copied or misdirected skill. Diagnose the required junction topology with:
 
 ```bash
-npm run doctor
+pnpm run doctor
 ```
 
 Use `--check` when any missing, copied, or misdirected target should fail:
@@ -180,7 +180,7 @@ node scripts/doctor-skill.mjs --check
 Preview direct junctions for both `.agents` and `.codex`:
 
 ```bash
-npm run install:local
+pnpm run install:local
 ```
 
 Create missing junctions after inspecting the dry run:

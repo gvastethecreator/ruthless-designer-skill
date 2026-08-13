@@ -1,7 +1,7 @@
 {
-  "current_commit": "09ab25571dccbd4d44ba45753e7622471e90f0f5",
+  "current_commit": "116c4484ff212a8ae3ee66cbd269ec57c5757738",
   "working_tree_dirty": true,
-  "generated_at": "2026-08-08T09:57:21Z",
+  "generated_at": "2026-08-12T06:42:54Z",
   "scanned_scope": [
     "."
   ],
@@ -11,6 +11,7 @@
     ".hg",
     ".next",
     ".nuxt",
+    ".scratch",
     ".svn",
     ".turbo",
     ".venv",
@@ -32,13 +33,13 @@
       "id": ".",
       "path": ".",
       "file_count": 5,
-      "fingerprint": "8461754ce735c5b21f2127c5e10bfd2e885be1e5371095331628b72fbf1aded8"
+      "fingerprint": "ad07ff60908709193df5932199eb3c6dc70bab06bcd8b379d82ed0f2713a9f05"
     },
     {
       "id": ".github",
       "path": ".github",
       "file_count": 1,
-      "fingerprint": "2e9fdbaa882d63a769f9e6c22a7088294c116fadf190ff62c5fe85892f383bea"
+      "fingerprint": "b2d0daccf5c461b75ba47f3664665cd0a117e038073014f766580e44df0ed62d"
     },
     {
       "id": ".vscode",

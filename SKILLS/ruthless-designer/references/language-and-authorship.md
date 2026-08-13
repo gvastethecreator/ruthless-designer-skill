@@ -62,6 +62,8 @@ Treat this list as a pressure test. Keep a term when it carries meaning, uncerta
 ## Design-Specific Application
 
 - A UI label names an action, object, state, or consequence. It does not perform marketing theater.
+- Address the reader as `you` when the product voice allows it. Do not narrate “the user.” Omit unneeded gender, use people-first language about disability, and prefer plain wording over culture-bound jokes and idioms.
+- Permission purpose copy is one active sentence: what is collected and why. Reject “for a better experience.”
 - A brief explains a decision, its product cause, and its proof target. It does not hide missing context behind moodboard language.
 - A critique uses `evidence -> damage -> cause -> fix`. It does not substitute swagger, jokes, or a vague verdict for inspection.
 - A proposal marks content as real, synthetic, missing, or blocked. It does not turn placeholder copy into product proof.
@@ -92,4 +94,4 @@ Pass only when:
 
 ## Source
 
-Adapted from [petergyang/no-ai-slop at `61c21c3`](https://github.com/petergyang/no-ai-slop/tree/61c21c351da4dcb40946a11fead978f2078a2c65), including its `SKILL.md` and `eval.md`. This route applies those observable writing rules to design briefs, UI copy, critiques, reports, and handoffs.
+Adapted from [petergyang/no-ai-slop at `61c21c3`](https://github.com/petergyang/no-ai-slop/tree/61c21c351da4dcb40946a11fead978f2078a2c65), including its `SKILL.md` and `eval.md`. This route applies those observable writing rules to design briefs, UI copy, critiques, reports, and handoffs. For permission purpose strings, inclusion, and interruption grammar, load [human-interface-craft.md](human-interface-craft.md).

@@ -67,6 +67,7 @@ Name both predictable failures:
 
 - First reflex: centered hero, purple-blue gradient, three equal cards, rounded icon tiles, fake dashboard, decorative glass, or generic SaaS copy.
 - Second reflex: editorial monochrome by default, terminal-dark developer cosplay, beige luxury, faux brutalism, chrome-everything, oversized serif italics, or cinematic scroll effects on a task UI.
+- Third reflex: iOS Settings costume, Liquid Glass on every surface, SF-like chrome, or a five-item tab bar on a web product that did not ask for Apple-feel.
 
 Also kill category costume: a visual trope that signals an industry without serving this product, audience, or workflow.
 
