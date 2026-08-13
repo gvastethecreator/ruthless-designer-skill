@@ -54,6 +54,7 @@ Do not repaint a broken hierarchy. If the main artifact remains visually subordi
 - Keep product controls restrained even when the surrounding brand surface is expressive.
 - Make responsive behavior structural: collapse, reorder, change navigation, transform tables, or reprioritize. Do not merely stack every card.
 - For dense or spatial work, persist the geometry ledger from [geometry-and-rhythm.md](geometry-and-rhythm.md); for material motion, persist the event map from [motion.md](motion.md).
+- For onboarding, settings, search, permissions, or interruption-heavy flows, load [human-interface-craft.md](human-interface-craft.md). Keep interaction grammar familiar. Put the signature in the artifact, not in restyled standard controls.
 - Run the causality and cheap-generation gate in [authorship-and-specificity.md](authorship-and-specificity.md) before calling a direction distinctive.
 
 ## State Contract

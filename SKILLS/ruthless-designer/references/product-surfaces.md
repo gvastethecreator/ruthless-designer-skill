@@ -21,9 +21,9 @@ Choose a structure that reflects work:
 - List/table plus evidence pane: dense scanning, stable selection, one clear next action.
 - Workflow: stages show current work, count, owner, risk, and recovery—not decorative stepper dots.
 - Workbench: preview or canvas owns the shell; controls group by the object they affect.
-- Empty-state onboarding: teach the first meaningful action and clearly label sample content.
+- Empty-state onboarding: teach the first meaningful action, make the flow skippable, and clearly label sample content.
 
-Keep filters, saved views, bulk actions, selection, and row actions stable during updates. Use progressive disclosure before reaching for a modal.
+Keep filters, saved views, bulk actions, selection, and row actions stable during updates. Use progressive disclosure before a modal. For the modality ladder, undo, permissions, onboarding, search, and large-text contract, load [human-interface-craft.md](human-interface-craft.md).
 
 ## Interface Contract
 

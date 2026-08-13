@@ -1,0 +1,9 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "🧪 Check", "type": "shell", "command": "pnpm run check", "problemMatcher": [] },
+    { "label": "🔬 Smoke", "type": "shell", "command": "pnpm run smoke", "problemMatcher": [] },
+    { "label": "🩺 Doctor", "type": "shell", "command": "pnpm run doctor", "problemMatcher": [] },
+    { "label": "🧹 Diff", "type": "shell", "command": "git diff --check", "problemMatcher": [] }
+  ]
+}

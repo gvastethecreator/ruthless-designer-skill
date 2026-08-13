@@ -22,4 +22,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm run check
+      - run: corepack pnpm install --frozen-lockfile && pnpm run check
