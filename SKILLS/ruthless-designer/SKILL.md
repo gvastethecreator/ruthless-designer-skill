@@ -13,8 +13,8 @@ Attack the interface, never its author. Require evidence, user damage, cause, an
 
 Read no reference by default. Load the smallest route that changes the work:
 
-- Greenfield creation, broad redesign, or reference-led creation: [references/execution-contract.md](references/execution-contract.md), [references/create.md](references/create.md), then [references/direction.md](references/direction.md) when the brief is open, ambitious, reference-led, broad, or in danger of becoming generic.
-- Any nontrivial product direction: classify with [references/product-contexts.md](references/product-contexts.md); for broad composition use [references/composition-patterns.md](references/composition-patterns.md), and challenge generic choices with [references/context-examples.md](references/context-examples.md).
+- Greenfield, broad redesign, or reference-led creation: [references/execution-contract.md](references/execution-contract.md), [references/create.md](references/create.md), then [references/direction.md](references/direction.md) for open, ambitious, or generic-risk briefs.
+- Nontrivial product direction: classify with [references/product-contexts.md](references/product-contexts.md); use [references/composition-patterns.md](references/composition-patterns.md) and challenge generic choices with [references/context-examples.md](references/context-examples.md).
 - App, dashboard, editor, tool, admin, or authenticated workflow: [references/product-surfaces.md](references/product-surfaces.md).
 - Onboarding, settings, search, permissions, destructive actions, or interruption-heavy flows: [references/human-interface-craft.md](references/human-interface-craft.md).
 - Production product implementation or any `production-ready` claim: [references/production-hardening.md](references/production-hardening.md).
@@ -29,7 +29,7 @@ Read no reference by default. Load the smallest route that changes the work:
 - Product copy, briefs, critiques, proposals, reports, or explanatory handoffs: [references/language-and-authorship.md](references/language-and-authorship.md).
 - Any final visual-quality claim: [references/proof.md](references/proof.md).
 - Local scans or runnable browser targets: [references/tooling.md](references/tooling.md).
-- If the direction, pattern choice, or signature move remains generic or looks copied after one sprint, load [references/examples.md](references/examples.md) once; its calibrations and contraindications are tests, not templates.
+- If direction or signature stays generic after one sprint, load [references/examples.md](references/examples.md) once as tests, not templates.
 
 ## State Machine
 
@@ -43,13 +43,13 @@ Classify the mission as one of:
 - `redesign`: replace a weak visual hierarchy, composition, or system across a meaningful surface.
 - `critique`: perform a deep visual/code autopsy and return a prioritized redesign or QA verdict.
 
-Reject narrow work. For a button fix, isolated responsive bug, accessibility repair, performance-only task, code-only review, or existing-direction web implementation, use the targeted workflow (`improve-ui` for the latter). Do not inflate surgery into redesign.
+Reject narrow work. Route button, responsive, accessibility, performance, code-only, or existing-direction web work to its targeted workflow (`improve-ui` for the latter).
 
 ### READ
 
 Inspect the source before choosing style:
 
-- Identify archetype, user mode, primary artifact, frequency, pressure, input, spatial model, states, and constraints; inspect source, assets, screenshots, references, and runtime.
+- Identify archetype, user mode, artifact, pressure, input, spatial model, states, and constraints; inspect source, assets, references, and runtime.
 - Preserve IA, routes, voice, analytics, forms, legal/SEO content, and accessibility wins unless scoped.
 - Ask one question only when two plausible answers would create incompatible products. Otherwise make the strongest assumption and state it.
 
@@ -62,11 +62,11 @@ Choose the argument before decorating it.
 - Pick `product`, `brand`, or `hybrid` register.
 - Kill the obvious category reflex and its fashionable replacement.
 - For open or ambitious work, persist three incompatible options in `direction-cards.json` and `direction-cards.md`, plus `kill-list.json` and `kill-list.md`; select one for this task.
-- Choose one primary signature move tied to the product artifact, workflow, data, proof, material, audience, or interaction. Kill it if removing it only makes the page simpler; decoration is not a signature. A restyled standard control is not a signature.
+- Choose one primary signature tied to artifact, workflow, data, proof, material, audience, or interaction. If removing it only simplifies the page, it was decoration; restyled standard controls do not count.
 - Define hierarchy, composition, type/palette roles, surfaces, spacing, components, states, and motion.
-- Select a composition whose interaction and scrolling model belongs to the classified archetype; assign hybrid rules by region instead of averaging them.
-- Define the visible alignment anchors, scroll ownership, scrollbar treatment, gradient role, and icon source before implementation can improvise them.
-- Before implementation, persist the choices as `build-inventory.md` next to the context card: one row per dimension above plus the signature move, each with its intended move. No dimension stays silent. The inventory is the ambition contract; without it, a build shrinks to the two safest edits.
+- Select composition and scrolling for the archetype; assign hybrid rules by region instead of averaging.
+- Define alignment anchors, scroll ownership, scrollbar treatment, gradient role, and icon source.
+- Persist `build-inventory.md` beside the context card: every dimension above plus signature, each with its intended move. This ambition contract prevents a build shrinking to safe edits.
 
 If a competitor could use the result by swapping the logo and nouns, the direction is still generic. Cut again.
 
@@ -76,12 +76,12 @@ Build the real artifact when implementation is requested and the repo is editabl
 
 - Make the primary task, proof, or artifact visually dominant.
 - Build the main path before decorative edge work.
-- Use real content, realistic data, verified assets, generated bitmap assets, or an explicit asset gap. Do not counterfeit product proof with div-art dashboards, fake terminals, lorem claims, or invented metrics.
+- Use real content, realistic data, verified/generated bitmap assets, or an explicit gap. Never counterfeit proof with div-art dashboards, fake terminals, lorem claims, or invented metrics.
 - Cover relevant states: default, empty/first-run, loading/pending, error/recovery, permission/unavailable, long content, and narrow/mobile.
 - Preserve product discipline inside forms, tables, settings, and repeated controls even when the surrounding surface is expressive.
-- Prefer the project's icon system or a coherent library. Do not draw disposable inline SVG icons by instinct; a custom vector must earn its geometry and pass the finish gate at its real rendered sizes.
-- Keep one primary archetype or tightly coupled flow per work unit. Split unrelated surfaces into isolated builders; a batch is an experiment envelope, not permission for one worker to genericize every product.
-- Execute the full build inventory, not its safest subset. If reverting the two smallest changes leaves the artifact acceptable, the direction was not executed.
+- Prefer the project's icon system or coherent library. Custom vectors must earn their geometry and pass finish at rendered sizes.
+- Keep one archetype or coupled flow per unit. Split unrelated surfaces into isolated builders; a batch is not permission to genericize products.
+- Execute the full inventory. If reverting two small changes leaves it acceptable, the direction was not executed.
 
 For critique-only work, replace implementation with a concrete redesign: exact cuts, hierarchy, layout, system changes, source causes, and proof targets. State what already works and must not be broken. Never end at "improve spacing."
 
@@ -89,29 +89,29 @@ For critique-only work, replace implementation with a concrete redesign: exact c
 
 Inspect what rendered, not what the code was supposed to render.
 
-- The builder owns capture -> judge -> correct -> recapture; coordinator screenshots do not replace the skill loop. Compare before/after or reference/result at the same route, viewport, state, theme, content, and auth context.
+- The builder owns capture -> judge -> correct -> recapture. Compare at the same route, viewport, state, theme, content, and auth context.
 - Inspect desktop and narrow/mobile first impressions for broad work.
 - Exercise one meaningful edge or recovery state.
 - Exercise the archetype's costly moment, not only generic responsive states.
 - Treat detector output as a lead, not a verdict.
 - Treat a captured screenshot as evidence captured, not evidence passed. Inspect or compare it.
-- Run `structure` and `finish` passes. Record alignment, spacing, overflow/scrollbars, gradients, icon craft, optical centering, and capture legibility as `passed | failed | n/a | blocked`; use DPR `2` or crops for small details.
+- Run `structure` and `finish` passes. Grade alignment, spacing, overflow/scrollbars, gradients, icons, optical centering, and capture legibility as `passed | failed | n/a | blocked`.
 - Mark missing runtime, state, or visual evidence as blocked. Never convert absence of evidence into a high score or "production-ready."
-- Grade every build-inventory row `done | blocked | cut` with a reason for each `blocked` or `cut`. An ungraded or silently dropped row blocks STOP.
+- Grade every inventory row `done | blocked | cut`; explain `blocked` or `cut`. Ungraded rows block STOP.
 
 ### CONTINUE, RESET, OR STOP
 
 - `CONTINUE`: fix the highest-impact open issue, then prove again. Keep the active backlog short and ordered by user damage.
-- `RESET`: after two valid `flat` or `worse` comparisons leave the same root cause intact, stop polishing. Delete the failed structure, keep what still works, choose a new direction, and rebuild. If the verdict came from missing content, bad fixtures, or invalid proof, repair the evidence instead of thrashing the design.
-- `STOP`: stop only when no in-scope blocker or context mismatch remains, required execution artifacts exist, every build-inventory row is graded, requested states and viewports are proven, every applicable finish dimension passed, and the final claim matches the evidence. Otherwise state the blocker or scope limit.
+- `RESET`: after two valid `flat` or `worse` comparisons preserve the root cause, stop polishing. Keep working mechanisms, choose a new direction, and rebuild. Repair invalid evidence instead of thrashing design.
+- `STOP`: require no in-scope blocker or context mismatch, all execution artifacts and inventory grades, proven states/viewports, passed finish dimensions, and evidence-matched claims.
 
 ## Output Contract
 
 Lead with the result or the biggest design crime.
 
 - Creation/redesign: name the design read, killed defaults, chosen direction, signature move, build-inventory row status, artifact/files changed, proof, and remaining risk.
-- Material critique/proposal: persist `report-manifest.json`, `report.md`, lossless `report-assets/`, and annotated `report.html` from one manifest; link both reports. Markers must name and match their literal visible subject in the full image and evidence zoom; keep future proposals off before/reference evidence.
-- Critique: perform a visual-first inspection at readable scale before tracing source. Group symptoms by systemic cause, then pair each major finding with `evidence -> user damage -> structural cause -> exact fix -> one earned roast`. Include a required `do not break` section, the finish ledger, up to five cuts—never pad the list—and a brutal verdict.
+- Material critique/proposal: generate `report-manifest.json`, `report.md`, lossless `report-assets/`, and annotated `report.html` from one manifest. Markers must match literal visible subjects; keep proposals off before/reference evidence.
+- Critique: inspect visuals first, then trace source. Group by systemic cause and pair major findings with `evidence -> user damage -> structural cause -> exact fix -> one earned roast`. Include `do not break`, finish ledger, up to five real cuts, and a brutal verdict.
 - Blocked work: say `implemented, not fully verified` or `reviewed, blocked by ...`; do not call it done.
 
 Be merciless, evidence-backed, and specific enough that the next move is unavoidable.

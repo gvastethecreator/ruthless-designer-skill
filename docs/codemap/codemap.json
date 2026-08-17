@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-12T06:42:54Z",
-  "generated_from_commit": "116c4484ff212a8ae3ee66cbd269ec57c5757738",
+  "generated_at": "2026-08-15T05:08:02Z",
+  "generated_from_commit": "19721cb018aeea9afff684c89b94b0ff6ae10dd1",
   "scope": [
     "."
   ],
@@ -12,7 +12,7 @@
       "type": "module",
       "boundary": "Repository",
       "entrypoints": [
-        "README.md:Ruthless Designer"
+        "README.md:Use It For"
       ],
       "tests": [],
       "constraints": [
@@ -23,7 +23,7 @@
         "locations": [
           {
             "path": "README.md",
-            "symbol": "Ruthless Designer"
+            "symbol": "Use It For"
           }
         ]
       }
@@ -70,6 +70,34 @@
           {
             "path": "SKILLS/ruthless-designer/SKILL.md",
             "symbol": "Ruthless Designer"
+          }
+        ]
+      }
+    },
+    {
+      "id": "project-site",
+      "path": "docs/index.html",
+      "role": "Presents the English design contract, tested harness fixture, installation route, and sponsorship links on GitHub Pages.",
+      "type": "interface",
+      "boundary": "Documentation",
+      "entrypoints": [
+        "docs/index.html:main"
+      ],
+      "tests": [],
+      "constraints": [
+        "Static English-only surface with no JavaScript or target application access.",
+        "Published only through the GitHub Pages workflow."
+      ],
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "docs/index.html",
+            "symbol": "main"
+          },
+          {
+            "path": ".github/workflows/pages.yml",
+            "symbol": "deploy"
           }
         ]
       }
@@ -151,9 +179,35 @@
           }
         ]
       }
+    },
+    {
+      "from": "project-site",
+      "to": "repository",
+      "type": "reads",
+      "evidence": {
+        "status": "verified",
+        "locations": [
+          {
+            "path": "docs/index.html",
+            "symbol": "github.com/gvastethecreator/ruthless-designer-skill"
+          },
+          {
+            "path": "README.md",
+            "symbol": "Project site"
+          }
+        ]
+      }
     }
   ],
   "flows": [
+    {
+      "trigger": "GitHub Pages request for /ruthless-designer-skill/",
+      "steps": [
+        "project-site",
+        "repository"
+      ],
+      "outcome": "The static project site explains the contract and routes readers to installation, harness documentation, source, and sponsorship."
+    },
     {
       "trigger": "Tracked reference SKILLS/ruthless-designer/references/reporting.md:README.md",
       "steps": [
