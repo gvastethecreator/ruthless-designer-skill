@@ -541,14 +541,18 @@ async function inspectViewport(browser, viewport, actionGroup) {
       };
       const backgroundFor = (node) => {
         let current = node;
+        const layers = [];
         let bg = { r: 255, g: 255, b: 255, a: 1 };
         while (current && current.nodeType === Node.ELEMENT_NODE) {
           const color = parseColor(getComputedStyle(current).backgroundColor);
           if (color && color.a > 0) {
-            bg = color.a >= 1 ? color : blend(color, bg);
-            if (bg.a >= 1) break;
+            layers.push(color);
+            if (color.a >= 1) break;
           }
           current = current.parentElement;
+        }
+        for (const color of layers.reverse()) {
+          bg = color.a >= 1 ? color : blend(color, bg);
         }
         return bg;
       };
@@ -561,6 +565,7 @@ async function inspectViewport(browser, viewport, actionGroup) {
           return ![...node.children].some((child) => child.textContent?.trim());
         })
         .map((node) => {
+          const text = node.textContent?.trim() ?? "";
           const style = getComputedStyle(node);
           const fg = parseColor(style.color);
           if (!fg) return null;

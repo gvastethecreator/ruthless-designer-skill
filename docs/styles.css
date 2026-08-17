@@ -1,0 +1,70 @@
+:root { color-scheme: dark; --ink: #0b0b0b; --panel: #171717; --line: #3a3a3a; --paper: #eee9dc; --muted: #aaa69d; --red: #c62f28; --max: 1230px; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-color: var(--red) var(--panel); scrollbar-width: thin; }
+body { margin: 0; background: var(--ink); color: var(--paper); font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55; }
+a { color: inherit; }
+.site-header, main, footer { width: min(calc(100% - 40px), var(--max)); margin: 0 auto; }
+.site-header { min-height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 30px; border-bottom: 1px solid var(--line); }
+.brand { min-height: 44px; display: inline-flex; align-items: center; gap: 12px; font-size: .84rem; font-weight: 850; letter-spacing: .04em; text-decoration: none; text-transform: uppercase; }
+.brand span { width: 38px; height: 38px; display: grid; place-items: center; background: var(--red); color: #fff; font-family: ui-monospace, "Cascadia Code", monospace; }
+nav { display: flex; gap: 26px; }
+nav a { min-height: 44px; display: inline-flex; align-items: center; color: var(--muted); font-size: .84rem; text-decoration: none; }
+nav a:hover, nav a:focus-visible { color: var(--paper); }
+.hero { min-height: 710px; display: flex; flex-direction: column; justify-content: center; padding: 88px 0 105px; }
+.eyebrow { margin: 0 0 18px; color: #ed756d; font-size: .72rem; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; }
+h1, h2, p { text-wrap: pretty; }
+h1 { max-width: 1140px; margin: 0; font-size: clamp(4.5rem, 10vw, 9.6rem); line-height: .83; letter-spacing: -.075em; }
+.hero-lower { display: grid; grid-template-columns: minmax(0, 680px) 1fr; gap: 60px; align-items: end; margin-top: 42px; }
+.hero-lower > p { margin: 0; color: var(--muted); font-size: 1.12rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: flex-end; }
+.button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; padding: 0 20px; border: 1px solid var(--line); font-size: .88rem; font-weight: 850; text-decoration: none; }
+.button.primary { background: var(--red); border-color: var(--red); color: #fff; }
+.diagnosis { padding: 105px 0; border-top: 1px solid var(--line); }
+.diagnosis-head { display: grid; grid-template-columns: .4fr 1.1fr; gap: 52px; align-items: start; margin-bottom: 48px; }
+.diagnosis h2, .contract h2, .harness h2, .install h2 { max-width: 900px; margin: 0; font-size: clamp(2.8rem, 6.2vw, 6.5rem); line-height: .91; letter-spacing: -.06em; }
+.diagnosis ol { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; border: 1px solid var(--line); list-style: none; }
+.diagnosis li { min-height: 290px; padding: 25px; background: var(--panel); border-right: 1px solid var(--line); }
+.diagnosis li:last-child { border-right: 0; }
+.diagnosis li span { color: #ed756d; font: 800 .75rem/1 ui-monospace, "Cascadia Code", monospace; }
+.diagnosis li strong { display: block; margin-top: 95px; font-size: 1.2rem; }
+.diagnosis li p { margin-bottom: 0; color: var(--muted); }
+.contract { display: grid; grid-template-columns: .72fr 1.28fr; gap: 75px; padding: 110px 0; border-top: 1px solid var(--line); }
+.rules { border-top: 1px solid var(--line); }
+.rules article { display: grid; grid-template-columns: 45px 210px 1fr; gap: 24px; align-items: start; padding: 24px 0; border-bottom: 1px solid var(--line); }
+.rules b { color: #ed756d; font-family: ui-monospace, "Cascadia Code", monospace; }
+.rules h3, .rules p { margin: 0; }
+.rules p { color: var(--muted); }
+.harness { display: grid; grid-template-columns: 1.25fr .55fr; gap: clamp(55px, 9vw, 130px); align-items: center; padding: 110px 0; border-top: 1px solid var(--line); }
+.harness-copy > p:last-child { max-width: 720px; margin: 30px 0 0; color: var(--muted); font-size: 1.05rem; }
+.fixture { padding: 26px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
+.fixture > p { margin: 0 0 45px; color: #7d1e19; font: 850 .7rem/1 ui-monospace, "Cascadia Code", monospace; letter-spacing: .14em; }
+.fixture > strong { display: block; margin-bottom: 25px; font-size: 2rem; letter-spacing: -.04em; }
+.fixture div { display: flex; justify-content: space-between; padding: 11px 0; border-top: 1px solid #aaa69d; }
+.fixture div:first-of-type span { color: #9f1f19; }
+.fixture small { display: block; margin-top: 22px; color: #4c4a45; }
+.install { display: grid; grid-template-columns: 1fr 1fr; gap: 55px; align-items: end; padding: 110px 0; border-top: 1px solid var(--line); }
+.install pre { overflow: auto; margin: 0; padding: 22px; border: 1px solid var(--line); background: var(--panel); color: #f18a82; white-space: pre-wrap; overflow-wrap: anywhere; scrollbar-color: var(--red) var(--panel); }
+footer { min-height: 120px; display: flex; align-items: center; justify-content: space-between; gap: 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: .83rem; }
+footer a { min-height: 44px; display: inline-flex; align-items: center; }
+@media (max-width: 840px) {
+  nav a:not(:last-child) { display: none; }
+  .hero { min-height: auto; padding: 76px 0 90px; }
+  .hero-lower, .diagnosis-head, .contract, .harness, .install { grid-template-columns: 1fr; }
+  .actions { justify-content: flex-start; }
+  .diagnosis ol { grid-template-columns: 1fr 1fr; }
+  .diagnosis li:nth-child(2) { border-right: 0; }
+  .diagnosis li { border-bottom: 1px solid var(--line); }
+  .diagnosis li:nth-last-child(-n+2) { border-bottom: 0; }
+  .rules article { grid-template-columns: 42px 1fr; }
+  .rules p { grid-column: 2; }
+  footer { align-items: flex-start; flex-direction: column; justify-content: center; }
+}
+@media (max-width: 520px) {
+  .site-header, main, footer { width: min(calc(100% - 24px), var(--max)); }
+  h1 { font-size: clamp(3.8rem, 19vw, 5.6rem); }
+  .diagnosis ol { grid-template-columns: 1fr; }
+  .diagnosis li { min-height: 240px; border-right: 0; border-bottom: 1px solid var(--line) !important; }
+  .diagnosis li:last-child { border-bottom: 0 !important; }
+  .diagnosis li strong { margin-top: 58px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

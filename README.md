@@ -1,11 +1,21 @@
-# Ruthless Designer
-
-![Ruthless Designer banner](./assets/readme-banner-v5.png)
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/document.svg?title=Ruthless+Designer&subtitle=Attack+the+interface.+Prove+the+better+move.&logo=target&theme=red&align=center&mode=dark" />
+    <img alt="Ruthless Designer — attack the interface and prove the better move" src="https://shieldcn.dev/header/document.svg?title=Ruthless+Designer&subtitle=Attack+the+interface.+Prove+the+better+move.&logo=target&theme=red&align=center&mode=light" />
+  </picture>
+</p>
 
 > A Codex skill with teeth: distinctive interface creation, broad redesign, aggressive evidence-backed critique, and visual proof that refuses to certify vibes.
 
-[![License: MIT](https://shieldcn.dev/badge/license-MIT-yellow.svg?variant=secondary&size=xs)](./LICENSE)
-[![Status](https://shieldcn.dev/badge/status-preview-red.svg?variant=secondary&size=xs)](#status)
+<p align="center">
+  <a href="https://github.com/gvastethecreator/ruthless-designer-skill/actions/workflows/ci.yml"><img alt="CI status" src="https://shieldcn.dev/github/ci/gvastethecreator/ruthless-designer-skill.svg?workflow=ci&branch=master&variant=secondary&size=xs" /></a>
+  <a href="https://gvastethecreator.github.io/ruthless-designer-skill/"><img alt="Project site" src="https://shieldcn.dev/badge/site-pages-b91c1c.svg?logo=githubpages&variant=branded&size=xs" /></a>
+  <a href="https://agentskills.io/"><img alt="Agent Skills compatible" src="https://shieldcn.dev/badge/Agent+Skills-compatible-111111.svg?variant=secondary&size=xs" /></a>
+  <a href="https://github.com/gvastethecreator/ruthless-designer-skill/stargazers"><img alt="GitHub stars" src="https://shieldcn.dev/github/stars/gvastethecreator/ruthless-designer-skill.svg?variant=secondary&size=xs" /></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://shieldcn.dev/github/license/gvastethecreator/ruthless-designer-skill.svg?variant=secondary&size=xs" /></a>
+</p>
+
+[Project site](https://gvastethecreator.github.io/ruthless-designer-skill/) · [Install](#install) · [Runtime harness](#runtime-evidence-harness) · [Contributing](CONTRIBUTING.md)
 
 Ruthless Designer is hostile to mediocre artifacts and loyal to the user. It kills generic defaults, finds the structural cause behind weak hierarchy, builds the better interface when implementation is requested, and refuses to call unobserved work excellent.
 
@@ -218,3 +228,5 @@ Preview public skill project.
 ## Attribution And License
 
 Released under the [MIT License](./LICENSE).
+
+Support continued maintenance through [GitHub Sponsors](https://github.com/sponsors/gvastethecreator) or [Ko-fi](https://ko-fi.com/gvaste). Report vulnerabilities through the private route in [SECURITY.md](SECURITY.md).

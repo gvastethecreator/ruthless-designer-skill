@@ -25,6 +25,21 @@ function readReview(outDir) {
   return JSON.parse(fs.readFileSync(path.join(outDir, "review.json"), "utf8"));
 }
 
+test("the browser contrast audit keeps text in the map callback scope", () => {
+  const source = fs.readFileSync(harnessPath, "utf8");
+
+  assert.match(
+    source,
+    /\.map\(\(node\) => \{\s+const text = node\.textContent\?\.trim\(\) \?\? "";\s+const style = getComputedStyle\(node\);/,
+  );
+});
+
+test("the browser contrast audit composites translucent surfaces over their ancestors", () => {
+  const source = fs.readFileSync(harnessPath, "utf8");
+
+  assert.match(source, /const layers = \[\];[\s\S]*layers\.push\(color\);[\s\S]*for \(const color of layers\.reverse\(\)\)/);
+});
+
 function makeFakePlaywright(sandbox) {
   const moduleDir = path.join(sandbox, "fake-playwright");
   fs.mkdirSync(moduleDir, { recursive: true });
