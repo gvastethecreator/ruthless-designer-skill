@@ -1,16 +1,16 @@
 # Direction And Distinction
 
-Use this route when the brief is open, ambitious, reference-led, broad, or in danger of producing a competent template.
+Use when the brief is open, ambitious, reference-led, broad, or likely to produce a competent template.
 
 ## Choose The Register
 
-- `product`: apps, dashboards, tools, admin, settings, editors, and repeated workflows. Optimize trust, scan speed, state clarity, density, and consistency.
-- `brand`: landing pages, portfolios, launch pages, campaigns, and persuasion surfaces. Optimize point of view, proof, imagery, type voice, pacing, and memorability.
-- `hybrid`: product-led marketing, onboarding, commerce, docs, and public-to-authenticated handoffs. Use brand expression for persuasion and product discipline for controls, forms, tables, and repeated navigation.
+- `product`: apps, dashboards, tools, admin, settings, editors, repeated workflows. Optimize trust, scan speed, state clarity, density, consistency.
+- `brand`: landing pages, portfolios, launch pages, campaigns, persuasion surfaces. Optimize point of view, proof, imagery, type voice, pacing, memorability.
+- `hybrid`: product-led marketing, onboarding, commerce, docs, public-to-authenticated handoffs. Brand expression for persuasion; product discipline for controls, forms, tables, repeated navigation.
 
 Do not let a cinematic hero infect the settings screen. Do not force dashboard restraint onto a page whose job is to be remembered.
 
-`product` does not mean neutral, and `brand` does not mean B2B SaaS theater. A creative instrument, game, or cultural tool may need fierce expression. A high-risk public service may need restraint. A cultural surface may trade instant explanation for earned mystery. Register describes the job, not the personality.
+`product` does not mean neutral, and `brand` does not mean B2B SaaS theater. A creative instrument may need fierce expression; a high-risk public service may need restraint.
 
 ## Calibrate The Direction
 
@@ -26,7 +26,7 @@ emotional tone: exact words, not a slider
 because: task + frequency + consequence + audience + context
 ```
 
-The vector is an argument, not a taste profile. High-frequency or high-consequence work usually spends less novelty; expert comparison work may demand density; cultural discovery may earn delay; a playful creative tool may be both dense and expressive. Justify every position through user work, audience literacy, risk, evidence, and use frequency.
+The vector is an argument, not a taste profile. Justify every position through user work, audience literacy, risk, evidence, and frequency.
 
 Do not move every axis together. Loud does not require motion. Dense does not require darkness. Familiar does not require blandness. Trust does not require blue. If the rationale is only an aesthetic adjective, the vector is cosplay.
 
@@ -50,12 +50,12 @@ Primary risk:
 Proof target:
 ```
 
-- Make each direction change the information architecture, composition, or interaction argument—not merely palette and type.
-- Derive at least one direction from the real product artifact, workflow, data, proof, or decision.
-- Let one direction push the sharpest brand or experiential interpretation when the register permits it.
-- Keep a restrained direction only when restraint is the strongest answer for the task, not because it is the safe option.
+- Make each direction change information architecture, composition, or interaction argument—not merely palette and type.
+- Derive at least one direction from real product artifact, workflow, data, proof, or decision.
+- Let one direction push sharpest brand or experiential interpretation when register permits it.
+- Keep restrained direction only when restraint is strongest answer for task, not because it is safe option.
 
-Build one. Merge only when the merge makes hierarchy sharper, not safer.
+Build one. Merge only when hierarchy gets sharper, not safer.
 
 Select the direction that makes the task fastest to understand, gives the surface a defensible reason to look this way, survives real states and narrow viewports, and has a visible signature move. Reject anything that needs fake assets, hides the product behind theater, or could belong to a competitor after a noun swap.
 
@@ -66,60 +66,38 @@ Run [authorship-and-specificity.md](authorship-and-specificity.md) against the s
 Name both predictable failures:
 
 - First reflex: centered hero, purple-blue gradient, three equal cards, rounded icon tiles, fake dashboard, decorative glass, or generic SaaS copy.
-- Second reflex: editorial monochrome by default, terminal-dark developer cosplay, beige luxury, faux brutalism, chrome-everything, oversized serif italics, or cinematic scroll effects on a task UI.
-- Third reflex: iOS Settings costume, Liquid Glass on every surface, SF-like chrome, or a five-item tab bar on a web product that did not ask for Apple-feel.
+- Second reflex: editorial monochrome by default, terminal-dark developer cosplay, beige luxury, faux brutalism, chrome-everything, oversized serif italics, or cinematic scroll effects on task UI.
+- Third reflex: iOS Settings costume, Liquid Glass on every surface, SF-like chrome, or five-item tab bar on web product that did not ask for Apple-feel.
 
 Also kill category costume: a visual trope that signals an industry without serving this product, audience, or workflow.
 
-Generated-looking design is not a list of forbidden colors. It is unearned repetition. A pattern may stay when the existing system owns it and it improves the task. If it appears because it was easy to predict, remove it.
-
-Do not turn anti-cliche into its own cliche. Rejecting gradients, cards, or symmetry only to auto-select monochrome brutalism, giant type, visible grids, acid accents, or hostile motion is the same laziness in a different costume. Keep a common pattern when it is the clearest grammar; make the product-specific information, composition, behavior, and artifact carry distinction.
+Generated-looking design is unearned repetition. Keep a pattern the existing system owns and that improves the task; remove it when it was merely easy to predict. Rejecting gradients, cards, or symmetry only to auto-select monochrome brutalism, giant type, visible grids, acid accents, or hostile motion is the same laziness.
 
 ## Choose A Signature Move
 
-Choose one primary move and at most one supporting move. Make it visible, useful, and testable.
+Choose one primary move and at most one supporting move.
 
-Strong product moves:
+Strong product moves: current object/canvas/case/map/media/record/decision gets most weight; controls tether to the region they change; organize around comparison or approval, not feature categories; collapse scattered badges into one status model; make history, recovery, confidence, freshness, or source quality part of the interaction grammar; density gradient—dense for repeated work, spacious for rare choices.
 
-- Give the current object, canvas, case, map, media, record, or decision most visual weight.
-- Tether controls to the region or object they change.
-- Organize around a comparison or approval decision instead of feature categories.
-- Collapse scattered badges into one readable status model.
-- Make history, recovery, confidence, freshness, or source quality part of the interaction grammar.
-- Use a density gradient: dense where repeated work happens, spacious where rare choices need focus.
+Strong brand moves: a real artifact, place, product, screenshot, output, or material owns the first impression; palette from a real scene, image, material, or brand artifact; proof before poetry; one hard constraint (annotated crops, visible grid, monochrome plus one material color, image-led full bleed, or a deliberate type axis); every public claim paired with a precise proof object; conversion where proof peaks, not only in hero and footer.
 
-Strong brand moves:
-
-- Let a real artifact, place, product, screenshot, output, or material own the first impression.
-- Derive palette from a real scene, image, product material, or brand artifact.
-- Put proof before poetry.
-- Use one hard constraint: annotated crops, visible grid, monochrome plus one material color, image-led full bleed, or a deliberate type axis.
-- Pair every public claim with a precise proof object.
-- Place conversion where proof peaks, not only in hero and footer.
-
-Strong hybrid moves:
-
-- Show the product mechanism in the hero.
-- Make the handoff from expressive brand to restrained product explicit.
-- Turn onboarding sample data into the user's first real object.
-- Organize pricing by fit and limits instead of feature-column sludge.
-- Connect quickstart, code, live result, and troubleshooting into one proof path.
+Strong hybrid moves: product mechanism in the hero; explicit handoff from expressive brand to restrained product; onboarding sample data becomes the user's first real object; pricing by fit and limits, not feature-column sludge; quickstart, code, live result, and troubleshooting as one proof path.
 
 Kill a signature move when it only looks expensive, hides the task, depends on invented proof, fails focus/reduced-motion/long-content/mobile, or becomes simpler and clearer when removed.
 
 ## Choose Composition By Job
 
 - `operator cockpit`: current work dominates; navigation and diagnostics stay subordinate.
-- `decision list + evidence pane`: scanning on one side, selected proof and action on the other.
+- `decision list + evidence pane`: scanning on one side, selected proof and action on other.
 - `workflow strip`: stages expose owner, risk, count, recovery, and next action.
 - `inspector workbench`: canvas dominates; controls group by object and give reversible feedback.
-- `artifact stage`: real product/media carries the hero.
+- `artifact stage`: real product/media carries hero.
 - `proof wall`: claim, evidence, consequence, action; no equal feature-card cemetery.
-- `comparison canvas`: old/new, risk/reward, or plan/plan align to a shared frame.
+- `comparison canvas`: old/new, risk/reward, or plan/plan align to shared frame.
 - `editorial path`: varied pacing through artifacts, process, proof, and CTA.
-- `playable surface first`: the usable prototype appears before explanatory preamble.
+- `playable surface first`: usable prototype appears before explanatory preamble.
 
-Use a pattern as a skeleton, never as a template. It must house empty/error/overflow states and have a real narrow-screen plan.
+It must house empty/error/overflow states and have a real narrow-screen plan.
 
 ## Direction Gate
 
@@ -136,6 +114,6 @@ kill condition:
 desktop/mobile proof:
 ```
 
-Pass only when a skeptical reviewer can name what makes the surface specific without hearing the design-process explanation.
+Pass when a skeptical reviewer can name what makes the surface specific without a process speech.
 
-For proposal delivery, put all three viable cards, the explicit selection, rejection reasons, signature move, assets/state gaps, and proof targets into the dossier defined by [reporting.md](reporting.md). Do not hide discarded options when the user must approve the decision.
+For proposal delivery, put all three viable cards, the explicit selection, rejection reasons, signature move, assets/state gaps, and proof targets into the dossier defined by [reporting.md](reporting.md). Do not hide discarded options when user must approve.

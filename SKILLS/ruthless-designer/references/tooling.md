@@ -1,113 +1,109 @@
 # Local Review Tooling
 
-Use the bundled tools only when local frontend files or a runnable URL can support the claim. They collect evidence; they do not possess taste.
+Use only when local frontend files or a runnable URL can support the claim. Tools collect evidence; they lack taste.
 
 ## Static Detector
-
-Run a focused local scan:
 
 ```powershell
 node SKILLS/ruthless-designer/scripts/detect-ui-antipatterns.mjs --json --fail-on=P1 --out output/ruthless-designer/<slug>/static-findings.json <file-or-directory>
 ```
 
-Useful flags:
+Flags:
 
-- `--list-rules`: print the executable rule catalog without requiring a target.
-- `--explain <rule-id>`: print one rule's severity, confidence, applicability, message, and contextual exceptions.
+- `--list-rules`: print rule catalog; no target required.
+- `--explain <rule-id>`: one rule's severity, confidence, applicability, message, contextual exceptions.
 - `--format=text|md|json` or `--json`: choose output.
 - `--fail-on=P1|P2|P3`: fail when that severity or worse exists.
 - `--out <file>`: persist the report.
 - `--allowlist <json>`: suppress accepted stable fingerprints.
 - `--baseline <json>`: suppress existing findings from an earlier report.
-- `--changed-only`: scan staged, unstaged, and untracked non-ignored Git files under the target.
+- `--changed-only`: scan staged, unstaged, untracked non-ignored Git files under the target.
 - `--category <name>`: filter by category or rule ID.
 - `--include-ignored`: include normally skipped directories during traversal.
-- `--allow-empty`: explicitly accept a scan with zero compatible files.
+- `--allow-empty`: accept a scan with zero compatible files.
 
-By default, a missing target or zero compatible files fails closed with exit code `2`. Do not add `--allow-empty` merely to make a gate green. Use it only when an empty scan is genuinely expected and state why.
+Missing target or zero compatible files fails closed, exit code `2`. Do not add `--allow-empty` merely to make a gate green; use only when an empty scan is expected; state why.
 
-Directory traversal skips common tests, fixtures, generated output, and vendor dependencies. An explicitly targeted ignored file/directory remains inspectable; use `--include-ignored` for broad traversal only when those files are actually in scope.
+Traversal skips common tests, fixtures, generated output, vendor dependencies. Explicitly targeted ignored file/directory remains inspectable; `--include-ignored` for broad traversal only when those files are actually in scope.
 
-Supported frontend/source styles include common JS/TS/JSX/TSX/Vue/Svelte/HTML/CSS plus MJS/CJS/SCSS/Sass/Less variants.
+Supported: JS/TS/JSX/TSX/Vue/Svelte/HTML/CSS plus MJS/CJS/SCSS/Sass/Less.
 
-Treat every finding as a lead:
+Lead, not sentence:
 
-- Use `confidence` to judge how strongly the syntax supports the rule.
-- Use `applicability` to decide whether the pattern applies to this surface and register.
-- Confirm aesthetic and heuristic findings in context.
-- Group repeated findings by primitive, token, component, or state model.
-- Keep fingerprints stable in baselines; do not key long-lived suppressions to line numbers.
+- `confidence`: how strongly the syntax supports the rule.
+- `applicability`: whether the pattern applies to this surface and register.
+- Confirm aesthetic, heuristic findings in context.
+- Group repeated findings by primitive, token, component, state model.
+- Fingerprints stay stable in baselines; do not key long-lived suppressions to line numbers.
 
-Read the rule's exceptions before sentencing the artifact. Documented system intent, generated/vendor/fixture code, layout primitives, pointer-capture infrastructure, and decorative blur can make otherwise suspicious syntax legitimate. Frequency, distance, register, and user task also change the damage. An exception is an investigation path, not an automatic acquittal: confirm the rendered behavior or source contract and record why the rule does or does not apply.
+Read the rule's exceptions before sentencing. Documented system intent, generated/vendor/fixture code, layout primitives, pointer-capture infrastructure, decorative blur can make suspicious syntax legitimate. Frequency, distance, register, user task also change damage. Exception is investigation path, not automatic acquittal: confirm rendered behavior or source contract; record why the rule does or does not apply.
 
-The deprecated `--gpt` and `--gemini` flags are accepted only for compatibility and emit no provider-specific findings. Design slop is a pattern, not a model nationality.
+Deprecated `--gpt` and `--gemini` flags are accepted only for compatibility; emit no provider-specific findings. Design slop is a pattern, not a model nationality.
 
 ## Full Review Harness
-
-Use the harness for a combined static/runtime evidence package:
 
 ```powershell
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --out output/ruthless-designer/<slug> --fail-on=P1 --require-runtime --detail-capture
 ```
 
-Use static-only mode when no URL exists, then state runtime/visual proof is blocked:
+Static-only when no URL exists; state runtime/visual proof blocked:
 
 ```powershell
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --out output/ruthless-designer/<slug> --fail-on=P1
 ```
 
-Do not use static-only output to claim visual quality, responsiveness, or interaction correctness.
+Do not use static-only output to claim visual quality, responsiveness, interaction correctness.
 
-Useful gates:
+Gates:
 
 - `--require-runtime`: fail when no runnable URL exists or runtime evidence cannot complete.
 - `--fail-on=P1|P2|P3`: gate finding severity.
-- `--require-signature --signature-proof <text> --signature-selector <selector>`: require a named signature claim, successful runtime screenshots, and an observable visible target. A selector proves presence, not visual excellence.
+- `--require-signature --signature-proof <text> --signature-selector <selector>`: named signature claim, successful runtime screenshots, observable visible target. Selector proves presence, not visual excellence.
 - `--expect-finding <rule-id>` and `--expect-assessment=blocked|findings|evidence-collected`: smoke-test known fixtures.
-- `--viewport <width>x<height>`: target a specific viewport.
-- `--detail-capture`: render browser evidence at device scale factor `2` so small alignment, icon, spacing, and scrollbar defects remain inspectable.
+- `--viewport <width>x<height>`: specific viewport.
+- `--detail-capture`: browser evidence at device scale factor `2` so small alignment, icon, spacing, scrollbar defects stay inspectable.
 
-The report records a nonnumeric assessment:
+Nonnumeric assessment:
 
-- `blocked`: at least one required evidence gate failed.
-- `findings`: evidence ran and produced static or runtime findings; inspect severity and the available context or applicability.
-- `evidence-collected`: evidence ran without detector findings; this is not approval.
+- `blocked`: required evidence gate failed.
+- `findings`: evidence ran; produced static or runtime findings; inspect severity, available context or applicability.
+- `evidence-collected`: evidence ran without detector findings; not approval.
 
-Unknown dimensions remain unknown. The report also keeps production integrity, task effectiveness, and distinctiveness separate; the harness may block or limit production integrity, but it does not automatically assess human comprehension or visual distinction. A failed required gate blocks the assessment even when the static finding count is zero.
+Unknown dimensions remain unknown. Production integrity, task effectiveness, distinctiveness stay separate; harness may block or limit production integrity, but does not assess human comprehension or visual distinction. Failed required gate blocks the assessment even when static finding count is zero.
 
-The retired `--fail-verdict`, `--fail-under-score`, and `--expect-verdict` flags exit with a migration error. Use explicit evidence gates and severities instead of laundering incomplete coverage into a flattering number.
+Retired `--fail-verdict`, `--fail-under-score`, `--expect-verdict` flags exit with a migration error. Use explicit evidence gates and severities instead of laundering incomplete coverage into a flattering number.
 
-`--expect-assessment=blocked` may make a known blocked fixture exit successfully while its failed gates remain visible in the report. It does not override `--fail`, `--fail-on`, another failed expectation, or invalid input.
+`--expect-assessment=blocked` may make a known blocked fixture exit successfully while failed gates stay visible in the report. Does not override `--fail`, `--fail-on`, another failed expectation, invalid input.
 
-Captured screenshots prove capture, not visual comparison. Inspect them manually or compare them against before/reference artifacts before claiming fidelity or improvement.
+Captured screenshots prove capture, not visual comparison. Inspect manually or compare against before/reference artifacts before claiming fidelity or improvement.
 
-This harness does not orchestrate multi-tab conflicts, server-side authorization, replay/idempotency, or every offline/network race. Exercise those contracts in the application's own integration or end-to-end runner, then attach the commands and artifacts to the same evidence ledger.
+Does not orchestrate multi-tab conflicts, server-side authorization, replay/idempotency, or every offline/network race. Exercise those contracts in the app's integration or end-to-end runner, then attach commands and artifacts to the evidence ledger.
 
-The harness now writes report.html alongside review.json and README.md. It translates collected evidence into a portable dossier but labels automated findings as leads and preserves human-judgment limits. A corrupt or missing screenshot appears as a visible evidence placeholder rather than disappearing.
+Writes report.html alongside review.json, README.md. Translates collected evidence into a portable dossier; labels automated findings as leads; preserves human-judgment limits. Corrupt or missing screenshot → visible evidence placeholder, not a disappearing image.
 
 ## Standalone Proposal Report
 
-For critique, proposal, and redesign deliverables, create report-manifest.json using [reporting.md](reporting.md), then run:
+Critique, proposal, redesign: create report-manifest.json using [reporting.md](reporting.md), then run:
 
 ~~~powershell
 node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest output/ruthless-designer/<slug>/report-manifest.json --out output/ruthless-designer/<slug>/report.html --strict-assets
 ~~~
 
-The generator:
+Generator:
 
-- validates mode, finding severity, proof states, screenshot IDs, and annotation bounds;
+- validates mode, finding severity, proof states, screenshot IDs, annotation bounds;
 - escapes all text instead of accepting arbitrary HTML;
 - embeds supported local screenshots for portability;
-- rejects missing, corrupt, unsupported, or external screenshots in strict mode;
-- provides numbered visual annotations with a matching text legend;
+- rejects missing, corrupt, unsupported, external screenshots in strict mode;
+- numbered visual annotations with matching text legend;
 - renders without JavaScript or external styles;
-- exposes risks, limitations, and artifact warnings.
+- exposes risks, limitations, artifact warnings.
 
-Use no-embed-images only for a controlled local draft and disclose the portability loss. Open the final artifact at desktop and narrow widths, confirm print behavior when handoff needs it, and inspect annotations at readable scale.
+no-embed-images only for controlled local draft; disclose portability loss. Open the final artifact at desktop, narrow, confirm print when handoff needs it, inspect annotations at readable scale.
 
 ## Interaction States
 
-Use an action file when proof depends on behavior after page load:
+Action file when proof depends on after-load behavior:
 
 ```json
 [
@@ -124,32 +120,32 @@ Run:
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --actions actions.json --out output/ruthless-designer/<slug>
 ```
 
-For several states, prefer named groups:
+Several states: prefer named groups:
 
 ```powershell
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --action-group default=actions-default.json --action-group error=actions-error.json --out output/ruthless-designer/<slug>
 ```
 
-Supported interaction types include `click`, `hover`, `type`, `press`, `scroll`, and `wait`. Observable assertions are `assert-visible` with `selector`, `assert-text` with `selector` plus `value`, and `assert-url` with `value`. Do not assert a generic element that was already visible and call it state proof.
+Supported types: `click`, `hover`, `type`, `press`, `scroll`, `wait`. Observable assertions: `assert-visible` with `selector`, `assert-text` with `selector` plus `value`, `assert-url` with `value`. Do not assert a generic already-visible element and call it state proof.
 
-For async coverage:
+Async coverage:
 
 ```powershell
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --async-ui --states empty,loading,error,permission,long-content,slow-network,rapid-click --action-group error=actions-error.json --out output/ruthless-designer/<slug>
 ```
 
-State names are a contract, not navigation magic. Count a state as covered only when its same-name action group is non-empty, contains an observable state assertion, and the runtime assertion succeeds. An empty group or clean page load proves nothing about error, permission, loading, or recovery.
+State names are a contract, not navigation magic. Covered only when the same-name action group is non-empty, contains an observable state assertion, runtime assertion succeeds. Empty group or clean page load proves nothing about error, permission, loading, recovery.
 
 ## Read The Report Ruthlessly
 
-Inspect the report, screenshots, console/network results, state runs, and gate failures. Verify:
+Inspect report, screenshots, console/network results, state runs, gate failures:
 
 - Static scan ran against intended files.
-- At least one runtime result succeeded when runtime is required.
-- Screenshots show the intended route, viewport, theme, auth, content, and state.
+- Runtime result succeeded when runtime is required.
+- Screenshots show intended route, viewport, theme, auth, content, state.
 - Signature proof is visible in successful captures.
 - Async state names correspond to successful action groups or fixtures.
-- Console/network failures and layout/motion signals are investigated rather than blindly copied into the roast.
-- The assessment result and claim limits match the evidence actually collected.
+- Console/network failures and layout/motion signals: investigate, don't copy blindly into the roast.
+- Assessment result, claim limits match evidence actually collected.
 
-Persist the exact command, output path, viewport/state, and claim limit in the evidence ledger.
+Persist exact command, output path, viewport/state, claim limit in the evidence ledger.

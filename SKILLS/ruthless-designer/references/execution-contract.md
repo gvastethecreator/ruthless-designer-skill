@@ -1,43 +1,43 @@
 # Redesign Execution Contract
 
-Use this for every implemented greenfield surface or broad redesign. The skill is not activated because its file was read; activation is the observable trail from context and rejected defaults to a rendered result that survives its own proof loop.
+Use for every implemented greenfield surface or broad redesign. The skill is not active because its file was read; activation is the trail from context and rejected defaults to a rendered result that survives its own proof loop.
 
 ## Isolate The Work
 
-One work unit owns one primary product archetype, route, or tightly coupled flow. Five unrelated interfaces require five isolated builders or sequential work units. A studio, dashboard, command center, game HUD, and landing page cannot share one design read, scroll model, density, composition, signature, or costly-state matrix. A benchmark may group their receipts, never their judgment.
+One unit owns one primary archetype, route, or tightly coupled flow. Unrelated interfaces need isolated builders or sequential units. Studio, dashboard, command center, game HUD, and landing page cannot share one design read, scroll model, density, composition, signature, or costly-state matrix. A benchmark may group receipts, never judgment.
 
-Shared primitives may stay together only when one causal decision and one proof matrix cover every consumer. Otherwise split first. Broad means depth across a coherent product surface, not breadth across unrelated products.
+Shared primitives stay together only when one causal decision and one proof matrix cover every consumer. Otherwise split. Broad means depth across a coherent product surface, not breadth across unrelated products.
 
 ## Required Builder-Owned Artifacts
 
 Use coordinator-provided paths when present. Otherwise keep temporary evidence outside product source and report exact paths.
 
-Before implementation, produce `context-card.json` and `context-card.md` with work-unit id, archetype, secondary regions, user mode, primary artifact, frequency, pressure, input, spatial model, costly states, constraints, preserved contracts and proof matrix.
+Before implementation, produce `context-card.json` and `context-card.md` with work-unit id, archetype, secondary regions, user mode, primary artifact, frequency, pressure, input, spatial model, costly states, constraints, preserved contracts, and proof matrix.
 
-Also produce `build-inventory.md`: one row per chosen dimension (hierarchy, composition, type roles, palette/surfaces, spacing, components, states, motion, copy) plus the signature move, each with its intended move. The final report grades every row `done | blocked | cut` with a reason for each `blocked` or `cut`.
+Also produce `build-inventory.md`: one row per chosen dimension (hierarchy, composition, type roles, palette/surfaces, spacing, components, states, motion, copy) plus the signature move, each with its intended move. Final report grades every row `done | blocked | cut` with a reason for each `blocked` or `cut`.
 
-For open, ambitious, reference-led or broad work, produce:
+For open, ambitious, reference-led, or broad work, produce:
 
-- `direction-cards.json` plus `direction-cards.md`: three incompatible directions with argument, composition, interaction, visual language, signature, responsive/scroll model, asset plan and primary risk;
-- `kill-list.json` plus `kill-list.md`: category reflex, fashionable replacement, generic composition, fake-proof move and disposable decoration that will not survive;
-- selected direction and the reason it wins for this exact context.
+- `direction-cards.json` plus `direction-cards.md`: three incompatible directions with argument, composition, interaction, visual language, signature, responsive/scroll model, asset plan, and primary risk
+- `kill-list.json` plus `kill-list.md`: category reflex, fashionable replacement, generic composition, fake-proof move, and disposable decoration that will not survive
+- selected direction and why it wins for this exact context
 
 Every rendered implementation also produces:
 
-- `proof/before.png` and `proof/after.png` at the same route, viewport, state, theme, content and auth context;
-- `proof/detail.png` or named DPR 2 crops for alignment, spacing, dense controls, scrollbar, gradient and icon/vector inspection;
-- `finish-ledger.json` plus `finish-ledger.md` with context-fit, hierarchy, alignment, spacing-rhythm, overflow, scrollbars, gradients, icons-vector-craft, content-integrity, capture-legibility and responsive-detail.
+- `proof/before.png` and `proof/after.png` at same route, viewport, state, theme, content, and auth context
+- `proof/detail.png` or named DPR 2 crops for alignment, spacing, dense controls, scrollbar, gradient, and icon/vector inspection
+- `finish-ledger.json` plus `finish-ledger.md` with context-fit, hierarchy, alignment, spacing-rhythm, overflow, scrollbars, gradients, icons-vector-craft, content-integrity, capture-legibility, and responsive-detail
 
-Every durable JSON decision artifact requires a Markdown companion with the same facts, ids, ordering, statuses, evidence paths and blockers. JSON remains the structured source; Markdown is the ingestion and correction surface. Do not add interpretation to only one format or let the mirrors drift.
+Every durable JSON decision artifact needs a Markdown companion with the same facts, ids, ordering, statuses, evidence paths, and blockers. JSON is the structured source; Markdown is the ingestion and correction surface. Do not add interpretation to only one format or let the mirrors drift.
 
-Each finish entry records `passed | failed | not-applicable | blocked`, evidence, observation and corrective action. Alignment, spacing, overflow, content integrity, capture legibility and responsive detail cannot be not-applicable. Existing scroll requires a minimal theme-aware custom scrollbar unless platform constraints make styling impossible. Native default chrome is a failed finish state. Icons and gradients may be not applicable only when absent; improvised vectors never pass because they merely exist.
+Each finish entry records `passed | failed | not-applicable | blocked`, evidence, observation, and corrective action. Alignment, spacing, overflow, content integrity, capture legibility, and responsive detail cannot be not-applicable. Existing scroll requires a minimal theme-aware custom scrollbar unless platform constraints make styling impossible. Native default chrome is a failed finish state. Icons and gradients may be not-applicable only when absent; improvised vectors never pass because they merely exist.
 
 ## Prove The Direction, Not File Creation
 
-The same builder captures, visually judges at readable scale, corrects and recaptures. Controls and navigation are exercised, not inferred. The costly archetype-specific state is proven alongside the main path. A capture is `captured`, not `passed`, until inspected.
+The same builder captures, judges at readable scale, corrects, and recaptures. Exercise controls and navigation; do not infer them. Prove the costly archetype-specific state beside the main path. A capture is `captured`, not `passed`, until inspected.
 
-Run `CONTINUE` while an applicable ledger item fails. Correct the highest user-damage systemic cause and rerun the same evidence. Run `RESET` when two valid comparisons remain flat or worse because the same structural cause survived; preserve working contracts, kill the failed structure and choose a different direction. Repair invalid fixtures or mismatched proof before blaming the direction.
+Run `CONTINUE` while an applicable ledger item fails. Correct the highest user-damage systemic cause and rerun the same evidence. Run `RESET` when two valid comparisons remain flat or worse because the same structural cause survived; preserve working contracts, kill the failed structure, and choose a different direction. Repair invalid fixtures or mismatched proof before blaming the direction.
 
 ## Completion Gate
 
-Do not `STOP`, mark complete, or claim a skill win when a required artifact is absent, a visible control or navigation target failed, fake proof remains, before/after frames do not match, an applicable finish dimension failed or is blocked, or the rendered artifact cannot demonstrate the selected direction and signature. Report `implemented, not fully verified`, the blocker and the exact next proof action.
+Do not `STOP`, mark complete, or claim a skill win when a required artifact is absent, a visible control or navigation target failed, fake proof remains, before/after frames do not match, an applicable finish dimension failed or is blocked, or the rendered artifact cannot demonstrate the selected direction and signature. Report `implemented, not fully verified`, the blocker, and the exact next proof action.

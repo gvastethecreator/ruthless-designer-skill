@@ -1,6 +1,6 @@
 # Product Contexts
 
-Use this before choosing a direction for any nontrivial interface. A dark shell is not automatically a command center, a grid of numbers is not automatically a dashboard, and a canvas inside a browser is not automatically a studio. Classify the work from what the user must perceive, decide, and do.
+Before choosing a direction for any nontrivial interface. Dark shell ≠ command center; number grid ≠ dashboard; browser canvas ≠ studio. Classify from what the user must perceive, decide, do.
 
 ## Contents
 
@@ -17,7 +17,7 @@ Use this before choosing a direction for any nontrivial interface. A dark shell 
 
 ## Context Card
 
-Complete this from source, screenshots, runtime behavior, product copy, and available fixtures before styling:
+From source, screenshots, runtime, product copy, fixtures before styling:
 
 ```text
 archetype: one primary product context
@@ -31,153 +31,151 @@ state pressure: the failures, transitions, and content extremes that change the 
 proof target: representative state + viewport + interaction + detail evidence
 ```
 
-Do not classify by visual costume. Classify by the user's dominant loop and the cost of a missed signal or wrong action. If two plausible classifications would create incompatible products, ask one question. Otherwise select a primary archetype, name secondary regions, and proceed.
+Classify by dominant loop and cost of missed signal or wrong action — not visual costume. If two classifications create incompatible products, ask one question. Else pick a primary archetype, name secondary regions, proceed.
 
-Finish with: `archetype + user mode + primary artifact + pressure + spatial model + proof target`.
+Finish: `archetype + user mode + primary artifact + pressure + spatial model + proof target`.
 
 ## Hybrid Products
 
-Decompose hybrids by region and moment instead of averaging their rules:
+Decompose by region and moment; don't average rules:
 
-- A public page with an interactive product preview is `landing` around a bounded `product` artifact.
-- A level editor is a `studio`, even though it creates a game. Its play-test viewport may temporarily enter a game context.
-- A browser game with DOM menus and HUD is `game UI`; route renderer, shader, camera, and gameplay-system work to the specialist domain.
-- An analytics panel inside a studio is a `dashboard region`; it must not steal sovereignty from the canvas or timeline.
-- A command center can contain dashboards, but its alert lifecycle, freshness, ownership, and response path set the shell priority.
+- Public page with interactive preview: `landing` around a bounded `product` artifact.
+- Level editor is a `studio` even if it creates a game; play-test viewport may enter game context.
+- Browser game with DOM menus and HUD: `game UI`; route renderer, shader, camera, gameplay-system work to the specialist domain.
+- Analytics panel inside a studio: `dashboard region`; must not steal sovereignty from canvas or timeline.
+- Command center can contain dashboards; alert lifecycle, freshness, ownership, response path set shell priority.
 
-Write the boundary explicitly. Brand rules belong to persuasion zones; product rules belong to repeated controls; game rules belong to live play; operational rules belong to monitoring and response.
+Write the boundary. Brand rules → persuasion zones; product rules → repeated controls; game rules → live play; operational rules → monitoring and response.
 
 ## Creative Studio Or Editor
 
-The user creates or transforms an artifact over time. Examples: video, image, audio, animation, level, document, CAD, shader, workflow, or dataset editors.
+Video, image, audio, animation, level, document, CAD, shader, workflow, dataset editors.
 
 Direction priorities:
 
-- Make the canvas, timeline, document, scene, or selected object sovereign.
-- Organize tools by user intent and affected object, not by component implementation.
-- Keep selection, mode, zoom, time, save state, and scope continuously legible.
-- Make edits immediate, reversible, and attributable. Undo/redo, autosave, conflicts, destructive actions, and export are product structure.
-- Use compact inspectors and panels with deliberate scroll ownership. A panel is not permission to dump every parameter at once.
-- Let the artifact generate identity: material, waveform, frames, handles, guides, layers, or direct manipulation can carry the signature move.
+- Canvas, timeline, document, scene, or selected object is sovereign.
+- Tools by user intent and affected object, not component implementation.
+- Selection, mode, zoom, time, save state, scope continuously legible.
+- Edits immediate, reversible, attributable. Undo/redo, autosave, conflicts, destructive actions, export are product structure.
+- Compact inspectors; deliberate scroll ownership. A panel is not permission to dump every parameter.
+- Artifact generates identity: material, waveform, frames, handles, guides, layers, or direct manipulation can carry the signature move.
 
 Reject:
 
 - KPI cards above the work.
-- A dashboard shell with a decorative canvas in the center.
-- Hidden modes, ambiguous selection scope, tiny unlabeled glyph walls, and panels that scroll behind one another.
-- Marketing-scale typography, cinematic entrance choreography, or chrome louder than the artifact.
+- Dashboard shell with decorative canvas in the center.
+- Hidden modes, ambiguous selection scope, unlabeled glyph walls, panels scrolling behind one another.
+- Marketing-scale type, cinematic entrance, chrome louder than the artifact.
 
-Prove: blank/new, loaded, selected and multi-selected, unsaved/saving/saved, invalid or conflicting edit, undo/redo, long names, zoom/pan, collapsed panels, export success/failure, and the supported minimum workspace. Inspect real-size icons and dense rows at DPR 2.
+Prove: blank/new, loaded, selected and multi-selected, unsaved/saving/saved, invalid or conflicting edit, undo/redo, long names, zoom/pan, collapsed panels, export success/failure, supported minimum workspace. Inspect real-size icons and dense rows at DPR 2.
 
 ## Dashboard Or Analytics Surface
 
-The user scans evidence to understand a question or choose a next action. The dashboard is an answer surface, not a collection of available chart components.
+Answer surface, not a chart-component inventory: scan evidence to understand a question or choose a next action.
 
 Direction priorities:
 
-- State the first decision and rank evidence by its effect on that decision.
-- Make comparison, change, threshold, freshness, denominator, and uncertainty visible.
-- Use overview for orientation, then stable drill-down or evidence detail.
-- Keep filters, time range, cohort, units, and data source attached to what they alter.
-- Let density serve comparison. Preserve aligned scales, tabular numerals, readable labels, and exact-value access.
+- State the first decision; rank evidence by effect on it.
+- Comparison, change, threshold, freshness, denominator, uncertainty visible.
+- Overview for orientation, then stable drill-down or evidence detail.
+- Filters, time range, cohort, units, data source attached to what they alter.
+- Density serves comparison. Preserve aligned scales, tabular numerals, readable labels, exact-value access.
 
 Reject:
 
-- Equal KPI-card soup, chart variety as decoration, miniature graphs with no readable scale, and color-only meaning.
+- Equal KPI-card soup, decorative chart variety, miniature graphs with no readable scale, color-only meaning.
 - Operational alerts without owner or action.
 - Treating zero, missing, stale, suppressed, and uncertain as the same blank state.
-- Turning every metric into a card because the grid component already exists.
+- Every metric as a card because the grid component exists.
 
-Prove: typical, zero, missing, stale, partial, uncertain, filtered, long-label, high-volume, and narrow states. Verify the first decision can be made without reading every panel.
+Prove: typical, zero, missing, stale, partial, uncertain, filtered, long-label, high-volume, narrow. First decision must be possible without reading every panel.
 
 ## Command Center Or Operations Console
 
-The user continuously monitors a system and must detect, triage, own, communicate, or recover from consequential change. This is not a dashboard with darker colors.
+Detect, triage, own, communicate, or recover from consequential change. Not a dashboard with darker colors.
 
 Direction priorities:
 
-- Separate normal, degraded, incident, acknowledged, assigned, recovering, and resolved states.
-- Expose freshness, source health, confidence, ownership, severity, scope, and next safe action.
-- Keep the alert-to-evidence-to-action path stable under update pressure.
-- Design for sustained gaze, shift handoff, keyboard speed, partial subsystem failure, and noisy event volume.
-- Reserve high-salience color, motion, and sound for events that truly demand response.
-- Support wallboard observation and operator action as different views when both exist.
+- Separate normal, degraded, incident, acknowledged, assigned, recovering, resolved.
+- Freshness, source health, confidence, ownership, severity, scope, next safe action.
+- Alert-to-evidence-to-action path stable under update pressure.
+- Sustained gaze, shift handoff, keyboard speed, partial subsystem failure, noisy event volume.
+- High-salience color, motion, sound only for events that demand response.
+- Wallboard observation and operator action as different views when both exist.
 
 Reject:
 
-- Sci-fi glow, radar decoration, fake terminal chrome, pulsing everything, and red as ambient brand color.
-- A mosaic of equally loud panels.
-- Auto-sorting that moves the item under the operator, disappearing acknowledgements, and alerts with no owner or recovery path.
+- Sci-fi glow, radar decoration, fake terminal chrome, pulsing everything, red as ambient brand color.
+- Mosaic of equally loud panels.
+- Auto-sorting that moves the item under the operator, disappearing acknowledgements, alerts with no owner or recovery path.
 - Hiding stale feeds behind a clean aggregate status.
 
-Prove: normal baseline, one active incident, alert flood, stale/offline source, partial failure, acknowledged/assigned states, recovery, handoff, drill-down, keyboard path, and supported large/narrow displays. Measure whether critical content remains stable while data updates.
+Prove: normal baseline, one active incident, alert flood, stale/offline source, partial failure, acknowledged/assigned, recovery, handoff, drill-down, keyboard path, large/narrow displays. Check critical content stays stable while data updates.
 
 ## Game UI Or Web HUD
 
-The interface supports play, not generic information work. Classify the moment: live play, pause, inventory, map, dialogue, loadout, matchmaking, tutorial, results, or settings. Classify presentation as diegetic, spatial, meta, or non-diegetic and name the input modality.
+Not generic information work. Classify the moment: live play, pause, inventory, map, dialogue, loadout, matchmaking, tutorial, results, or settings. Classify presentation as diegetic, spatial, meta, or non-diegetic; name the input modality.
 
 Direction priorities:
 
-- Protect the gameplay focal area and target glance time. Persistent elements must earn their screen occupation.
-- Tie hierarchy to urgency, depletion, threat, objective, team state, and player intent—not to card size.
-- Keep text and indicators readable over representative bright, dark, noisy, and moving scenes.
-- Respect safe areas, aspect ratios, controller focus, touch reach, input-glyph switching, localization, and stream/capture overlays.
-- Let motion confirm gameplay state and timing. Avoid decorative HUD motion that competes with combat or traversal.
-- Use menus, inventory, and settings as distinct interaction modes; live-play HUD rules do not justify hiding required menu structure.
+- Protect gameplay focal area and target glance time. Persistent elements must earn screen occupation.
+- Hierarchy from urgency, depletion, threat, objective, team state, player intent — not card size.
+- Text and indicators readable over bright, dark, noisy, moving scenes.
+- Safe areas, aspect ratios, controller focus, touch reach, input-glyph switching, localization, stream/capture overlays.
+- Motion confirms gameplay state and timing. No decorative HUD motion competing with combat or traversal.
+- Menus, inventory, settings as distinct modes; live-play HUD rules do not hide required menu structure.
 
 Reject:
 
-- Dashboard cards floating over gameplay, native web-app sidebars, uncontrolled blur, tiny admin typography, and scrollbars in live HUD.
+- Dashboard cards over gameplay, native web-app sidebars, uncontrolled blur, tiny admin type, scrollbars in live HUD.
 - Decorative vector glyphs with no silhouette discipline or icon-family proof.
-- Testing the HUD on a flat background, title screen, or one calm scene only.
+- HUD tested only on a flat background, title screen, or one calm scene.
 
-Prove: calm and high-noise play, damage/critical state, objective update, input switch, pause/menu focus, long localization, common aspect ratios, safe-area pressure, reduced motion, and a representative gameplay capture. For engine, renderer, camera, or gameplay-system changes, use the specialist skill and keep this route on the web UI integration.
+Prove: calm and high-noise play, damage/critical, objective update, input switch, pause/menu focus, long localization, common aspect ratios, safe-area pressure, reduced motion, representative gameplay capture. Engine, renderer, camera, or gameplay-system changes: specialist skill; this route stays on web UI integration.
 
 ## Interactive Prototype, Lab, Or Simulator
 
-The output or playable mechanism is the reason to visit. Examples: shader labs, generators, simulations, explainers, audio experiments, and technical prototypes.
+Shader labs, generators, simulations, explainers, audio experiments, technical prototypes.
 
 Direction priorities:
 
-- Put the real output in the first viewport.
-- Tether controls to their visible effect and group presets by intent.
-- Keep diagnostics available but subordinate until failure or explicit inspection.
-- Preserve reset, reproducibility, export, share, unsupported-capability fallback, and performance limits.
+- Real output in the first viewport.
+- Tether controls to visible effect; group presets by intent.
+- Diagnostics available but subordinate until failure or explicit inspection.
+- Reset, reproducibility, export, share, unsupported-capability fallback, performance limits.
 
-Reject landing-page preambles, fake instrument complexity, parameter dumps, and logs louder than the experiment.
+Reject landing-page preambles, fake instrument complexity, parameter dumps, logs louder than the experiment.
 
-Prove nonblank output, meaningful parameter change, reset, invalid/extreme values, export failure, unsupported capability, mobile/narrow control access, offscreen behavior, and representative performance.
+Prove nonblank output, meaningful parameter change, reset, invalid/extreme values, export failure, unsupported capability, mobile/narrow control access, offscreen behavior, representative performance.
 
 ## Transactional App, Admin, Or Workflow Tool
 
-The user enters, reviews, approves, configures, schedules, or moves records through a known process.
+Records through a known process. Prioritize accurate state, stable navigation, clear scope, forms, tables, bulk actions, permissions, pending/retry, recovery. Familiarity and density may beat novelty. Active record and next safe action must be obvious.
 
-Prioritize accurate state, stable navigation, clear scope, forms, tables, bulk actions, permissions, pending/retry behavior, and recovery. Familiarity and density may beat novelty. Make the active record and next safe action obvious.
+Reject brand type in controls, modal-first architecture, bespoke standard inputs, duplicated status, decorative empty states that delay the first task.
 
-Reject brand typography in controls, modal-first architecture, bespoke standard inputs, duplicated status, and decorative empty states that delay the first task.
-
-Prove empty, loading, error, permission, validation, double-submit, unsaved work, long content, large data, and narrow layouts. Preserve URL state when refresh, history, sharing, or support workflows depend on it.
+Prove empty, loading, error, permission, validation, double-submit, unsaved work, long content, large data, narrow layouts. Preserve URL state when refresh, history, sharing, or support workflows depend on it.
 
 ## Landing, Commerce, Or Editorial Surface
 
-The user is choosing, trusting, buying, understanding, or exploring rather than repeatedly operating a tool.
+Not operating a tool repeatedly.
 
-- Landing: connect offer, audience, proof, objection, and action; make the first viewport specific and prove the next decision.
-- Commerce: keep media, variant, availability, price, delivery, returns, and commitment consequence mutually legible.
-- Editorial/cultural: allow pacing and mystery when discovery is the value, while preserving orientation, access, and a direct route for concrete tasks.
+- Landing: connect offer, audience, proof, objection, action; first viewport specific; prove the next decision.
+- Commerce: media, variant, availability, price, delivery, returns, commitment consequence mutually legible.
+- Editorial/cultural: pacing and mystery when discovery is the value; still preserve orientation, access, and a direct route for concrete tasks.
 
-Reject transplanting dashboard density into persuasion, inventing proof, forcing funnels onto cultural work, or using product chrome as brand identity.
+Reject dashboard density in persuasion, invented proof, funnels on cultural work, product chrome as brand identity.
 
-Prove first viewport, decisive proof or product detail, commitment state, form/error path, mobile rhythm, media fallback, and relevant legal/analytics/SEO preservation.
+Prove first viewport, decisive proof or product detail, commitment state, form/error path, mobile rhythm, media fallback, relevant legal/analytics/SEO preservation.
 
 ## Context Mismatch Gate
 
 Fail the direction when any is true:
 
-- The primary artifact or action is visually subordinate to borrowed category chrome.
-- The scrolling, density, motion, or navigation model belongs to another archetype.
-- The state and proof plan tests generic breakpoints but misses the product's costly moments.
-- A hybrid silently averages incompatible registers instead of assigning rules by region.
-- The design could change archetype by replacing nouns and keeping the same composition.
+- Primary artifact or action visually subordinate to borrowed category chrome.
+- Scrolling, density, motion, or navigation model belongs to another archetype.
+- State and proof plan tests generic breakpoints but misses the product's costly moments.
+- Hybrid silently averages incompatible registers instead of assigning rules by region.
+- Design could change archetype by replacing nouns and keeping the same composition.
 
-When the mismatch repeats after one correction, return to the context card before changing colors, spacing, or effects.
+If mismatch repeats after one correction, return to the context card before changing colors, spacing, or effects.

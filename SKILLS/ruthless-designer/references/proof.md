@@ -1,73 +1,65 @@
 # Proof And Stop Gates
 
-Use this route before any final claim about visual quality, fidelity, responsiveness, interaction, motion, accessibility, performance, or production readiness.
+Visual quality, fidelity, responsiveness, interaction, motion, accessibility, performance, production readiness.
 
 ## Match Evidence To The Claim
 
-Choose the smallest proof that could falsify the claim:
-
-- Visual change: before/after at the same route, viewport, state, theme, content, and auth context.
+- Visual change: before/after same route, viewport, state, theme, content, auth context.
 - Reference-led build: source/reference and result side by side or in directly comparable crops.
-- Product surface: desktop plus narrow/mobile, realistic dense content, and one meaningful empty/error/permission/recovery state.
-- Brand surface: first viewport, early artifact/proof or deliberately staged reveal, the relevant conversion/entry/wayfinding decision, and mobile first viewport.
-- Component/system: default, hover/focus/disabled, long text, narrow container, and one relevant edge state.
-- Async/data UI: loading, refresh, empty, error, permission, long content, slow network, and rapid-click states that can really occur.
-- Motion/gesture: trigger, pointer-down response, repeated/interrupted trigger, reduced motion, origin, duration/easing, slow drag, fast flick, reversal, and release outside bounds.
-- Immersive runtime: visible render, foreground readability, mobile/static fallback, reduced motion, offscreen pause, cleanup path, and console/WebGL state.
+- Product surface: desktop plus narrow/mobile, realistic dense content, one meaningful empty/error/permission/recovery state.
+- Brand surface: first viewport, early artifact/proof or deliberately staged reveal, relevant conversion/entry/wayfinding decision, mobile first viewport.
+- Component/system: default, hover/focus/disabled, long text, narrow container, one relevant edge state.
+- Async/data UI: loading, refresh, empty, error, permission, long content, slow network, rapid-click states that can really occur.
+- Motion/gesture: trigger, pointer-down response, repeated/interrupted trigger, reduced motion, origin, duration/easing, slow drag, fast flick, reversal, release outside bounds.
+- Immersive runtime: visible render, foreground readability, mobile/static fallback, reduced motion, offscreen pause, cleanup path, console/WebGL state.
 - Static-only review: source and detector findings with runtime/visual proof explicitly blocked.
-- Context-specific claim: use the [product context](product-contexts.md) card and prove the costly state, input, spatial, and update behavior that distinguishes this archetype from generic web UI.
-- Material proposal/review: generate the synchronized dossier from [reporting.md](reporting.md), inspect the HTML itself at desktop and narrow widths, then ingest the Markdown independently and cross-check subjects, geometry, findings, proof states, and asset paths. The dossier packages evidence; it does not upgrade an unproven design claim.
+- Context-specific: [product context](product-contexts.md) card; prove the costly state, input, spatial, update behavior that distinguishes this archetype from generic web UI.
+- Material proposal/review: dossier from [reporting.md](reporting.md); inspect HTML at desktop and narrow; ingest Markdown independently; cross-check subjects, geometry, findings, proof states, asset paths. Dossier packages evidence; does not upgrade an unproven design claim.
 
-More screenshots are not better when they prove nothing meaningful.
+More screenshots are not better when they prove nothing.
 
-For atlases or repeated media, cover the complete small set or every crop class plus first, last, and edge cells. Record grid, ratio, mapping, crop/focal behavior, and a narrow fixture; fail stretching, bleed, subject loss, wrong mapping, blank tiles, or default-item-only proof.
+Atlases or repeated media: complete small set, or every crop class plus first, last, edge cells. Record grid, ratio, mapping, crop/focal behavior, narrow fixture; fail stretching, bleed, subject loss, wrong mapping, blank tiles, default-item-only proof.
 
 ## Judge Three Independent Claims
 
-Do not collapse quality into one flattering score:
+- `production integrity`: artifact runs, survives required states/viewports, preserves data and contracts, meets applicable accessibility, performance, resilience bar.
+- `task effectiveness`: intended audience can identify what matters, understand the offer or state, complete the key decision or action without rescue.
+- `distinctiveness`: hierarchy, artifact, behavior, visual system form a specific point of view instead of competent category paste.
 
-- `production integrity`: the artifact runs, survives required states/viewports, preserves data and contracts, and meets the applicable accessibility, performance, and resilience bar.
-- `task effectiveness`: the intended audience can identify what matters, understand the offer or state, and complete the key decision or action without rescue.
-- `distinctiveness`: the hierarchy, artifact, behavior, and visual system form a specific point of view instead of competent category paste.
+Record `passed | limited | blocked` per claim, with evidence. Production-ready can be aesthetically timid; a spectacular direction can be unsafe garbage. Neither borrows the other's grade.
 
-Record `passed | limited | blocked` for each and state the evidence. A surface may be production-ready yet aesthetically timid. A spectacular direction may still be unsafe garbage. Do not let either borrow the other's grade.
-
-Claims of human comprehension need at least one representative non-builder: ask what this is, what matters, and what comes next; record hesitation, errors, and task outcome. One person is only a smoke test. Without it, describe intended hierarchy, not proven comprehension.
+Human-comprehension claims need one non-builder: ask what this is, what matters, what comes next; record hesitation, errors, task outcome. One person is a smoke test. Without it, describe intended hierarchy, not proven comprehension.
 
 ## Accept Evidence Before Judging
 
-Reject wrong route/window, mismatched context, blank/loading/blocked output, unreadable detail, cropped content, failed actions, `error` captures, runtime P0/P1, or blocked assessments. Wait for fonts, images, async content, and intended interaction state. A passing assertion cannot overrule failed visual/runtime evidence; repair or rerun it.
+Reject wrong route/window, mismatched context, blank/loading/blocked output, unreadable detail, cropped content, failed actions, `error` captures, runtime P0/P1, blocked assessments. Wait for fonts, images, async content, intended interaction state. Passing assertion cannot overrule failed visual/runtime evidence; repair or rerun it.
 
-A screenshot captured is not a screenshot compared. Record whether evidence was:
+Captured ≠ compared:
 
-- `observed`: the state loaded and was inspected.
+- `observed`: state loaded and inspected.
 - `captured`: an artifact exists.
-- `compared`: source/before and result/after were evaluated against defined criteria.
+- `compared`: source/before and result/after evaluated against defined criteria.
 - `passed`: no actionable in-scope blocker/major finding remains.
 
 Do not skip from `captured` to `passed`; name viewport and state in the filename or ledger.
 
 ## Compare The Right Surfaces
 
-Inspect:
+- Hierarchy: first attention, primary task, CTA, warning dominance, artifact visibility.
+- Typography: family/fallback, weight, scale, line height, wrapping, truncation, product/brand voice.
+- Layout: frame, crop, margins, grid, alignment, spacing rhythm, responsive structure, radius, edge, elevation.
+- Color: palette roles, semantic states, contrast, opacity, foreground/background balance.
+- Assets: subject, crop, sharpness, compression, masking, logo/icon fidelity, fake-vs-real proof.
+- Content: literal labels, actions, claims, sample data, empty/error copy, prompt leakage.
+- Interaction: affordance, focus, pending/disabled, recovery, interruption, feedback.
 
-- Hierarchy: first attention, primary task, CTA, warning dominance, and artifact visibility.
-- Typography: family/fallback, weight, scale, line height, wrapping, truncation, and product/brand voice.
-- Layout: frame, crop, margins, grid, alignment, spacing rhythm, responsive structure, radius, edge, and elevation.
-- Color: palette roles, semantic states, contrast, opacity, and foreground/background balance.
-- Assets: subject, crop, sharpness, compression, masking, logo/icon fidelity, and fake-vs-real proof.
-- Content: literal labels, actions, claims, sample data, empty/error copy, and prompt leakage.
-- Interaction: affordance, focus, pending/disabled, recovery, interruption, and feedback.
+Focused crops or component inspection when a full-page image makes relevant detail unreadable.
 
-Use focused crops or component inspection when a full-page image makes the relevant detail unreadable.
+Complete the ledger. DPR `2+` for controls, icons, alignment, rows, scrollbars; low-resolution evidence cannot prove unresolved detail.
 
-For final claims, complete the ledger. Use DPR `2+` for controls, icons, alignment, rows, or scrollbars; low-resolution evidence cannot prove unresolved detail.
-
-For repeated geometry, attach the anchor map, gap or baseline deltas, and focused crop from [geometry-and-rhythm.md](geometry-and-rhythm.md). For material motion, attach the event map plus interruption, repeated-use, and reduced-mode evidence from [motion.md](motion.md). “Feels smoother” and “spacing improved” are not falsifiable claims.
+Repeated geometry: attach the anchor map, gap or baseline deltas, focused crop from [geometry-and-rhythm.md](geometry-and-rhythm.md). Material motion: event map plus interruption, repeated-use, reduced-mode evidence from [motion.md](motion.md). “Feels smoother” and “spacing improved” are not falsifiable claims.
 
 ## Evidence Ledger
-
-Record:
 
 ```text
 claim:
@@ -79,32 +71,30 @@ result: observed | captured | compared | passed | blocked
 claim limit:
 ```
 
-Every final claim must point to a screenshot, comparison, source line, test, command output, runtime metric, or explicit blocker.
+Every final claim points to a screenshot, comparison, source line, test, command output, runtime metric, or explicit blocker.
 
 ## Severity And Verdict
 
-- `P0`: blocks core use, data safety, or readable access.
-- `P1`: major mismatch, broken hierarchy/core responsive path, missing critical asset/state, or strong usability/accessibility regression.
-- `P2`: systemic generic pattern, visible drift, inconsistent state, or fixable resilience gap.
+- `P0`: blocks core use, data safety, readable access.
+- `P1`: major mismatch, broken hierarchy/core responsive path, missing critical asset/state, strong usability/accessibility regression.
+- `P2`: systemic generic pattern, visible drift, inconsistent state, fixable resilience gap.
 - `P3`: bounded refinement with low user impact.
 
-Tag each finding with the claim it threatens. Use `passed` for a claim only when its required evidence ran and no unresolved issue material to that claim remains. Any P0/P1 blocks the affected claim. A bounded P2 may remain when its risk is explicit and accepted. In particular, a P2 for generic or under-ambitious aesthetics can fail `distinctiveness` without blocking `production integrity` or the literal `production-ready` claim. Never launder a task, accessibility, state, or trust failure as mere taste.
+Tag each finding with the claim it threatens. `passed` only when required evidence ran and no unresolved issue material to that claim remains. P0/P1 blocks the affected claim. Bounded P2 may remain when risk is explicit and accepted. Generic/under-ambitious P2 can fail `distinctiveness` without blocking `production integrity` or the literal `production-ready` claim. Never launder a task, accessibility, state, trust failure as mere taste.
 
-Use `blocked` when required evidence is unavailable or failed. Use `limited` when evidence exists but cannot support the full claim.
+`blocked` when required evidence is unavailable or failed. `limited` when evidence exists but cannot support the full claim.
 
-Do not assign a high score to an unobserved dimension. Mark it `unknown` or `blocked`. Absence of findings is not evidence of excellence.
+Unobserved dimension → `unknown` or `blocked`. Absence of findings is not evidence of excellence.
 
 ## Continue, Reset, Stop
 
-- Continue when proof exposes a major issue. Fix the highest user-damage cause and rerun the same evidence.
-- Reset when two valid comparisons remain `flat` or `worse` because the same root cause survived; kill the failed structure and choose a new direction. Repair incomplete content, fixtures, or proof before blaming the direction.
-- Stop when the requested bar is met, relevant states/viewports pass, and remaining issues are unrelated or explicitly scoped.
+- Continue when proof exposes a major issue: fix the highest user-damage cause; rerun the same evidence.
+- Reset when two valid comparisons stay `flat` or `worse` because the same root cause survived; kill the failed structure and choose a new direction. Repair incomplete content, fixtures, proof before blaming the direction.
+- Stop when the requested bar is met, relevant states/viewports pass, remaining issues are unrelated or explicitly scoped.
 
-Do not stop because the first patch compiled. Do not keep looping to satisfy ceremony after meaningful risk is closed.
+Do not stop because the first patch compiled, or loop to satisfy ceremony after meaningful risk is closed.
 
 ## Blocked Language
-
-Use direct limits:
 
 - `Runtime proof blocked: no runnable URL was available; source/static inspection only.`
 - `Visual proof blocked: browser capture could not run; layout and fit remain unverified.`
@@ -116,18 +106,16 @@ Never upgrade these statements to `verified`, `complete`, `excellent`, or `produ
 
 ## Final Gate
 
-Before stopping, answer:
-
-- Did production integrity pass, and what required state or runtime remains?
-- Did task effectiveness receive a human comprehension/task smoke test?
-- Did distinctiveness survive comparison with a grounded category default or competent baseline, rather than a stereotype invented for easy victory?
+- Production integrity: pass? Required state or runtime remains?
+- Task effectiveness: human comprehension/task smoke test?
+- Distinctiveness: grounded category default or competent baseline, not a stereotype for easy victory?
 - What visibly improved?
 - Which killed default stayed dead?
-- Did the signature move survive desktop and narrow/mobile?
-- Did the main path and one meaningful edge/recovery state pass?
-- Did the context-specific costly moment pass, and did every bounded hybrid region keep its own interaction rules?
-- Did the finish ledger pass alignment, spacing rhythm, overflow/scrollbars, gradients, icons/vector craft, and capture legibility?
-- What evidence supports each claim?
+- Signature move survive desktop and narrow/mobile?
+- Main path, one meaningful edge/recovery state pass?
+- Context-specific costly moment pass, every bounded hybrid region keep its own interaction rules?
+- Finish ledger: alignment, spacing rhythm, overflow/scrollbars, gradients, icons/vector craft, capture legibility?
+- Evidence for each claim?
 - What remains unverified?
 
-If those answers are vague, the work is not ready. The interface may be finished; your evidence is not.
+If those answers are vague, the work is not ready. Interface may be finished; evidence is not.
