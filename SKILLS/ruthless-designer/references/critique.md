@@ -1,12 +1,12 @@
 # Forensic Critique
 
-Use this route for UI audits, screenshot critiques, visual reviews, design verdicts, and roasts. Keep the personality aggressive. A polite autopsy is how mediocre interfaces escape alive.
+Use for UI audits, screenshot critiques, visual reviews, design verdicts, and roasts. Keep the personality aggressive.
 
 ## Voice Contract
 
-Be brutal, direct, useful, and in the user's language. Attack decisions, never people. Skip compliments, praise sandwiches, hedging, and invented crimes.
+Brutal, direct, useful, in the user's language. Attack decisions, never people. Skip compliments, praise sandwiches, hedging, and invented crimes.
 
-Make every major hit contain:
+Every major hit contains:
 
 ```text
 Evidence: what is visible or confirmed in source.
@@ -20,22 +20,22 @@ Group symptoms by root cause. One cause earns at most one joke; humor sharpens d
 
 ## Inspect Both Bodies
 
-Inspect visual evidence and source code when both exist:
+Inspect visual evidence and source when both exist:
 
-- Visual: screenshot, browser state, URL, video frame, mock, responsive state, focus state, and interaction result.
-- Source: routes, components, markup, styles, tokens, primitives, state ownership, data shape, responsive logic, accessibility, and component-library usage.
+- Visual: screenshot, browser state, URL, video frame, mock, responsive state, focus state, interaction result.
+- Source: routes, components, markup, styles, tokens, primitives, state ownership, data shape, responsive logic, accessibility, component-library usage.
 
-Inspect them in this order:
+Inspect in this order:
 
-1. Run a visual-only pass at readable scale. Record what the image actually prioritizes, where anchors wobble, how spacing groups or separates, which scroll regions are visible, whether gradients carry a job, and whether icons look coherent and optically centered.
+1. Visual-only pass at readable scale. Record what image actually prioritizes, where anchors wobble, how spacing groups or separates, which scroll regions are visible, whether gradients carry a job, and whether icons look coherent and optically centered.
 2. Open source and trace those visible symptoms to structure, primitives, tokens, assets, and state.
-3. Synthesize the verdict. Do not let clean code acquit a visibly bad result or let a pretty screenshot conceal a broken contract.
+3. Synthesize verdict. Clean code does not acquit visibly bad result; pretty screenshot does not conceal broken contract.
 
-If the capture is too small, compressed, or blurry to judge control finish, icon geometry, spacing, or scrollbars, recapture at device scale factor `2` or higher and add focused crops. When recapture is impossible, say which details remain unknown. Do not perform a thumbnail roast and call it forensic.
+If the capture is too small, compressed, or blurry to judge control finish, icon geometry, spacing, or scrollbars, recapture at device scale factor `2` or higher and add focused crops. When recapture is impossible, say which details remain unknown. Do not thumbnail-roast and call it forensic.
 
 Cross-reference the layers. Do not blame CSS for a broken information architecture. Do not critique code alone when the rendered hierarchy is visibly on fire.
 
-Before judging hierarchy, complete the context card in [product-contexts.md](product-contexts.md). State the primary archetype, user mode, primary artifact, pressure, spatial model, and costly states. Review the interface against that contract. A HUD is not guilty because it lacks dashboard density; a studio is guilty when dashboard chrome buries the artifact; a command center is guilty when urgency, ownership, freshness, and recovery collapse into decorative alarm theater.
+Before judging hierarchy, complete the context card in [product-contexts.md](product-contexts.md). State primary archetype, user mode, primary artifact, pressure, spatial model, and costly states. Review against that contract. A HUD is not guilty because it lacks dashboard density; a studio is guilty when dashboard chrome buries the artifact; a command center is guilty when urgency, ownership, freshness, and recovery collapse into decorative alarm theater.
 
 When one side is missing, state the limit plainly:
 
@@ -49,15 +49,15 @@ Every critique must include `Do not break`: name the mechanism, hierarchy, inter
 
 ## Run The Autopsy
 
-1. Classify the product context and bounded hybrid regions from evidence, not visual costume.
-2. Infer the product intent, primary user task, costly moments, and preservation contract.
-3. Name the intended hierarchy and what the interface accidentally prioritizes.
+1. Classify product context and bounded hybrid regions from evidence, not visual costume.
+2. Infer product intent, primary user task, costly moments, and preservation contract.
+3. Name intended hierarchy and what interface accidentally prioritizes.
 4. Compare intended priority with actual visual weight and archetype behavior.
-5. Trace the biggest mismatches to likely or confirmed structural causes.
-6. Rank findings by user damage, not by how amusing the metaphor is.
+5. Trace biggest mismatches to likely or confirmed structural causes.
+6. Rank findings by user damage, not by how amusing metaphor is.
 7. Define up to five cuts, ordered by damage. Never invent filler to reach five.
-8. If implementation was requested and the repo is editable, patch the highest-impact in-scope causes and prove the context-specific result.
-9. For a material review or proposal, persist the standalone evidence dossier from [reporting.md](reporting.md); chat is the handoff summary, not the only artifact.
+8. If implementation was requested and repo is editable, patch highest-impact in-scope causes and prove context-specific result.
+9. For material review or proposal, persist standalone evidence dossier from [reporting.md](reporting.md); chat is handoff summary, not only artifact.
 
 Inspect when relevant:
 
@@ -75,7 +75,7 @@ Inspect when relevant:
 
 ## Severity
 
-- `P0`: blocks the core task, causes data loss, traps users, or makes core content unreadable.
+- `P0`: blocks core task, causes data loss, traps users, or makes core content unreadable.
 - `P1`: major hierarchy/usability/accessibility failure, broken responsive path, missing critical asset/state, or visible trust regression.
 - `P2`: systemic generic pattern, design-system drift, state/content resilience gap, or strong visible mismatch.
 - `P3`: bounded polish with low user impact.
@@ -95,5 +95,3 @@ Ban vague prescriptions. Name what dominates or loses weight; which cards, badge
 ## Pass Gate
 
 The critique fails when it is polite, generic, screenshot-only despite available source, code-only despite available visuals, based on unreadable captures, unsupported, entertainment-only, padded to five, careless about what already works, or vague about the fix. It also fails when context is inferred from costume, the same prescription could be pasted onto another archetype, costly product states are skipped, or alignment, spacing, overflow/scrollbars, gradients, icons, or capture legibility were applicable but ignored.
-
-It succeeds when the user can see the crime, understand the damage, locate the cause, and execute—or inspect—the better design immediately.
