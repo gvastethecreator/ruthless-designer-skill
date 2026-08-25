@@ -248,15 +248,15 @@ function canonicalize(value) {
 function uniquePaths(values) {
   const seen = new Set();
   return values.filter((value) => {
-    const key = normalize(value);
+    const key = normalizeRequested(value);
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
 }
 
-function normalize(value) {
-  return canonicalize(value);
+function normalizeRequested(value) {
+  return path.resolve(value).replaceAll("\\", "/").toLowerCase();
 }
 
 function renderText(result) {
