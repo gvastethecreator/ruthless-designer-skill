@@ -80,7 +80,7 @@ function inspectTarget(requestedPath, source, sourceManifest) {
     return targetResult(absolute, null, "missing", false, "target path does not exist");
   }
 
-  const linked = entry.isSymbolicLink();
+  const linked = isDirectLink(absolute, entry);
   let realPath;
   try {
     realPath = fs.realpathSync.native(absolute);
@@ -220,8 +220,29 @@ function lstatOrNull(value) {
   }
 }
 
+function isDirectLink(absolute, entry) {
+  if (entry.isSymbolicLink()) return true;
+  if (process.platform !== "win32") return false;
+  try {
+    fs.readlinkSync(absolute);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function samePath(left, right) {
-  return normalize(left) === normalize(right);
+  return canonicalize(left) === canonicalize(right);
+}
+
+function canonicalize(value) {
+  if (!value) return "";
+  const resolved = path.resolve(value);
+  try {
+    return fs.realpathSync.native(resolved).replaceAll("\\", "/").toLowerCase();
+  } catch {
+    return resolved.replaceAll("\\", "/").toLowerCase();
+  }
 }
 
 function uniquePaths(values) {
@@ -235,7 +256,7 @@ function uniquePaths(values) {
 }
 
 function normalize(value) {
-  return path.resolve(value).replaceAll("\\", "/").toLowerCase();
+  return canonicalize(value);
 }
 
 function renderText(result) {

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
-import { execFileSync, execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
 const VALID_EXT = new Set([
   ".astro",
@@ -770,7 +770,7 @@ function toFinding(rule, file, text, index, snippet) {
     confidence: rule.confidence || defaultConfidence(rule),
     applicability: rule.applicability || defaultApplicability(rule),
     message: rule.message,
-    file: path.relative(reportRoot, file).replaceAll("\\", "/"),
+    file: path.relative(canonicalPath(reportRoot), canonicalPath(file)).replaceAll("\\", "/"),
     line: lineForIndex(text, index),
     snippet: cleanSnippet(snippet),
   };
@@ -876,20 +876,21 @@ function gitChangedFiles(startPath = process.cwd()) {
   let gitRoot;
   try {
     const cwd = fs.statSync(startPath).isDirectory() ? startPath : path.dirname(startPath);
-    gitRoot = execFileSync("git", ["-C", cwd, "rev-parse", "--show-toplevel"], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
+    gitRoot = canonicalPath(
+      execFileSync("git", ["-C", cwd, "rev-parse", "--show-toplevel"], {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      }).trim(),
+    );
   } catch {
     return [];
   }
-  for (const command of [
-    "git diff --name-only --diff-filter=ACMRTUXB -z HEAD",
-    "git ls-files --others --exclude-standard -z",
+  for (const args of [
+    ["diff", "--name-only", "--diff-filter=ACMRTUXB", "-z", "HEAD"],
+    ["ls-files", "--others", "--exclude-standard", "-z"],
   ]) {
     try {
-      const output = execSync(command, {
-        cwd: gitRoot,
+      const output = execFileSync("git", ["-C", gitRoot, ...args], {
         encoding: "utf8",
         stdio: ["ignore", "pipe", "ignore"],
       });
@@ -913,7 +914,7 @@ function resolveReportRoot(scanTargets) {
         encoding: "utf8",
         stdio: ["ignore", "pipe", "ignore"],
       }).trim();
-      if (root) gitRoots.add(normalizeFsPath(root));
+      if (root) gitRoots.add(normalizeFsPath(canonicalPath(root)));
     } catch {
       // Non-Git scans use their stable target ancestor instead.
     }
@@ -926,9 +927,9 @@ function resolveReportRoot(scanTargets) {
 
 function commonAncestor(paths) {
   if (!paths.length) return process.cwd();
-  let candidate = path.resolve(paths[0]);
+  let candidate = canonicalPath(paths[0]);
   for (const current of paths.slice(1)) {
-    const absolute = path.resolve(current);
+    const absolute = canonicalPath(current);
     while (!isInsideOrSame(candidate, absolute)) {
       const parent = path.dirname(candidate);
       if (parent === candidate) return path.parse(candidate).root;
@@ -939,7 +940,7 @@ function commonAncestor(paths) {
 }
 
 function isInsideOrSame(parent, child) {
-  const relative = path.relative(parent, child);
+  const relative = path.relative(canonicalPath(parent), canonicalPath(child));
   return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
 }
 
@@ -994,8 +995,17 @@ function normalizePath(value) {
   return String(value).replaceAll("\\", "/");
 }
 
+function canonicalPath(value) {
+  const resolved = path.resolve(String(value));
+  try {
+    return fs.realpathSync.native(resolved);
+  } catch {
+    return resolved;
+  }
+}
+
 function normalizeFsPath(value) {
-  const normalized = path.resolve(String(value)).replaceAll("\\", "/");
+  const normalized = canonicalPath(value).replaceAll("\\", "/");
   return process.platform === "win32" ? normalized.toLowerCase() : normalized;
 }
 
