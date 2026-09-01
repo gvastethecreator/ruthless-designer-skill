@@ -76,7 +76,7 @@ New-Item -ItemType Directory -Force $target | Out-Null
 Copy-Item -Recurse -Force .\SKILLS\ruthless-designer\* $target
 ```
 
-Those copy commands are for consumers without the canonical checkout. On the maintainer machine, `D:\DEV\ruthless-designer\SKILLS\ruthless-designer` is the only editable skill directory. `agents-matrix`, `.agents`, and `.codex` must be direct junctions to it; never edit or synchronize a second physical copy.
+Those copy commands are for consumers without the canonical checkout. `SKILLS/ruthless-designer` is the only editable skill directory. Workspace copies should be junctions or symbolic links to it; never edit or synchronize a second physical copy.
 
 ## Usage
 
@@ -230,3 +230,5 @@ Preview public skill project.
 Released under the [MIT License](./LICENSE).
 
 Support continued maintenance through [GitHub Sponsors](https://github.com/sponsors/gvastethecreator) or [Ko-fi](https://ko-fi.com/gvaste). Report vulnerabilities through the private route in [SECURITY.md](SECURITY.md).
+
+

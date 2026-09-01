@@ -8,6 +8,7 @@ Ruthless Designer is an evidence-backed Agent Skills package and UI review harne
 2. Run `pnpm run check`.
 3. Add or update the nearest detector, harness, validator, or report regression for changed behavior.
 4. Keep the router below its validated context budget.
-5. Keep public documentation, fixtures, and reports in English unless a localization test explicitly requires another language.
+5. Keep public documentation, fixtures, and reports in American English unless a localization test explicitly requires another language.
 
 Do not weaken a finding expectation, evidence gate, or security redaction only to make the suite pass.
+
