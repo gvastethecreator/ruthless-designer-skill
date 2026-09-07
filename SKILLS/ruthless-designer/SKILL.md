@@ -14,6 +14,7 @@ Find the dominant design failure and build a replacement that withstands the sam
 - Product context: [product contexts](references/product-contexts.md), [composition](references/composition-patterns.md); [context examples](references/context-examples.md) when the archetype is unclear.
 - Apps, studios, dashboards, admin: [product surfaces](references/product-surfaces.md).
 - Onboarding, settings, search, permissions, destructive or interrupted flows: [human interface craft](references/human-interface-craft.md).
+- Decision load, interruption/return, partial results, AI-assisted actions, or UX measurement: [experience quality](references/experience-quality.md).
 - Production implementation/readiness: [production hardening](references/production-hardening.md).
 - Landing, portfolio, campaign, pricing, editorial: [brand surfaces](references/brand-surfaces.md).
 - Data, charts, tables, uncertainty: [data information](references/data-information.md).

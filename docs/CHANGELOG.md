@@ -2,6 +2,10 @@
 
 ## 2026-09-07
 
+- Adapted selected experience-design practices to challenge hidden decision costs, partial effects, misleading AI acceptance, and outcome claims in redesigns.
+- Added a self-contained experience-quality reference with primary sources and reading limits; clarified that automated reviewers do not count as human participants.
+- Added three experience-focused evaluation cases. Package, evaluation, and quick validators passed; the new cases were checked structurally, not executed as agent trials. Runtime suites were not repeated for this guidance-only addition.
+
 - Added adversarial review of both the existing interface and its proposed replacement.
 - Required credible alternatives, explicit gains and costs, and observable acceptance for major design decisions.
 - Separated direct critique from optional roast humor and made durable reports conditional on the deliverable.
@@ -13,4 +17,3 @@
 
 - Standardized scripts, CI, and README commands on pnpm 11.20.0.
 - Added a dependency-free lockfile and concise VS Code tasks.
-

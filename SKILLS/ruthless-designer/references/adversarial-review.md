@@ -53,6 +53,8 @@ Select the direction with the strongest task and visual argument. Define one vis
 
 ## Attack Your Own Replacement
 
+When a direction hides decision information, changes interruption/recovery, or automates a choice, use [experience quality](experience-quality.md) to test where the work and its consequences went.
+
 Before accepting the result, inspect it without the direction card. Try to find a stronger objection than the one made against the original:
 
 | Challenge | Reject the replacement when |

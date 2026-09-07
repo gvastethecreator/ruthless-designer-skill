@@ -28,7 +28,7 @@ Atlases or repeated media: complete small set, or every crop class plus first, l
 
 Record `passed | limited | blocked` per claim, with evidence. Production-ready can be aesthetically timid; a spectacular direction can be unsafe garbage. Neither borrows the other's grade.
 
-Human-comprehension claims need one non-builder: ask what this is, what matters, what comes next; record hesitation, errors, task outcome. One person is a smoke test. Without it, describe intended hierarchy, not proven comprehension.
+Human-comprehension claims need an actual participant from the intended audience: ask what this is, what matters, what comes next; record hesitation, errors, help, and task outcome. One person is a smoke test, not a population estimate. An LLM reviewer or browser script does not meet this requirement. Without participant evidence, describe intended hierarchy, not proven comprehension. For measured gains, use [experience quality](experience-quality.md) to define baseline, task outcome, denominator, and harm check.
 
 ## Accept Evidence Before Judging
 
