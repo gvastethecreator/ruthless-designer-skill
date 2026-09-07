@@ -14,7 +14,7 @@ Visual quality, fidelity, responsiveness, interaction, motion, accessibility, pe
 - Immersive runtime: visible render, foreground readability, mobile/static fallback, reduced motion, offscreen pause, cleanup path, console/WebGL state.
 - Static-only review: source and detector findings with runtime/visual proof explicitly blocked.
 - Context-specific: [product context](product-contexts.md) card; prove the costly state, input, spatial, update behavior that distinguishes this archetype from generic web UI.
-- Material proposal/review: dossier from [reporting.md](reporting.md); inspect HTML at desktop and narrow; ingest Markdown independently; cross-check subjects, geometry, findings, proof states, asset paths. Dossier packages evidence; does not upgrade an unproven design claim.
+- Requested durable proposal/review: dossier from [reporting.md](reporting.md); inspect HTML at desktop and narrow; ingest Markdown independently; cross-check subjects, geometry, findings, proof states, asset paths. Dossier packages evidence; does not upgrade an unproven design claim.
 
 More screenshots are not better when they prove nothing.
 
@@ -88,7 +88,8 @@ Unobserved dimension → `unknown` or `blocked`. Absence of findings is not evid
 
 ## Continue, Reset, Stop
 
-- Continue when proof exposes a major issue: fix the highest user-damage cause; rerun the same evidence.
+- Before accepting the result, apply [adversarial-review.md](adversarial-review.md): name the gain, regression, and whether the comparison is better, flat, worse, or inconclusive. Try to disprove your chosen direction.
+- Continue when proof exposes a major issue: fix the highest user-damage cause; rerun the affected evidence at the verification boundary.
 - Reset when two valid comparisons stay `flat` or `worse` because the same root cause survived; kill the failed structure and choose a new direction. Repair incomplete content, fixtures, proof before blaming the direction.
 - Stop when the requested bar is met, relevant states/viewports pass, remaining issues are unrelated or explicitly scoped.
 

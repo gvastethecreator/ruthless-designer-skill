@@ -1,43 +1,43 @@
 # Redesign Execution Contract
 
-Use for every implemented greenfield surface or broad redesign. The skill is not active because its file was read; activation is the trail from context and rejected defaults to a rendered result that survives its own proof loop.
+Use for implemented greenfield surfaces and broad redesigns. Context, a defensible direction, and an inspected result define success. Artifact counts do not.
 
 ## Isolate The Work
 
-One unit owns one primary archetype, route, or tightly coupled flow. Unrelated interfaces need isolated builders or sequential units. Studio, dashboard, command center, game HUD, and landing page cannot share one design read, scroll model, density, composition, signature, or costly-state matrix. A benchmark may group receipts, never judgment.
+Five unrelated interfaces require five isolated builders when delegation is authorized, or five sequential units otherwise. Each unit owns its task, primary artifact, spatial model, composition, and costly states. Shared primitives stay together only when one cause and proof cover affected consumers.
 
-Shared primitives stay together only when one causal decision and one proof matrix cover every consumer. Otherwise split. Broad means depth across a coherent product surface, not breadth across unrelated products.
+## Keep Decisions Proportional
 
-## Required Builder-Owned Artifacts
+Before building, record the user decision, constraints, preserved strengths, current failure or opportunity, chosen composition, visual system, signature, state behavior, and acceptance condition. Use concise working notes or existing project documents.
 
-Use coordinator-provided paths when present. Otherwise keep temporary evidence outside product source and report exact paths.
+For open direction work, compare viable alternatives and explain the choice. A redesign must beat a credible repair of the current interface. Do not build three complete versions or produce duplicate inventories merely to satisfy the process.
 
-Before implementation, produce `context-card.json` and `context-card.md` with work-unit id, archetype, secondary regions, user mode, primary artifact, frequency, pressure, input, spatial model, costly states, constraints, preserved contracts, and proof matrix.
+Ordinary work needs the artifact and evidence links. Use the structured format below when a requested handoff, benchmark, existing project contract, or strict harness requires it. Store temporary evidence outside product source. A detailed critique alone does not authorize creating a dossier.
 
-Also produce `build-inventory.md`: one row per chosen dimension (hierarchy, composition, type roles, palette/surfaces, spacing, components, states, motion, copy) plus the signature move, each with its intended move. Final report grades every row `done | blocked | cut` with a reason for each `blocked` or `cut`.
+## Structured Evidence Format
 
-For open, ambitious, reference-led, or broad work, produce:
+For a structured run, record:
 
-- `direction-cards.json` plus `direction-cards.md`: three incompatible directions with argument, composition, interaction, visual language, signature, responsive/scroll model, asset plan, and primary risk
-- `kill-list.json` plus `kill-list.md`: category reflex, fashionable replacement, generic composition, fake-proof move, and disposable decoration that will not survive
-- selected direction and why it wins for this exact context
+- `context-card.json` and `context-card.md`: task, archetype, constraints, preserved contracts, costly states, and proof matrix.
+- `build-inventory.md`: chosen changes, observable acceptance, and status `done | blocked | cut`; explain blockers and cuts.
+- `direction-cards.json` and `direction-cards.md`: viable alternatives with composition, visual language, behavior, gain, risk, and selection.
+- `kill-list.json` and `kill-list.md`: rejected defaults and actual cuts, each tied to a reason.
+- `proof/before.png` and `proof/after.png`: matched route, viewport, state, theme, content, and auth context for redesign.
+- `proof/detail.png` or named readable crops for the claimed finish details.
+- `finish-ledger.json` and `finish-ledger.md`: applicable dimensions with evidence, observation, corrective action, and status `passed | failed | not-applicable | blocked`.
 
-Every rendered implementation also produces:
+For greenfield, compare the supplied reference or declared acceptance condition with the result; do not invent a before image. Every durable JSON decision artifact needs a Markdown companion with the same facts, ids, statuses, paths, and blockers. The format is conditional; the evidence bar is not.
 
-- `proof/before.png` and `proof/after.png` at same route, viewport, state, theme, content, and auth context
-- `proof/detail.png` or named DPR 2 crops for alignment, spacing, dense controls, scrollbar, gradient, and icon/vector inspection
-- `finish-ledger.json` plus `finish-ledger.md` with context-fit, hierarchy, alignment, spacing-rhythm, overflow, scrollbars, gradients, icons-vector-craft, content-integrity, capture-legibility, and responsive-detail
+## Prove The Direction
 
-Every durable JSON decision artifact needs a Markdown companion with the same facts, ids, ordering, statuses, evidence paths, and blockers. JSON is the structured source; Markdown is the ingestion and correction surface. Do not add interpretation to only one format or let the mirrors drift.
+The same builder captures, judges, corrects, and recaptures. Exercise the main path and its costly state. Inspect structure, relationships, and optical finish at readable scale. Native scrollbars can pass when fit, visibility, and behavior serve the product; custom treatment needs an observed mismatch or explicit brief.
 
-Each finish entry records `passed | failed | not-applicable | blocked`, evidence, observation, and corrective action. Alignment, spacing, overflow, content integrity, capture legibility, and responsive detail cannot be not-applicable. Existing scroll requires a minimal theme-aware custom scrollbar unless platform constraints make styling impossible. Native default chrome is a failed finish state. Icons and gradients may be not-applicable only when absent; improvised vectors never pass because they merely exist.
+Use [adversarial-review.md](adversarial-review.md) to challenge the replacement. A comparison must name the gain and regression, not just changed CSS. Distinguish production integrity, task effectiveness, and distinctiveness. Missing evidence cannot pass any of them.
 
-## Prove The Direction, Not File Creation
-
-The same builder captures, judges at readable scale, corrects, and recaptures. Exercise controls and navigation; do not infer them. Prove the costly archetype-specific state beside the main path. A capture is `captured`, not `passed`, until inspected.
-
-Run `CONTINUE` while an applicable ledger item fails. Correct the highest user-damage systemic cause and rerun the same evidence. Run `RESET` when two valid comparisons remain flat or worse because the same structural cause survived; preserve working contracts, kill the failed structure, and choose a different direction. Repair invalid fixtures or mismatched proof before blaming the direction.
+Correct an evidenced failure, then rerun affected proof at the verification boundary. Reset structure when valid comparisons show the same dominant cause survives; repair invalid evidence without thrashing the design.
 
 ## Completion Gate
 
-Do not `STOP`, mark complete, or claim a skill win when a required artifact is absent, a visible control or navigation target failed, fake proof remains, before/after frames do not match, an applicable finish dimension failed or is blocked, or the rendered artifact cannot demonstrate the selected direction and signature. Report `implemented, not fully verified`, the blocker, and the exact next proof action.
+Do not `STOP` when a required artifact is absent from a run that requires it, a core control failed, fake proof remains, comparison contexts differ, an applicable dimension failed, or the result contradicts the chosen direction. Report `implemented, not fully verified` for missing proof.
+
+Stop when the scoped outcome and requested visual ambition are demonstrated without material regressions. A polished report, successful build, or large diff does not meet that bar.

@@ -1,108 +1,86 @@
 ---
 name: ruthless-designer
-description: "Greenfield UI, broad redesign, evidence-backed visual critique: studios, dashboards, command centers, game HUDs, landing pages, portfolios, prototypes, reference-led work. New direction or deep autopsy; route existing-direction web implementation to improve-ui; skip routine implementation, isolated components, narrow repairs, token migrations, code-only review."
+description: "Create distinctive interfaces, rethink weak visual direction, and deliver evidence-backed design critiques. Use for greenfield, broad redesign, or deep visual autopsy. Route existing-direction web repairs to improve-ui; skip isolated components and code-only review."
 ---
 
 # Ruthless Designer
 
-Replace mediocre artifacts with evidence-backed direction. Attack the interface, never its author. Require evidence, user damage, cause, and a better move. Answer in the user's language; skip praise sandwiches.
+Find the dominant design failure and build a replacement that withstands the same scrutiny. Be exact about evidence, user consequences, and visual decisions. Attack the interface, never its author.
 
-## Load References Only When Needed
+## Load Only What Changes The Work
 
-Read no reference by default. Load the smallest route that changes the work.
+- Broad redesign or critique: [adversarial review](references/adversarial-review.md); critique also uses [critique](references/critique.md).
+- Creation/redesign: [execution contract](references/execution-contract.md), [create](references/create.md); open direction also uses [direction](references/direction.md).
+- Product context: [product contexts](references/product-contexts.md), [composition](references/composition-patterns.md); [context examples](references/context-examples.md) when the archetype is unclear.
+- Apps, studios, dashboards, admin: [product surfaces](references/product-surfaces.md).
+- Onboarding, settings, search, permissions, destructive or interrupted flows: [human interface craft](references/human-interface-craft.md).
+- Production implementation/readiness: [production hardening](references/production-hardening.md).
+- Landing, portfolio, campaign, pricing, editorial: [brand surfaces](references/brand-surfaces.md).
+- Data, charts, tables, uncertainty: [data information](references/data-information.md).
+- Type, color, media, themes: [visual craft](references/visual-craft.md).
+- Geometry, density, scrolling, HUD safe areas: [geometry and rhythm](references/geometry-and-rhythm.md).
+- Generic or interchangeable results: [authorship](references/authorship-and-specificity.md).
+- Motion/gesture: [motion](references/motion.md); implementation adds [motion traps](references/motion-implementation.md).
+- Product copy and review prose: [language and authorship](references/language-and-authorship.md).
+- Requested durable proposal/review: [reporting](references/reporting.md).
+- Final quality claims: [proof](references/proof.md). Local scans/browser harness: [tooling](references/tooling.md).
+- Direction still generic after one attempt: [examples](references/examples.md) as tests, not templates.
 
-- Greenfield, broad redesign, reference-led create: [references/execution-contract.md](references/execution-contract.md), [references/create.md](references/create.md); add [references/direction.md](references/direction.md) for open, ambitious, or generic-risk briefs.
-- Nontrivial product direction: classify with [references/product-contexts.md](references/product-contexts.md); composition via [references/composition-patterns.md](references/composition-patterns.md); challenge generic choices with [references/context-examples.md](references/context-examples.md).
-- App, dashboard, editor, tool, admin, authenticated workflow: [references/product-surfaces.md](references/product-surfaces.md).
-- Onboarding, settings, search, permissions, destructive actions, interruption-heavy flows: [references/human-interface-craft.md](references/human-interface-craft.md).
-- Production implementation or any `production-ready` claim: [references/production-hardening.md](references/production-hardening.md).
-- Landing, portfolio, launch, pricing, campaign, cultural/editorial, persuasion: [references/brand-surfaces.md](references/brand-surfaces.md).
-- Charts, tables, metrics, uncertainty, decision-heavy data: [references/data-information.md](references/data-information.md).
-- Typography, color, grid, media, themes, systemic visual craft: [references/visual-craft.md](references/visual-craft.md).
-- Geometry, spacing, alignment, scroll ownership, safe areas, command centers, HUDs: [references/geometry-and-rhythm.md](references/geometry-and-rhythm.md).
-- Generated-looking or interchangeable work: [references/authorship-and-specificity.md](references/authorship-and-specificity.md).
-- Audit, roast, screenshot critique, design verdict: [references/critique.md](references/critique.md).
-- Motion, gesture, transition, canvas, or animation-heavy work: [references/motion.md](references/motion.md); implementing it also needs [references/motion-implementation.md](references/motion-implementation.md).
-- Material proposal or review artifact: [references/reporting.md](references/reporting.md).
-- Product copy, briefs, critiques, proposals, reports, explanatory handoffs: [references/language-and-authorship.md](references/language-and-authorship.md).
-- Any final visual-quality claim: [references/proof.md](references/proof.md).
-- Local scans or runnable browser targets: [references/tooling.md](references/tooling.md).
-- If direction or signature stays generic after one sprint, load [references/examples.md](references/examples.md) once as tests, not templates.
+## CLASSIFY AND READ
 
-## State Machine
+Choose `create`, `redesign`, or `critique`. Review-only requests stay read-only. Implementation requests require a real artifact when the path is editable. Keep provider, model, tooling, and delegation choices in the active client's control.
 
-Run `CLASSIFY -> READ -> CHOOSE -> BUILD -> PROVE -> CONTINUE | RESET | STOP`.
+Inspect visuals before source. Name the user decision, primary artifact, intended attention order, actual priority, and costly transition. Trace material symptoms to their source when available. Record what must survive: useful density, learned controls, routes, voice, data, legal/SEO content, analytics, and accessibility wins.
 
-### CLASSIFY
+Ask only when missing input forces incompatible products. Otherwise state the material assumption and proceed. Keep the context card in concise working notes; persist files only when the execution contract calls for a structured handoff.
 
-- `create`: invent new screen, flow, system, brand surface, or prototype.
-- `redesign`: replace weak visual hierarchy, composition, or system across a meaningful surface.
-- `critique`: deep visual/code autopsy; return prioritized redesign or QA verdict.
+## FIND AND CHALLENGE
 
-Reject narrow work. Route button, responsive, accessibility, performance, code-only, or existing-direction web work to its targeted workflow (`improve-ui` for the latter).
+Inspect whole-surface composition, component relationships, and optical detail. Look beyond the default frame: selection, pending, stale data, failure, recovery, and realistic content can expose the dominant cause.
 
-### READ
+Each material finding needs `evidence -> consequence -> cause or hypothesis -> exact move -> acceptance`. Check its strongest counterargument before keeping it. Separate severity from confidence. Never convict a font, gradient, native control, density, or familiar composition by category.
 
-Inspect source before style:
+Prioritize blocked tasks, misleading outcomes, exclusion, and repeated decision costs. Then address the largest mismatch with the visual brief. A functioning interface can still be compositionally weak. A taste preference cannot establish a standards violation. No quotas or invented metrics.
 
-- Identify archetype, user mode, artifact, pressure, input, spatial model, states, constraints; inspect source, assets, references, runtime.
-- Preserve IA, routes, voice, analytics, forms, legal/SEO content, accessibility wins unless scoped.
-- Ask one question only when two plausible answers would create incompatible products. Otherwise state strongest assumption.
+## CHOOSE
 
-Finish with the context card and one-line design read: `archetype + user mode + primary artifact + pressure + spatial model + proof target`. Before implementation, persist matching `context-card.json` and `context-card.md`.
+Choose `product`, `brand`, or `hybrid` register. Ground direction in artifact, workflow, audience, data, material, or proof.
 
-### CHOOSE
+For open or ambitious work, compare three viable, materially different directions. For a constrained redesign, compare only genuine alternatives; include a credible small repair when it could meet the brief. Name gain, cost, and an observable discriminator. Sketch spatial options when prose cannot distinguish them.
 
-Choose the argument before decorating it.
+Define dominant object, reading path, space allocation, type and palette roles, grouping, components, scrolling, states, and motion. Pick a visible signature that serves the product. Changing fonts and colors on the same weak composition is not a new direction.
 
-- Pick `product`, `brand`, or `hybrid` register.
-- Kill obvious category reflex and its fashionable replacement.
-- Open or ambitious work: persist three incompatible options in `direction-cards.json` and `direction-cards.md`, plus `kill-list.json` and `kill-list.md`; select one.
-- One primary signature tied to artifact, workflow, data, proof, material, audience, or interaction. If removing it only simplifies page, it was decoration; restyled standard controls do not count.
-- Define hierarchy, composition, type/palette roles, surfaces, spacing, components, states, motion; select composition and scrolling for archetype; assign hybrid rules by region, not by averaging.
-- Define alignment anchors, scroll ownership, scrollbar treatment, gradient role, icon source.
-- Persist `build-inventory.md` beside context card: every dimension above plus signature, each with its intended move.
+Keep a short build inventory of chosen moves and acceptance conditions. Avoid parallel paperwork. Preserve familiar controls; put expression where it strengthens the artifact or decision.
 
-If a competitor could reuse the result by swapping logo and nouns, cut again.
+## BUILD
 
-### BUILD
+Build the real artifact when implementation is requested. Use the existing framework, primitives, and assets unless a change earns its cost.
 
-Build the real artifact when implementation is requested and the repo is editable. Keep the existing framework and primitives unless a new dependency earns its cost.
+- Remove the dominant cause before decorative work. A small diff must still accomplish the whole repair.
+- Use real content and realistic data. Label synthetic fixtures; never counterfeit customer proof, metrics, screenshots, or telemetry.
+- Implement applicable default, pending, empty, failure, recovery, permission, long-content, and responsive states.
+- Maintain coherent typography, spacing, color roles, icon sources, and media crops at rendered sizes.
+- Split unrelated surfaces into isolated builders only when delegation is authorized; otherwise use sequential units.
+- Execute the chosen direction and preserve valuable secondary information, density, and recovery.
 
-- Primary task, proof, or artifact visually dominant; main path before decorative edge work.
-- Real content, realistic data, verified/generated bitmap assets, or explicit gap. Never counterfeit proof with div-art dashboards, fake terminals, lorem claims, or invented metrics.
-- Cover: default, empty/first-run, loading/pending, error/recovery, permission/unavailable, long content, narrow/mobile.
-- Product discipline inside forms, tables, settings, and repeated controls even when surrounding surface is expressive.
-- Prefer project's icon system or coherent library. Custom vectors must earn geometry and pass finish at rendered sizes.
-- One archetype or coupled flow per unit. Split unrelated surfaces into isolated builders; batch is not permission to genericize products.
-- Execute full inventory. If reverting two small changes leaves it acceptable, direction was not executed.
+For critique-only work, return an exact redesign proposal with causes, cuts, composition, system changes, acceptance conditions, and `Do not break`. Do not edit the product or create a dossier unless requested.
 
-For critique-only work, replace implementation with a concrete redesign: exact cuts, hierarchy, layout, system changes, source causes, proof targets. State what already works and must not be broken. Never end at "improve spacing."
+## PROVE AND DECIDE
 
-### PROVE
+At the task's verification boundary, the builder captures, judges, corrects, and recaptures. Compare matched route, viewport, state, theme, content, and auth context. For greenfield, use the reference or declared acceptance condition.
 
-Inspect what rendered, not what the code promised.
+Inspect `structure` and `finish` at readable scale. Exercise the main path and a meaningful costly state. Add viewport coverage for responsive changes, requested scope, or demonstrated risk. A detector is a lead; a captured screenshot still needs inspection.
 
-- Builder owns capture -> judge -> correct -> recapture. Compare at same route, viewport, state, theme, content, and auth context.
-- Inspect desktop and narrow/mobile first impressions for broad work; exercise one meaningful edge or recovery state and archetype's costly moment, not only generic responsive states.
-- Detector output is lead, not verdict. A captured screenshot is evidence captured, not evidence passed. Inspect or compare it.
-- Run `structure` and `finish` passes. Grade alignment, spacing, overflow/scrollbars, gradients, icons, optical centering, and capture legibility as `passed | failed | n/| blocked`.
-- Missing runtime, state, or visual evidence is blocked. Never convert absence of evidence into high score or "production-ready."
-- Grade every inventory row `done | blocked | cut`; explain `blocked` or `cut`. Ungraded rows block STOP.
+Attack the replacement with [adversarial review](references/adversarial-review.md). Name gain and regression, and classify the comparison `better | flat | worse | inconclusive`. Judge production integrity, task effectiveness, and distinctiveness independently.
 
-### CONTINUE, RESET, OR STOP
+- `CONTINUE`: correct the highest-impact surviving cause or regression; rerun affected failed proof.
+- `RESET`: two valid flat/worse comparisons preserve the same structural cause. Keep working contracts and change the structure. Repair invalid evidence without redesigning.
+- `STOP`: scoped outcome and visual ambition demonstrated; no material in-scope failure; claims match evidence. Grade chosen inventory moves `done | blocked | cut`.
 
-- `CONTINUE`: fix highest-impact open issue, then prove again. Keep active backlog short and ordered by user damage.
-- `RESET`: after two valid `flat` or `worse` comparisons preserve root cause, stop polishing. Keep working mechanisms, choose new direction, and rebuild. Repair invalid evidence instead of thrashing design.
-- `STOP`: no in-scope blocker or context mismatch; all execution artifacts and inventory grades; proven states/viewports; passed finish dimensions; evidence-matched claims.
+## Output
 
-## Output Contract
+Lead with the result or dominant failure. Show exact moves, preserved strengths, changed artifact/files, evidence, skipped checks, and limitations. Keep critique direct; roast humor is optional when requested.
 
-Lead with the result or the worst design crime.
+Requested durable reports use `report-manifest.json`, `report.md`, `report-assets/`, and `report.html` from one manifest. Ordinary work needs a concise response and usable evidence links.
 
-- Creation/redesign: design read, killed defaults, chosen direction, signature move, build-inventory row status, artifact/files changed, proof, remaining risk.
-- Material critique/proposal: generate `report-manifest.json`, `report.md`, lossless `report-assets/`, and annotated `report.html` from one manifest. Markers must match literal visible subjects; keep proposals off before/reference evidence.
-- Critique: inspect visuals first, then trace source. Group by systemic cause and pair major findings with `evidence -> user damage -> structural cause -> exact fix -> one earned roast`. Include `do not break`, finish ledger, up to five real cuts, and brutal verdict.
-- Blocked work: say `implemented, not fully verified` or `reviewed, blocked by ...`; do not call it done.
-
-Be merciless and evidence-backed; the next move must be unavoidable.
+Missing proof: say `implemented, not fully verified` or name the review's exact limit. Do not replace design judgment with a score, artifact count, or theatrical verdict.

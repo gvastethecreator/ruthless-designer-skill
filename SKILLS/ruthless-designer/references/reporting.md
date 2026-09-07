@@ -2,7 +2,7 @@
 
 Material critique, screenshot review, design proposal, redesign proposal. One decision artifact, two synchronized views: ingestion-first Markdown for fast correction; standalone HTML for visual inspection. Both contain evidence, diagnosis, proposed moves, preservation contract, proof targets.
 
-Skip for implementation note, routine status update, or code-only work with no visual proposal. Generate when the user must evaluate, approve, compare, hand off, continue the design later.
+Use when the user requests a durable report, proposal artifact, or handoff, or an established project contract requires it. Otherwise return findings and evidence links in the response. A detailed critique alone does not require creating files.
 
 ## Required Artifacts
 

@@ -55,6 +55,8 @@ Proof target:
 - Let one direction push sharpest brand or experiential interpretation when register permits it.
 - Keep restrained direction only when restraint is strongest answer for task, not because it is safe option.
 
+Include a credible minimal repair when comparing redesign options. State each option's gain, cost, and observable discriminator using [adversarial-review.md](adversarial-review.md). A redesign must beat the working baseline, not a strawman. Sketch competing spatial models when prose hides their differences.
+
 Build one. Merge only when hierarchy gets sharper, not safer.
 
 Select the direction that makes the task fastest to understand, gives the surface a defensible reason to look this way, survives real states and narrow viewports, and has a visible signature move. Reject anything that needs fake assets, hides the product behind theater, or could belong to a competitor after a noun swap.
@@ -116,4 +118,4 @@ desktop/mobile proof:
 
 Pass when a skeptical reviewer can name what makes the surface specific without a process speech.
 
-For proposal delivery, put all three viable cards, the explicit selection, rejection reasons, signature move, assets/state gaps, and proof targets into the dossier defined by [reporting.md](reporting.md). Do not hide discarded options when user must approve.
+For a requested proposal artifact, put viable cards, selection, rejection reasons, signature, asset/state gaps, and proof targets into [reporting.md](reporting.md). Otherwise keep these decisions in concise working notes and show the chosen direction.

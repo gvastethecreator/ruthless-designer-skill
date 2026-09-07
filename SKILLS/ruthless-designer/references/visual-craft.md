@@ -32,7 +32,7 @@ Audit horizontal, vertical anchors: sibling starts, ends, centers, baselines, in
 
 Tightly nested rounded surfaces: start with `outer radius ≈ inner radius + intervening padding`, then correct optically; unrelated radii look dented. `scrollbar-gutter: stable` when scrollbar appearance would shift reading measure, aligned columns, or fixed controls. Do not reserve dead space where overlay scrollbars or the composition make it irrelevant.
 
-Every remaining scroll region is a designed component: minimal theme-aware thumb and track, appropriate width, hover/active, cross-browser styling without hiding affordance or breaking forced colors, keyboard, wheel, touch, zoom. Native default chrome inside deliberate interface is unfinished unless platform prevents styling; record that limit.
+Judge every scroll region by ownership, visibility, visual fit, and input behavior. Native chrome can be the right platform choice. Use custom styling for a demonstrated mismatch or explicit brief, preserving affordance, forced colors, keyboard, wheel, touch, and zoom. Do not invent a defect to justify restyling.
 
 ## Icons And Media
 

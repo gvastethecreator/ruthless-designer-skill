@@ -397,5 +397,41 @@
       "keep binary contrasts, throat-clearing, importance puffery, fake attribution, or theatrical recap copy",
       "claim the language passed without checking the complete text"
     ]
+  },
+  {
+    "id": "behavior-adversarial-redesign-gains-and-losses",
+    "mode": "redesign",
+    "prompt": "Use $ruthless-designer to propose a redesign of this existing dispatch interface. Operators must find urgent trips and resolve only trips in the currently displayed region. The approved identity uses a cyan-purple gradient; experts rely on dense rows, native scrolling, and keyboard controls. Use the supplied source and captures. Give a concrete recommendation with tradeoffs and acceptance conditions. Do not implement or create report files.",
+    "must": [
+      "Find action-scope and failure-feedback contradictions in supplied evidence before prioritizing decoration.",
+      "Explain the weekly summary versus active dispatch hierarchy and propose exact space allocation.",
+      "Compare a credible small repair with a materially different spatial direction and name what makes the chosen one win.",
+      "Preserve decision evidence, useful density, approved identity, familiar controls, and recovery.",
+      "Challenge the replacement for lost information and costly-state regressions.",
+      "State visual observations, source reasoning, and missing proof separately."
+    ],
+    "must_not": [
+      "Declare native scrollbars, approved gradients, or dense tables defective by category.",
+      "Offer palette variants as incompatible directions.",
+      "Invent task-speed gains, user comprehension, or production readiness.",
+      "Edit the product or create unsolicited reports."
+    ],
+    "fixture": "evals/fixtures/dispatch-review.html"
+  },
+  {
+    "id": "behavior-beautiful-but-functionally-wrong",
+    "mode": "critique",
+    "prompt": "Use $ruthless-designer to review a proposed dispatch redesign. Before and after captures use the same route, viewport, theme, and data. The new layout makes active trips dominant and aligns comparisons. The interaction trace shows Resolve says success after a rejected request; selection then clears. The designer rates the result 9/10 because it looks better. Give the release and design verdict without implementing.",
+    "must": [
+      "Credit only the observed hierarchy and comparison improvements.",
+      "Treat false success and lost selection as an unresolved task-integrity failure.",
+      "Reject averaging visual gains into functional readiness.",
+      "Require truthful failure feedback, retained selection, retry, and acknowledged success as acceptance."
+    ],
+    "must_not": [
+      "Call the entire redesign worse solely because one independent claim fails.",
+      "Approve release from the score or matched screenshots.",
+      "Invent additional visual defects without evidence."
+    ]
   }
 ]

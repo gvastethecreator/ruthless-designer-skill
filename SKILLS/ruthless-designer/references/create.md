@@ -53,7 +53,7 @@ Do not repaint a broken hierarchy. If the main artifact stays visually subordina
 - State asset gap instead of faking proof with div art, decorative SVG dashboards, fake terminals, invented customers, or imaginary metrics.
 - Keep product controls restrained even when surrounding brand surface is expressive.
 - Make responsive behavior structural: collapse, reorder, change navigation, transform tables, or reprioritize. Do not merely stack every card.
-- For dense or spatial work, persist geometry ledger from [geometry-and-rhythm.md](geometry-and-rhythm.md); for material motion, persist event map from [motion.md](motion.md).
+- For dense or spatial work, use the geometry ledger from [geometry-and-rhythm.md](geometry-and-rhythm.md); for material motion, use the event map from [motion.md](motion.md). Keep concise working notes unless a durable handoff requires files.
 - For onboarding, settings, search, permissions, or interruption-heavy flows, load [human-interface-craft.md](human-interface-craft.md). Keep interaction grammar familiar. Put signature in artifact, not in restyled standard controls.
 - Run causality and cheap-generation gate in [authorship-and-specificity.md](authorship-and-specificity.md) before calling direction distinctive.
 
@@ -110,4 +110,4 @@ proof target:
 
 Stop when every in-scope blocker and major finding is fixed or explicitly scoped, the main path and a meaningful edge/recovery state are proven, and the final artifact visibly beats its baseline or competent default.
 
-When the deliverable is a proposal or review rather than direct implementation, persist the manifest and standalone HTML dossier defined in [reporting.md](reporting.md). The report must contain the context, observed evidence, selected direction or exact redesign, preservation contract, proof targets, and visible limitations.
+When the deliverable is a requested durable proposal or review artifact, use the manifest and standalone HTML dossier in [reporting.md](reporting.md). The report must contain the context, observed evidence, selected direction or exact redesign, preservation contract, proof targets, and visible limitations.

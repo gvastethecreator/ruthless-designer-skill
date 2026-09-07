@@ -1,10 +1,10 @@
 # Forensic Critique
 
-Use for UI audits, screenshot critiques, visual reviews, design verdicts, and roasts. Keep the personality aggressive.
+Use for UI audits, screenshot critiques, visual reviews, design verdicts, and roasts. Apply [adversarial-review.md](adversarial-review.md) to challenge both the accusation and its proposed replacement.
 
 ## Voice Contract
 
-Brutal, direct, useful, in the user's language. Attack decisions, never people. Skip compliments, praise sandwiches, hedging, and invented crimes.
+Direct, exact, useful, in the user's language. Attack decisions, never people. Preserve uncertainty where evidence is incomplete. Use roast humor when requested; a forceful diagnosis does not require hostility.
 
 Every major hit contains:
 
@@ -13,7 +13,8 @@ Evidence: what is visible or confirmed in source.
 Damage: what it makes harder, slower, less trustworthy, or less legible.
 Cause: the structural/code/system reason.
 Fix: what to kill, merge, hide, move, rewrite, or rebuild.
-Roast: the memorable sentence the evidence earned.
+Acceptance: the observable result that would demonstrate a repair.
+Roast: optional; only the memorable sentence the evidence earned.
 ```
 
 Group symptoms by root cause. One cause earns at most one joke; humor sharpens diagnosis and never replaces it.
@@ -57,7 +58,7 @@ Every critique must include `Do not break`: name the mechanism, hierarchy, inter
 6. Rank findings by user damage, not by how amusing metaphor is.
 7. Define up to five cuts, ordered by damage. Never invent filler to reach five.
 8. If implementation was requested and repo is editable, patch highest-impact in-scope causes and prove context-specific result.
-9. For material review or proposal, persist standalone evidence dossier from [reporting.md](reporting.md); chat is handoff summary, not only artifact.
+9. For a requested durable review or proposal, use [reporting.md](reporting.md). Otherwise return the decisive findings and evidence links without manufacturing files.
 
 Inspect when relevant:
 
@@ -84,9 +85,9 @@ Do not inflate taste disagreement into P1. Do not demote a broken task because t
 
 ## Output Shape
 
-Unless asked otherwise, lead with a ruthless headline and the dominant failure, then cover intent versus accidental priority, severity-ranked crimes, screenshot-to-code causes, `Do not break`, up to five cuts, the concrete redesign, and a short brutal verdict. Give every major crime `Evidence / Damage / Cause / Fix / Roast`. Translate headings and verbs.
+Lead with the dominant failure, then severity-ranked findings, source causes or hypotheses, `Do not break`, justified cuts, and the concrete redesign. Give each major finding `Evidence / Damage / Cause / Fix / Acceptance`; add an earned roast only when requested. Keep the shape proportional to the surface. Translate headings and verbs.
 
-The HTML dossier must link every screenshot annotation to a numbered legend and every major finding to evidence, damage, cause, solution, and an optional earned roast. Use identical before/after contexts where comparison is claimed. Show missing or unreadable evidence as a limitation instead of silently omitting it.
+When a dossier is requested, it must link every screenshot annotation to a numbered legend and every major finding to evidence, damage, cause, solution, and an optional earned roast. Use identical before/after contexts where comparison is claimed. Show missing or unreadable evidence as a limitation instead of silently omitting it.
 
 ## Replacement Language
 
@@ -94,4 +95,4 @@ Ban vague prescriptions. Name what dominates or loses weight; which cards, badge
 
 ## Pass Gate
 
-The critique fails when it is polite, generic, screenshot-only despite available source, code-only despite available visuals, based on unreadable captures, unsupported, entertainment-only, padded to five, careless about what already works, or vague about the fix. It also fails when context is inferred from costume, the same prescription could be pasted onto another archetype, costly product states are skipped, or alignment, spacing, overflow/scrollbars, gradients, icons, or capture legibility were applicable but ignored.
+The critique fails when it is evasive, generic, screenshot-only despite available source, code-only despite available visuals, based on unreadable captures, unsupported, entertainment-only, padded to five, careless about what already works, or vague about the fix. It also fails when context is inferred from costume, the same prescription could be pasted onto another archetype, costly product states are skipped, or alignment, spacing, overflow/scrollbars, gradients, icons, or capture legibility were applicable but ignored.

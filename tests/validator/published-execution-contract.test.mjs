@@ -16,7 +16,7 @@ test("broad redesign isolates surfaces and requires builder-owned activation art
   assert.match(contract, /Markdown companion[^.]+same facts/i);
   assert.match(skill, /report-manifest\.json[^.]+report\.md[^.]+report\.html/i);
   assert.match(contract, /same builder captures[^.]+judges[^.]+corrects[^.]+recaptures/i);
-  assert.match(contract, /Native default chrome is a failed finish state/i);
+  assert.match(contract, /Native scrollbars can pass[^.]+fit[^.]+visibility[^.]+behavior/i);
   assert.match(contract, /Do not `STOP`[^.]+required artifact is absent/i);
 });
 
