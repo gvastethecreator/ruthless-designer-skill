@@ -25,6 +25,81 @@ function readReview(outDir) {
   return JSON.parse(fs.readFileSync(path.join(outDir, "review.json"), "utf8"));
 }
 
+test("existing outputs require explicit overwrite and inputs stay protected", (t) => {
+  const sandbox = tempDir("output-conflicts");
+  t.after(() => {
+    assert.equal(path.dirname(fs.realpathSync(sandbox)), fs.realpathSync(os.tmpdir()));
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  });
+  const target = path.join(sandbox, "component.tsx");
+  const outDir = path.join(sandbox, "review");
+  fs.mkdirSync(outDir);
+  fs.writeFileSync(target, "export const Component = () => <main>Example</main>;\n");
+  fs.writeFileSync(path.join(outDir, "README.md"), "keep readme\n");
+  fs.writeFileSync(path.join(outDir, "static-findings.json"), "keep static\n");
+
+  const blocked = runHarness(["--path", target, "--out", outDir]);
+  assert.equal(blocked.status, 2);
+  assert.match(blocked.stderr, /--overwrite/);
+  assert.match(blocked.stderr, /README\.md/);
+  assert.match(blocked.stderr, /static-findings\.json/);
+  assert.equal(fs.readFileSync(path.join(outDir, "README.md"), "utf8"), "keep readme\n");
+  assert.equal(fs.readFileSync(path.join(outDir, "static-findings.json"), "utf8"), "keep static\n");
+  assert.deepEqual(fs.readdirSync(outDir).sort(), ["README.md", "static-findings.json"]);
+
+  const allowed = runHarness(["--path", target, "--out", outDir, "--overwrite"]);
+  assert.equal(allowed.status, 0, allowed.stderr || allowed.stdout);
+  assert.notEqual(fs.readFileSync(path.join(outDir, "README.md"), "utf8"), "keep readme\n");
+  assert.equal(fs.readFileSync(target, "utf8"), "export const Component = () => <main>Example</main>;\n");
+
+  const input = path.join(outDir, "README.md");
+  const before = fs.readFileSync(input, "utf8");
+  const protectedInput = runHarness(["--path", input, "--out", outDir, "--overwrite"]);
+  assert.equal(protectedInput.status, 2);
+  assert.match(protectedInput.stderr, /overwrite an input/i);
+  assert.equal(fs.readFileSync(input, "utf8"), before);
+
+  const sameDirectory = runHarness(["--path", outDir, "--out", outDir, "--overwrite"]);
+  assert.equal(sameDirectory.status, 2);
+  assert.match(sameDirectory.stderr, /inside the input directory/i);
+
+  const sourceDir = path.join(sandbox, "source");
+  const nestedOut = path.join(sourceDir, "nested-output");
+  fs.mkdirSync(nestedOut, { recursive: true });
+  const nestedInput = path.join(nestedOut, "README.md");
+  fs.writeFileSync(nestedInput, "preserve nested source\n");
+  const nested = runHarness(["--path", sourceDir, "--out", nestedOut, "--overwrite"]);
+  assert.equal(nested.status, 2);
+  assert.match(nested.stderr, /inside the input directory/i);
+  assert.equal(fs.readFileSync(nestedInput, "utf8"), "preserve nested source\n");
+
+  const linkedSource = path.join(sandbox, "linked-source");
+  fs.symlinkSync(sourceDir, linkedSource, "junction");
+  const linkedNestedOut = path.join(linkedSource, "new-output");
+  const nestedViaLink = runHarness(["--path", sourceDir, "--out", linkedNestedOut]);
+  assert.equal(nestedViaLink.status, 2);
+  assert.match(nestedViaLink.stderr, /inside the input directory/i);
+  assert.equal(fs.existsSync(linkedNestedOut), false);
+
+  const linkedOut = path.join(sandbox, "linked-output");
+  fs.symlinkSync(outDir, linkedOut, "junction");
+  const linked = runHarness(["--path", target, "--out", linkedOut, "--overwrite"]);
+  assert.equal(linked.status, 2);
+  assert.match(linked.stderr, /not a regular directory/i);
+
+  const screenshot = path.join(outDir, "screenshots", "default-320x480.png");
+  fs.writeFileSync(screenshot, "keep screenshot");
+  const runtimeArgs = ["--url", "https://example.test", "--out", outDir, "--viewport", "320x480"];
+  const env = { PLAYWRIGHT_PATH: makeFakePlaywright(sandbox) };
+  const blockedRuntime = runHarness(runtimeArgs, { env });
+  assert.equal(blockedRuntime.status, 2);
+  assert.match(blockedRuntime.stderr, /default-320x480\.png/);
+  assert.equal(fs.readFileSync(screenshot, "utf8"), "keep screenshot");
+  const allowedRuntime = runHarness([...runtimeArgs, "--overwrite"], { env });
+  assert.equal(allowedRuntime.status, 0, allowedRuntime.stderr || allowedRuntime.stdout);
+  assert.equal(fs.readFileSync(screenshot, "utf8"), "png");
+});
+
 test("the browser contrast audit keeps text in the map callback scope", () => {
   const source = fs.readFileSync(harnessPath, "utf8");
 

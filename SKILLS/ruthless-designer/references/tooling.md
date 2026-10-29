@@ -14,7 +14,7 @@ Flags:
 - `--explain <rule-id>`: one rule's severity, confidence, applicability, message, contextual exceptions.
 - `--format=text|md|json` or `--json`: choose output.
 - `--fail-on=P1|P2|P3`: fail when that severity or worse exists.
-- `--out <file>`: persist the report.
+- `--out <file>`: persist the report; an existing file at that path is overwritten.
 - `--allowlist <json>`: suppress accepted stable fingerprints.
 - `--baseline <json>`: suppress existing findings from an earlier report.
 - `--changed-only`: scan staged, unstaged, untracked non-ignored Git files under the target.
@@ -24,7 +24,7 @@ Flags:
 
 Missing target or zero compatible files fails closed, exit code `2`. Do not add `--allow-empty` merely to make a gate green; use only when an empty scan is expected; state why.
 
-Traversal skips common tests, fixtures, generated output, vendor dependencies. Explicitly targeted ignored file/directory remains inspectable; `--include-ignored` for broad traversal only when those files are actually in scope.
+Traversal skips discovered links and junctions, common tests, fixtures, generated output, and vendor dependencies. An explicitly targeted link or ignored path remains inspectable; `--include-ignored` does not follow discovered links.
 
 Supported: JS/TS/JSX/TSX/Vue/Svelte/HTML/CSS plus MJS/CJS/SCSS/Sass/Less.
 
@@ -41,6 +41,10 @@ Read the rule's exceptions before sentencing. Documented system intent, generate
 Deprecated `--gpt` and `--gemini` flags are accepted only for compatibility; emit no provider-specific findings. Design slop is a pattern, not a model nationality.
 
 ## Full Review Harness
+
+Use a task-owned output directory outside the source tree. The harness lists existing output
+conflicts and stops before writing; use `--overwrite` only when replacing them is authorized.
+It rejects output paths that coincide with an input and output entries that are links.
 
 ```powershell
 node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path <frontend-path> --url <local-url> --out output/ruthless-designer/<slug> --fail-on=P1 --require-runtime --detail-capture
@@ -83,7 +87,7 @@ Writes report.html alongside review.json, README.md. Translates collected eviden
 
 ## Standalone Proposal Report
 
-Critique, proposal, redesign: create report-manifest.json using [reporting.md](reporting.md), then run:
+When synchronized Markdown and HTML are requested or required, create report-manifest.json using [reporting.md](reporting.md), then run:
 
 ~~~powershell
 node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest output/ruthless-designer/<slug>/report-manifest.json --out output/ruthless-designer/<slug>/report.html --strict-assets
@@ -98,6 +102,9 @@ Generator:
 - numbered visual annotations with matching text legend;
 - renders without JavaScript or external styles;
 - exposes risks, limitations, artifact warnings.
+
+The standalone generator overwrites its named outputs. Choose new paths or obtain the required
+authority before reusing them; the harness's `--overwrite` guard does not apply to this command.
 
 no-embed-images only for controlled local draft; disclose portability loss. Open the final artifact at desktop, narrow, confirm print when handoff needs it, inspect annotations at readable scale.
 

@@ -857,7 +857,9 @@ function normalizeSeverity(value) {
 
 function collectFiles(target, out, changedFiles, isExplicitTarget = false) {
   if (!fs.existsSync(target)) return;
-  const stat = fs.statSync(target);
+  const link = fs.lstatSync(target);
+  if (link.isSymbolicLink() && !isExplicitTarget) return;
+  const stat = link.isSymbolicLink() ? fs.statSync(target) : link;
   if (stat.isDirectory()) {
     const name = path.basename(target).toLowerCase();
     if (!isExplicitTarget && !options.includeIgnored && SKIP_DIRS.has(name)) return;

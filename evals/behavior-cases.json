@@ -211,7 +211,7 @@
       "verify the SVG bounding box, transform-box, transform-origin, and whether a wrapper group is required",
       "give the shared-layout selection a unique stable identity and coordinate entry and exit order",
       "animate between compatible values and prevent false replay of saved state with initial false where appropriate",
-      "test the shipped production path and reduced-motion result, profiling representative hardware when complexity or evidence makes performance a risk"
+      "test the shipped path and reduced-motion result, profiling representative hardware when a performance claim, observed issue, or required gate calls for it"
     ],
     "must_not": [
       "force keyboard users through the pointer tooltip delay",
@@ -243,11 +243,11 @@
     "must": [
       "run separate structure and finish passes",
       "measure horizontal and vertical anchors plus repeated spacing relationships",
-      "customize every remaining scroll region without hiding its affordance",
+      "inspect scroll-region fit and customize only for an observed mismatch or explicit request",
       "judge gradients by rendered role and execution rather than banning them",
       "replace or deliberately rebuild weak custom vector icons within a coherent family",
-      "inspect device-scale-factor-2 captures and focused detail crops",
-      "record a finish ledger and continue while any applicable dimension fails"
+      "inspect readable captures and use focused detail crops when needed",
+      "record relevant finish findings in existing working notes and address applicable failures"
     ],
     "must_not": [
       "approve the result from source or a clean detector alone",
@@ -330,7 +330,7 @@
     "prompt": "Use $ruthless-designer to redesign a motion-heavy incident map. Nodes move between regions, a scene cover masks mode changes, alerts update live, and operators can drag, reverse, cancel, or invoke reduced motion.",
     "must": [
       "classify events as feedback state spatial attention or ambient motion",
-      "persist a motion map with purpose frequency origin destination interruption reduced mode and proof",
+      "record the relevant motion map in existing working notes with purpose, interruption, reduced mode, and proof",
       "define one bounded duration easing displacement and attention grammar",
       "commit mode changes at an observable covered milestone instead of a guessed timeout",
       "preserve identity and retarget interruption from the current rendered value",
@@ -348,7 +348,7 @@
     "mode": "critique",
     "prompt": "Use $ruthless-designer to review this command-center screenshot and implementation, propose the redesign, and deliver a beautiful portable HTML dossier that another designer can continue without this chat.",
     "must": [
-      "persist report-manifest.json and standalone report.html",
+      "deliver the requested standalone report.html with its evidence",
       "embed local screenshots and use normalized numbered annotations with a matching text legend",
       "include verdict context evidence systemic findings exact moves do-not-break proof risks and limitations",
       "escape hostile content and expose missing or corrupt evidence visibly",

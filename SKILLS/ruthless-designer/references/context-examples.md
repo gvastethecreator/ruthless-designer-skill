@@ -24,7 +24,7 @@ Context card: `dashboard + decide + staffing allocation + time-sensitive uncerta
 - Preserve: exact values, source timestamps, filter scope, accessible tabular alternative, export/report path.
 - Prove: zero capacity, missing feed, stale feed, uncertainty, surge threshold, long ward names, filtered cohort, narrow layout.
 
-Pass: staffing decision faster and more defensible—not more charts.
+Pass: the allocation decision has its evidence, uncertainty, and next action together. Decision speed remains unmeasured without a comparison.
 
 ## Command Center: Regional Fleet Incidents
 
@@ -79,4 +79,4 @@ Before approval, ask:
 - Did secondary region quietly take over primary archetype?
 - Is main artifact obvious with gradients, shadows, and imagery temporarily removed?
 
-Any `yes` to the first or `no` to the others means the direction is still generic.
+Use these answers as leads. A shared layout alone is not a failure; identify an observed mismatch in the product's task, hierarchy, or states before rejecting it.

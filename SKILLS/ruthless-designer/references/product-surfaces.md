@@ -52,7 +52,7 @@ Use `Intl.DateTimeFormat` and `Intl.NumberFormat`. Server/client rendering stabl
 - Offline, timeout, stale data, partial failure when relevant.
 - Rapid repeat action and double-submit pressure.
 - No items, one item, typical volume, costly volume.
-- Very short text, 100+ character text, long unbroken IDs/URLs/emails, emoji, translation expansion, CJK, RTL when relevant.
+- Short and long text, unbroken IDs/URLs/emails, emoji, translation expansion, CJK, RTL when relevant.
 
 `min-width: 0`, intentional wrapping, truncation with reachable full content, pagination, virtualization, or progressive loading when data requires it. Do not blanket `overflow-x: hidden` over a broken child.
 
@@ -60,7 +60,7 @@ Partial failures stay local. One dead panel must not take the page down.
 
 ## Visual System
 
-- Type: fixed scale, clear roles, functional labels, readable data. Display type out of forms, nav, tables, repeated controls. Body usually `65-75ch`; logs, code, tables stay predictable. Tabular numerals where changing digits would shift alignment.
+- Type: clear roles, functional labels, readable data. Fit body measure to content and layout; keep logs, code, and tables predictable. Tabular numerals help where changing digits would shift alignment.
 - Palette: roles before values. Neutrals plus restrained accent often suit operational work; expressive palette valid when artifact or audience earns it and semantic states keep exclusive, legible meaning. Define hover, focus, active, disabled, selected, loading, error, warning, success, info.
 - Radius: small role-based scale. Pills are pills; structural panels do not need `32px` vanity corners.
 - Edges: borders for inputs, grids, dividers, focus; restrained elevation for genuinely raised surfaces. Avoid hairline + giant soft shadow.
@@ -78,7 +78,7 @@ Translucent/blurred material only for functional floating chrome over content th
 - Full-saturation accents on inactive states.
 - Three competing primary buttons.
 - Hover-only affordances on touch-relevant actions.
-- Generic placeholder users, companies, metrics, and rows.
+- Unlabeled or misleading placeholder users, companies, metrics, and rows.
 - Animated travel on keyboard shortcuts, command palettes, and high-frequency navigation.
 - Brand typography or cinematic effects leaking into repeated controls.
 

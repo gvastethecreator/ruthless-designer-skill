@@ -4,17 +4,17 @@ Visual quality, fidelity, responsiveness, interaction, motion, accessibility, pe
 
 ## Match Evidence To The Claim
 
-- Visual change: before/after same route, viewport, state, theme, content, auth context.
+- Visual change: compare before/after at the same route, viewport, state, theme, content, and auth context when a baseline exists.
 - Reference-led build: source/reference and result side by side or in directly comparable crops.
-- Product surface: desktop plus narrow/mobile, realistic dense content, one meaningful empty/error/permission/recovery state.
-- Brand surface: first viewport, early artifact/proof or deliberately staged reveal, relevant conversion/entry/wayfinding decision, mobile first viewport.
-- Component/system: default, hover/focus/disabled, long text, narrow container, one relevant edge state.
+- Product surface: a representative desktop viewport, realistic content, and a relevant costly state. Add narrow/mobile when responsive behavior is changed or requested.
+- Brand surface: first viewport, artifact/proof or staged reveal, and the relevant entry or wayfinding decision. Add mobile when responsive behavior is changed or requested.
+- Component/system: exercise the changed states and relevant content or container constraints.
 - Async/data UI: loading, refresh, empty, error, permission, long content, slow network, rapid-click states that can really occur.
-- Motion/gesture: trigger, pointer-down response, repeated/interrupted trigger, reduced motion, origin, duration/easing, slow drag, fast flick, reversal, release outside bounds.
+- Motion/gesture: inspect applicable triggers, interruption, reduced motion, and timing; for direct manipulation, exercise the relevant drag, reversal, and release behavior.
 - Immersive runtime: visible render, foreground readability, mobile/static fallback, reduced motion, offscreen pause, cleanup path, console/WebGL state.
 - Static-only review: source and detector findings with runtime/visual proof explicitly blocked.
 - Context-specific: [product context](product-contexts.md) card; prove the costly state, input, spatial, update behavior that distinguishes this archetype from generic web UI.
-- Requested durable proposal/review: dossier from [reporting.md](reporting.md); inspect HTML at desktop and narrow; ingest Markdown independently; cross-check subjects, geometry, findings, proof states, asset paths. Dossier packages evidence; does not upgrade an unproven design claim.
+- Requested synchronized proposal/review: use [reporting.md](reporting.md), inspect the requested outputs, and cross-check subjects, geometry, findings, proof states, and asset paths. A dossier packages evidence; it does not upgrade an unproven design claim.
 
 More screenshots are not better when they prove nothing.
 
@@ -55,7 +55,7 @@ Do not skip from `captured` to `passed`; name viewport and state in the filename
 
 Focused crops or component inspection when a full-page image makes relevant detail unreadable.
 
-Complete the ledger. DPR `2+` for controls, icons, alignment, rows, scrollbars; low-resolution evidence cannot prove unresolved detail.
+Complete the ledger. Use a higher-resolution capture or focused crop when the available evidence cannot resolve controls, icons, alignment, rows, or scrollbars.
 
 Repeated geometry: attach the anchor map, gap or baseline deltas, focused crop from [geometry-and-rhythm.md](geometry-and-rhythm.md). Material motion: event map plus interruption, repeated-use, reduced-mode evidence from [motion.md](motion.md). “Feels smoother” and “spacing improved” are not falsifiable claims.
 

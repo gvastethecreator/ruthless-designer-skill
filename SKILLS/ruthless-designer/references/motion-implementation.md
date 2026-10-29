@@ -14,7 +14,7 @@ Animate interpolable values. Resolve classes, CSS variables, `auto`, percentages
 
 ## Measure The Shipped Path
 
-Complex, continuous, gesture-driven, canvas/WebGL, or suspected performance-sensitive motion: profile before and after on production build, representative lower-end hardware, and normal target. Falsifying metrics only: frame time, long tasks, layout/paint cost, memory, input latency. Bounded microtransition: inspect interruption, repetition, reduced motion in shipped build; profile when evidence suggests cost. Dev-mode stutter and flagship-laptop smoothness are unreliable witnesses. Preserve route, device, state, capture or metrics, and reduced-motion result with verdict.
+Profile before and after when a performance claim, observed issue, or required gate calls for it. Select representative hardware, build, route, and state for that claim; measure relevant frame time, main-thread, rendering, memory, or input cost. For a bounded transition, inspect interruption, repetition, and reduced motion; profile only when needed. Dev-mode stutter or one fast device alone does not establish production performance.
 
 ## Synchronize To Rendered Milestones
 

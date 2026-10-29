@@ -19,23 +19,23 @@ Build structure from offer, proof, and objections.
 
 Before styling, map audience questions in decision order: `what is this -> is it for me -> how does it work -> why believe it -> what does it cost/risk -> what next`. Inspect nav labels, titles, claim/proof adjacency, repeated ideas, missing objections, buried terms, and whether every important object has a real content home.
 
-Cut duplication, merge synonymous sections, rewrite vague labels as domain actions, and put proof beside the claim it supports. If the page needs three paragraphs to explain its own navigation, content architecture is dead.
+Cut duplication, merge synonymous sections, rewrite vague labels as domain actions, and put proof beside the claim it supports. Simplify navigation when its explanation obscures the task.
 
 Mystery and delayed reveal are valid for cultural, editorial, entertainment, and discovery surfaces when anticipation is part of the value. Preserve orientation, access, skip/exit, reduced motion, and a direct path for users with a concrete task.
 
 ## First Viewport
 
-Commercial, service, conversion-led surfaces must carry:
+For commercial, service, or conversion-led surfaces, select what the first viewport needs:
 
 - specific offer or product/category signal;
 - concise support line;
-- one dominant action;
-- one credibility signal;
-- visible hint of next proof, product, or mechanism.
+- a clear next action when appropriate;
+- relevant, supported proof or a path to it;
+- a product or mechanism cue when it helps orientation.
 
 Cultural, editorial, entertainment, and discovery surfaces must carry identity, one orientation cue, an intentional entry into the artifact or story, and reachable wayfinding. Dominant CTA, support line, or credibility badge is optional when it would flatten earned mystery into funnel sludge.
 
-Keep it legible on a small laptop and mobile. Kill the four-line display headline, tag soup, secondary-CTA shouting match, decorative metadata, and hero art that hides what the product does.
+Keep it legible at supported sizes. Remove competing actions, decorative metadata, or hero art when they hide what the product does; judge a headline by its actual readability rather than its line count.
 
 Prefer a real artifact, screenshot, object, place, output, person, material, or interaction. If no credible asset exists, state the gap. Nested divs are not product proof.
 
@@ -63,8 +63,8 @@ Proof before decoration. Convert where proof peaks.
 Lock the model before drawing cards: per-seat, usage, tiered, flat, freemium, enterprise, or custom.
 
 - Align plan names, price, period, limits, CTA, and comparable feature rows.
-- Say who recommended plan is for and why.
-- Expose overages, taxes, currencies, billing period, custom quote, and hidden limits.
+- If a plan is recommended, explain who it is for and why the recommendation is supported.
+- Expose applicable overages, taxes, currency, billing period, quote requirements, and material limits.
 - Keep risk reversal—trial, cancellation, migration, SLA, support, refund—near decision.
 - Tabular numerals for changing prices.
 - Tooltips or disclosure for complex limits; never hide material terms.
@@ -97,7 +97,7 @@ Use screenshots, URLs, videos, HTML exports, brand assets, and generated section
 
 Kill reflexive purple-blue gradients, beige/brass luxury, decorative glass, terminal cosplay, faux brutalism, default editorial monochrome, tiny uppercase kickers, fake coordinates/version strips, random serif italics, and generic "empower/streamline/supercharge" claims.
 
-Guilty until product provides an alibi.
+Judge each pattern by its fit and observed effect; do not reject it by category alone.
 
 ## Immersive Effects
 

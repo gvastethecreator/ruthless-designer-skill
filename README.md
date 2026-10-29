@@ -106,6 +106,10 @@ pnpm run check
 
 That command validates the skill and metadata, validates the evaluation specifications, runs detector/harness/installer regression tests, and exercises the deliberately bad smoke fixture.
 
+The smoke fixture uses `.scratch/ruthless-designer-smoke`. If that directory contains prior outputs,
+choose a fresh path with `pnpm run check --out <new-path>`, or use `pnpm run check --overwrite`
+only when replacing those outputs is authorized. The same options apply to `pnpm run smoke`.
+
 Individual commands:
 
 ```bash
@@ -135,6 +139,10 @@ Common options:
 
 ## Runtime Evidence Harness
 
+Choose a task-owned output directory outside the source tree. Existing outputs cause an error
+that lists conflicts; pass `--overwrite` only when their replacement is authorized. The harness
+rejects output paths that coincide with an input.
+
 Static plus runnable UI:
 
 ```bash
@@ -144,7 +152,7 @@ node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path ./src --ur
 Strict layout-shift regression:
 
 ```bash
-node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path ./src --url http://localhost:5173 --strict-cls --out ./output/ruthless-designer/app-shell
+node SKILLS/ruthless-designer/scripts/run-interface-review.mjs --path ./src --url http://localhost:5173 --strict-cls --out ./output/ruthless-designer/app-shell-strict
 ```
 
 The harness records source findings, successful/failed runtime observations, screenshots, console/network signals, viewport state, evidence coverage, and blocked gates. A screenshot is reported as captured and `not-compared`; the tool does not pretend capture alone proves visual quality.
@@ -170,6 +178,8 @@ node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest ./ou
 ~~~
 
 The generator always writes `report.md` beside `report.html` (or accepts `--markdown-out <path.md>`), copies local evidence losslessly into `report-assets/`, and keeps both views on the same normalized manifest. It validates annotation geometry and cross-references, requires every marker to name its literal visible subject, rejects proposal callouts on before/reference evidence, and renders exact context-padded annotation zooms when dimensions are available. It also escapes hostile text, embeds supported local images in HTML, fails strict mode on missing/corrupt/external assets, remains readable without JavaScript, and prints cleanly. Draft mode exposes missing or remote evidence in both reports as a sanitized visible warning instead of silently omitting or fetching it.
+
+The standalone generator overwrites its output paths; choose new paths or authorize replacement before running it.
 
 The runtime harness also writes `report.md`, `report-assets/`, and `report.html` automatically beside `review.json` and the compact `README.md` index. That automated dossier remains an evidence pack: it does not turn detector output or a captured screenshot into a human design verdict.
 

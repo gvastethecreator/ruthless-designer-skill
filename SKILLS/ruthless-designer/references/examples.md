@@ -14,7 +14,7 @@ Audience/task: curious visitors browse fragments; discovery and ambiguity are pa
 
 Crime: a renovation estimator surrounds an excellent before/after scrubber with twelve equal cards, duplicate savings badges, and three primary CTAs.
 
-Do not break: the scrubber aligns the same room and exposes material differences at the decision point; users understand the claim by manipulating proof.
+Do not break: the scrubber aligns the same room and lets people inspect material differences at the decision point. User comprehension is unmeasured in this example.
 
 Finding: **The proof is trapped inside a loyalty program for rectangles.** Evidence: the scrubber gets less area and contrast than summary cards. Damage: users scan invented metrics before inspecting the actual result. Cause: a shared card primitive assigns equal containment and emphasis to unlike content. Fix: make the scrubber the stage, merge cost/scope into one evidence rail, demote two CTAs, keep controls tethered to the image. Roast: "The strongest mechanism is being held hostage by twelve beige lunchboxes."
 
@@ -35,4 +35,4 @@ Look beyond hero treatments:
 - **Failure specimen:** real broken case teaches limits and recovery better than polished success theater.
 - **Reduced-motion identity:** hierarchy, state, rhythm, and material preserve product's character when movement is removed.
 
-A signature is valid only when it changes comprehension or action.
+A signature can support a task or product character, provided it does not obscure the work.

@@ -82,6 +82,6 @@ Attack the replacement with [adversarial review](references/adversarial-review.m
 
 Lead with the result or dominant failure. Show exact moves, preserved strengths, changed artifact/files, evidence, skipped checks, and limitations. Keep critique direct; roast humor is optional when requested.
 
-Requested durable reports use `report-manifest.json`, `report.md`, `report-assets/`, and `report.html` from one manifest. Ordinary work needs a concise response and usable evidence links.
+Use the requested report format and existing project records. When synchronized outputs are requested or required, generate `report-manifest.json`, `report.md`, and `report.html` together, with `report-assets/` when needed. Ordinary work needs a concise response and usable evidence links.
 
 Missing proof: say `implemented, not fully verified` or name the review's exact limit. Do not replace design judgment with a score, artifact count, or theatrical verdict.

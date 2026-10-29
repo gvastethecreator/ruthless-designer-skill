@@ -2,6 +2,8 @@
 
 Before choosing a direction for any nontrivial interface. Dark shell ≠ command center; number grid ≠ dashboard; browser canvas ≠ studio. Classify from what the user must perceive, decide, do.
 
+The proof lists below are examples, not required test matrices. Select the states and evidence relevant to the change and the project's contract; distinguish absent features from applicable but untested ones.
+
 ## Contents
 
 - [Context Card](#context-card)
@@ -56,7 +58,7 @@ Direction priorities:
 - Canvas, timeline, document, scene, or selected object is sovereign.
 - Tools by user intent and affected object, not component implementation.
 - Selection, mode, zoom, time, save state, scope continuously legible.
-- Edits immediate, reversible, attributable. Undo/redo, autosave, conflicts, destructive actions, export are product structure.
+- Keep edit feedback truthful. Preserve undo/redo, autosave, conflict handling, destructive actions, and export where the product supports them.
 - Compact inspectors; deliberate scroll ownership. A panel is not permission to dump every parameter.
 - Artifact generates identity: material, waveform, frames, handles, guides, layers, or direct manipulation can carry the signature move.
 

@@ -29,7 +29,7 @@ intentional breaks:
 proof route + viewport + state:
 ~~~
 
-Persist as geometry-ledger.json when several builders, surfaces, or proof states are involved.
+Reuse the existing working record for shared geometry decisions. Create a separate ledger only when requested or required by the project.
 
 ## Build An Alignment Map
 
@@ -50,11 +50,13 @@ No hover or validation border if it changes box size. Reserve geometry, or use o
 
 ## Make Rhythm Legible
 
-Ratio is contextual; ordering is not:
+Use this as a starting hypothesis, then adjust it to the observed grouping:
 
 ~~~text
 within < between < section
 ~~~
+
+Different relationships may need a different order; the rendered result decides.
 
 Edge clearance: tighter in a cockpit, larger on a rare decision screen. Dense ≠ cramped; spacious ≠ objects floating with no relationship.
 

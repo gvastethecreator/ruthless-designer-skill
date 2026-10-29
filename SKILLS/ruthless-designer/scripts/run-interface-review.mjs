@@ -27,6 +27,12 @@ const outDir = path.resolve(options.out || path.join(root, "output", "ruthless-d
 const screenshotsDir = path.join(outDir, "screenshots");
 const resolvedTargetPath = options.path ? path.resolve(options.path) : null;
 let invalidInputExitCode = null;
+try {
+  checkOutputConflicts(outDir, resolvedTargetPath, options);
+} catch (error) {
+  console.error(error.message);
+  process.exit(2);
+}
 fs.mkdirSync(screenshotsDir, { recursive: true });
 
 const review = {
@@ -131,6 +137,80 @@ if (review.expectations.some((expectation) => expectation.status === "fail")) {
 }
 if (review.assessment.result === "blocked" && options.expectAssessment !== "blocked") process.exitCode = 1;
 if (invalidInputExitCode !== null) process.exitCode = invalidInputExitCode;
+
+function checkOutputConflicts(dir, target, opts) {
+  const stat = (entry) => {
+    try {
+      return fs.lstatSync(entry);
+    } catch (error) {
+      if (error.code === "ENOENT") return null;
+      throw error;
+    }
+  };
+  const key = (entry) => {
+    let ancestor = path.resolve(entry);
+    const missing = [];
+    while (!fs.existsSync(ancestor)) {
+      const parent = path.dirname(ancestor);
+      if (parent === ancestor) break;
+      missing.unshift(path.basename(ancestor));
+      ancestor = parent;
+    }
+    const resolved = path.join(fs.realpathSync(ancestor), ...missing);
+    return process.platform === "win32" ? resolved.toLowerCase() : resolved;
+  };
+  const within = (parent, child) => {
+    const relative = path.relative(parent, child);
+    return relative === "" || (!relative.startsWith(`..${path.sep}`) && relative !== ".." && !path.isAbsolute(relative));
+  };
+  const directory = stat(dir);
+  if (directory && (directory.isSymbolicLink() || !directory.isDirectory())) {
+    throw new Error(`Output directory is not a regular directory: ${dir}`);
+  }
+
+  const files = ["README.md", "review.json", "report.md", "report.html"];
+  if (target) files.push("static-findings.json");
+  if (opts.url) files.push("runtime-findings.json");
+  const outputFiles = files.map((name) => path.join(dir, name));
+  const outputDirs = [path.join(dir, "screenshots"), ...(opts.url ? [path.join(dir, "report-assets")] : [])];
+  const conflicts = [];
+  for (const file of outputFiles) {
+    const info = stat(file);
+    if (info?.isSymbolicLink() || (info && !info.isFile())) throw new Error(`Unsafe output entry: ${file}`);
+    if (info) conflicts.push(file);
+  }
+  for (const folder of outputDirs) {
+    const info = stat(folder);
+    if (info?.isSymbolicLink() || (info && !info.isDirectory())) throw new Error(`Unsafe output entry: ${folder}`);
+    if (info && opts.url) {
+      for (const name of fs.readdirSync(folder)) {
+        const entry = path.join(folder, name);
+        if (stat(entry)?.isSymbolicLink()) throw new Error(`Unsafe output entry: ${entry}`);
+        conflicts.push(entry);
+      }
+    }
+  }
+
+  const inputs = [target, opts.actions, ...opts.actionGroups.map((spec) => parseNamedFile(spec, "--action-group")[1])].filter(Boolean);
+  for (const input of inputs) {
+    if (!fs.existsSync(input)) continue;
+    const inputKey = key(input);
+    if (input === target && fs.statSync(input).isDirectory() && within(inputKey, key(dir))) {
+      throw new Error(`Output directory is inside the input directory: ${input}`);
+    }
+    if (inputKey === key(dir) || outputFiles.some((file) => key(file) === inputKey)) {
+      throw new Error(`Output would overwrite an input: ${input}`);
+    }
+    for (const folder of outputDirs) {
+      if (within(key(folder), inputKey)) {
+        throw new Error(`Output would overwrite an input: ${input}`);
+      }
+    }
+  }
+  if (conflicts.length && !opts.overwrite) {
+    throw new Error(`Existing output conflicts (use --overwrite to replace):\n${conflicts.join("\n")}`);
+  }
+}
 
 function runStaticReview(targetReview) {
   const staticPath = path.join(outDir, "static-findings.json");
@@ -1139,6 +1219,7 @@ function parseArgs(args) {
     path: null,
     url: null,
     out: null,
+    overwrite: false,
     slug: null,
     actions: null,
     actionGroups: [],
@@ -1173,6 +1254,7 @@ function parseArgs(args) {
     if (name === "--path") options.path = nextValue();
     else if (name === "--url") options.url = nextValue();
     else if (name === "--out") options.out = nextValue();
+    else if (arg === "--overwrite") options.overwrite = true;
     else if (name === "--slug") options.slug = nextValue();
     else if (name === "--actions") options.actions = nextValue();
     else if (name === "--action-group") options.actionGroups.push(nextValue());
@@ -1349,5 +1431,5 @@ function redactReportValue(value) {
 }
 
 function usage() {
-  console.error("Usage: node run-interface-review.mjs --path <file-or-dir> [--url <local-url>] [--out <dir>] [--actions actions.json] [--action-group name=actions.json] [--viewport 1280x800] [--detail-capture] [--cls-threshold 0.1|--strict-cls] [--fail-on=P1|P2|P3] [--require-runtime] [--require-signature] [--signature-proof text --signature-selector selector] [--expect-finding rule-id] [--expect-assessment=blocked|findings|evidence-collected] [--fail]");
+  console.error("Usage: node run-interface-review.mjs --path <file-or-dir> [--url <local-url>] [--out <dir>] [--overwrite] [--actions actions.json] [--action-group name=actions.json] [--viewport 1280x800] [--detail-capture] [--cls-threshold 0.1|--strict-cls] [--fail-on=P1|P2|P3] [--require-runtime] [--require-signature] [--signature-proof text --signature-selector selector] [--expect-finding rule-id] [--expect-assessment=blocked|findings|evidence-collected] [--fail]");
 }

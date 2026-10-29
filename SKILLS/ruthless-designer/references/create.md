@@ -69,17 +69,17 @@ For product surfaces, design the states that can actually occur:
 - Long text, long identifiers, large data, and overflow.
 - Narrow viewport, touch, keyboard, and zoom where relevant.
 
-For brand surfaces, design:
+For brand surfaces, address the relevant states:
 
 - First viewport with specific offer or artifact.
 - Early proof or product mechanism.
 - Objection/trust moment.
 - Conversion decision point.
-- Mobile first viewport.
+- Mobile first viewport when responsive behavior is changed or requested.
 
 Missing states are the product under pressure, not polish.
 
-For a command center, also prove live update, freshness, ownership, alert priority, and recovery without geometry drift. For a studio, prove selection change, direct manipulation, undo/recovery, and inspector stability. For a HUD, prove the busiest play state, safe areas, glance legibility, input mode, and an aspect-ratio change.
+For a command center, studio, or HUD, select the applicable costly states from [product-contexts.md](product-contexts.md) and prove the ones affected by the change.
 
 ## Artifact Loop
 
@@ -110,4 +110,4 @@ proof target:
 
 Stop when every in-scope blocker and major finding is fixed or explicitly scoped, the main path and a meaningful edge/recovery state are proven, and the final artifact visibly beats its baseline or competent default.
 
-When the deliverable is a requested durable proposal or review artifact, use the manifest and standalone HTML dossier in [reporting.md](reporting.md). The report must contain the context, observed evidence, selected direction or exact redesign, preservation contract, proof targets, and visible limitations.
+When a durable proposal or review is requested, use the requested format and include the relevant context, evidence, direction, preservation contract, proof targets, and limits. Use the synchronized dossier in [reporting.md](reporting.md) only when requested or required.

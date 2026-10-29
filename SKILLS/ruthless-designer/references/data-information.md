@@ -21,7 +21,7 @@ Use tables for exact lookup, many attributes, mixed units, auditing, and row-lev
 
 Prefer position on a shared scale, then length, before area, angle, volume, or saturation. Keep comparable panels on comparable scales. Bars normally start at zero; a truncated line scale may be valid when disclosed and variation—not magnitude—is the question. Label log scales; never feed them zero or negative values.
 
-Show denominator, unit, time window, timezone, source, freshness, filters, sample size, and whether values are estimated. Distinguish `zero`, `missing`, `not applicable`, `suppressed`, `stale`, and `not yet reported`; blank is not a data type. Do not connect missing periods with a confident line.
+Show the denominator, unit, time window, timezone, source, freshness, filters, sample size, and estimation status when relevant to the decision. Distinguish `zero`, `missing`, `not applicable`, `suppressed`, `stale`, and `not yet reported`; blank is not a data type. Do not connect missing periods with a confident line.
 
 Expose uncertainty with intervals, ranges, bands, scenarios, sample counts, or explicit confidence language. Do not print false precision. Annotate decisions, threshold crossings, regime changes, and anomalies; labeling every point is panic, not annotation.
 
@@ -38,4 +38,4 @@ Color must be redundant with labels, shape, position, stroke, or pattern. Keep c
 
 ## Data Gate
 
-Ask a representative reader the intended question from the display. Pass only if they can find the comparison, read direction and uncertainty, tell missing from zero, and name the next decision without coaching.
+When claiming reader comprehension, ask a representative reader the intended question and observe the comparison, uncertainty, missing values, and next decision. Without participant evidence, describe the intended reading path and leave comprehension unverified.

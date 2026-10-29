@@ -57,7 +57,7 @@ Composition constraint, not an accessibility footnote.
 No permission wall at open unless the feature is the product.
 
 - Ask when the user starts the camera, location, notifications, or clipboard feature. Purpose copy: one active sentence — what and why. Reject "for a better experience."
-- Required pre-prompt: one Continue control that opens the real prompt. No fake Allow, no hostage Skip. Denied state: name the blocked action and recovery; rest of the product stays usable.
+- Use a pre-prompt only when context cannot explain an essential permission request. If the platform calls for one, make its Continue control open the real prompt; do not imitate the system's Allow choice. Denied state: name the blocked action and recovery; rest of the product stays usable.
 
 ## Inclusion
 
@@ -69,7 +69,7 @@ Load [language-and-authorship.md](language-and-authorship.md) for writing patter
 
 ## Proof
 
-Creation or redesign on this route must exercise the costly state:
+Exercise the applicable costly states affected by the creation or redesign, for example:
 
 - first-run skipped, absent on a later launch;
 - permission denied;
@@ -78,7 +78,7 @@ Creation or redesign on this route must exercise the costly state:
 - search no-results;
 - reduced transparency on any frosted chrome.
 
-Unexercised patterns stay `unknown`. Not a standard or license to clone Apple chrome.
+Mark absent patterns `not applicable` and applicable but unexercised patterns `unknown`. Not a standard or license to clone Apple chrome.
 
 ## Sources
 

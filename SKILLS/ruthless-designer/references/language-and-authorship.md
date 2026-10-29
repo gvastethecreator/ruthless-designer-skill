@@ -62,13 +62,13 @@ Pressure test: keep a term that carries meaning, uncertainty, emphasis, or domai
 
 ## Workflow And Output
 
-1. Read the complete text. Internal note: core point and three to five voice signals.
+1. Read the relevant text. Note the core point and voice signals that affect the edit.
 2. Minimum effective edit. Preserve strong lines and structure unless they harm clarity or the task.
 3. Check every claim against supplied evidence. Name an absent source instead of filling the gap.
 4. Run the checklist below. Fix failures before returning the result.
-5. Return the complete edited text and a short `What changed` section when editing was requested.
+5. Follow the requested output format. For in-place edits, summarize the change; repeat the complete text only when useful or requested.
 
-Detection or audit: report each found pattern with its quoted line and a short fix. Do not rewrite, score, or claim authorship. No text supplied: ask them to paste it. If audience, format, or goal changes the edit, ask one focused question.
+Detection or audit: report each relevant pattern with its quoted line and a short fix. Do not rewrite, score, or claim authorship. Inspect accessible named files before asking for text; infer the audience and format when context supports it, and ask only for a necessary decision.
 
 ## Gate
 
@@ -81,7 +81,7 @@ Pass only when:
 - strong lines survived; edit matches the amount of actual slop;
 - listed patterns, inflated language, formatting problems gone or justified;
 - ending on a concrete point, takeaway, or next action;
-- full output and short change log match the requested format.
+- output matches the requested format.
 
 ## Source
 

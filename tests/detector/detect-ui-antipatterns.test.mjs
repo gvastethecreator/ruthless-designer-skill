@@ -22,6 +22,7 @@ function withTempDir(callback) {
   try {
     return callback(directory);
   } finally {
+    assert.equal(path.dirname(fs.realpathSync(directory)), fs.realpathSync(os.tmpdir()));
     fs.rmSync(directory, { force: true, recursive: true });
   }
 }
@@ -135,6 +136,28 @@ test("skips test, fixture, generated, and vendor directories during normal trave
     assert.equal(payload.findings.filter((finding) => finding.id === "missing-img-alt").length, 1);
 
     const explicit = runDetector(["--json", path.join(directory, "fixtures")]);
+    assert.equal(explicit.status, 0, explicit.stderr);
+    assert.equal(JSON.parse(explicit.stdout).files, 1);
+  }));
+
+test("skips discovered junctions but permits an explicitly selected link", () =>
+  withTempDir((directory) => {
+    const source = path.join(directory, "source");
+    const external = path.join(directory, "external");
+    fs.mkdirSync(source);
+    fs.mkdirSync(external);
+    fs.writeFileSync(path.join(source, "local.tsx"), "export default null;\n");
+    fs.writeFileSync(path.join(external, "external.tsx"), "export default null;\n");
+    const linked = path.join(source, "linked");
+    fs.symlinkSync(external, linked, "junction");
+    fs.symlinkSync(source, path.join(source, "cycle"), "junction");
+
+    for (const args of [["--json", source], ["--json", "--include-ignored", source]]) {
+      const result = runDetector(args);
+      assert.equal(result.status, 0, result.stderr);
+      assert.equal(JSON.parse(result.stdout).files, 1);
+    }
+    const explicit = runDetector(["--json", linked]);
     assert.equal(explicit.status, 0, explicit.stderr);
     assert.equal(JSON.parse(explicit.stdout).files, 1);
   }));

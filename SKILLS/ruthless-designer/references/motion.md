@@ -14,7 +14,8 @@ If class is unclear, remove animation until its job is clear; do not use ambient
 
 ## Write The Motion Map
 
-Nontrivial work: record motion-plan.json before implementation:
+For nontrivial work, keep the relevant motion map in existing working notes. Create a separate
+`motion-plan.json` only when the user or project contract requires it:
 
 ~~~text
 event:
@@ -42,17 +43,15 @@ Example: scene-cover closes from selected room, reaches a fully covered mileston
 - one default entrance relationship, not one entrance preset copied onto every component; displacement and overshoot budgets;
 - attention budget: which events can pulse, shake, flash, or cover the scene; rules for overlap, stagger, reduced mode.
 
-Start from project tokens when they exist; otherwise these calibration ranges; tune in the shipped interaction. Duration follows perceived distance, visual mass, consequence, frequency:
-
-- press feedback: about 100–160ms; tooltip or small popover: about 125–200ms; dropdown or select: about 150–250ms;
-- most repeated UI state changes: under 300ms; large spatial surfaces: about 200–500ms only when distance and frequency earn it.
+Start from project tokens when they exist. Tune the shipped interaction for perceived distance,
+visual mass, consequence, frequency, and responsiveness; do not treat a universal duration as a quality gate.
 
 Large cover can need more time than a checkbox; a command used hundreds of times must not replay brand moment.
 
 - enter or settle: decelerate into destination; exit: accelerate away; usually finish faster or quieter;
 - movement between visible positions: smooth acceleration and deceleration; constant rotation, progress, or conveyor: linear when constant speed is truthful.
 
-Avoid ease-in on UI entry — it delays visible response — and huge spring overshoot as a default. Character belongs to the grammar, not every keyframe.
+Choose easing from the observed interaction. Avoid delayed feedback or excessive overshoot when they interfere with the task. Character belongs to the grammar, not every keyframe.
 
 ## Choreograph Cause, Not Layers
 
@@ -158,10 +157,10 @@ Cover, door, curtain, frame, camera move, or shared object only when belonging t
 
 ## Performance
 
-- Animate exact properties; never use transition: all when changing set is known. Prefer transform and opacity. Filter, clip-path, masks, or layout properties only when visible mechanism earns the cost and runtime evidence supports it.
+- Prefer explicit transition properties when they make behavior predictable. Investigate `transition: all`, filters, masks, or layout animation when they cause unintended work or visible defects; do not infer a performance failure from syntax alone.
 - Avoid driving large subtrees through inherited CSS variables during direct manipulation. will-change only for observed or credible first-frame stutter; name exact properties; remove temporary hints.
-- Cap simultaneous animated elements, expensive layers, blur area, shadow area, device pixel ratio, particles, physics bodies, canvas objects. Pause hidden and offscreen loops, marquees, video, canvas, WebGL, particles, physics.
-- Dispose animation frames, timers, observers, listeners, worklets, renderers, worlds, geometries, materials, textures on unmount or route change. Profile production builds on representative lower-end target when motion is continuous, gesture-heavy, canvas/WebGL, or visibly suspect.
+- Bound expensive visual work when evidence or the product's performance contract requires it. Pause or throttle offscreen work when safe; preserve timing and simulation behavior the product relies on.
+- Dispose animation frames, timers, observers, listeners, worklets, renderers, worlds, geometries, materials, textures on unmount or route change. Profile an appropriate production path and target when a performance claim, observed issue, or required gate calls for it.
 
 Dev-mode stutter and flagship-laptop smoothness are unreliable witnesses.
 
@@ -179,7 +178,7 @@ Solid or higher-contrast material when reduced transparency or contrast needs it
 
 Inspect source and runtime; slowed capture or browser animation tooling when origin, overlap, or settle is hard to judge.
 
-Required proof:
+Select applicable proof for the changed behavior:
 
 - default trigger and completion; rapid open/close/open or repeated activation; interruption and cancellation;
 - reduced motion; keyboard and touch/hover gating when applicable; hidden/offscreen behavior;
@@ -194,6 +193,6 @@ After: concrete replacement or deletion.
 Proof: route + viewport + state + slowed capture, runtime metric, source, or blocker.
 ~~~
 
-Block approval for: unjustified high-frequency travel; primary content hidden behind animation startup; scale-zero or delayed entries that visibly teleport; missing reduced behavior on significant movement; broken gesture capture; queued transitions; offscreen loops; timer-synchronized state that drifts from the rendered transition; easy compositor fixes left undone.
+Block approval for demonstrated material failures, such as primary content hidden behind startup, missing reduced behavior on significant movement, broken gesture capture, queued transitions, or state that drifts from the rendered transition.
 
 Syntax is a lead; rendered behavior commits the crime.

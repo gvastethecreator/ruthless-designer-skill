@@ -18,7 +18,7 @@ Optimistic updates only when reversible and temporary state is unmistakable: kee
 
 Abort obsolete reads when route, query, or component ownership changes. Ignore late responses with request IDs, sequence numbers, versions, or cancellation signals; arrival order is not truth. Concurrent writes: server versions, ETags, mutation IDs, or equivalent conflict contract. Stable idempotency key across retries when repeating a side effect could duplicate it. Surface conflicts with user work preserved — never silently last-write-wins.
 
-Same record in multiple tabs: define synchronization. `BroadcastChannel`, storage events, server subscriptions, or refresh-on-focus as the product warrants. Announce remote changes; merge only when semantics are safe; conscious resolution when not. Test tab A editing while tab B saves, logs out, deletes, or changes permissions.
+Same record in multiple tabs: define synchronization when the product supports it. `BroadcastChannel`, storage events, server subscriptions, or refresh-on-focus as warranted. Announce remote changes; merge only when semantics are safe; conscious resolution when not. When affected, test a representative cross-tab conflict at the existing seam.
 
 ## Survive Real Devices And Media
 

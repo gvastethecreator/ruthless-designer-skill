@@ -40,7 +40,7 @@ Before judging hierarchy, complete the context card in [product-contexts.md](pro
 
 When one side is missing, state the limit plainly:
 
-> No code was provided, so this is a visual-only roast. The code may be innocent, but the screenshot is already at the crime scene holding the weapon.
+> No code was provided, so this is a visual-only critique. Source causes and runtime behavior remain unverified.
 
 Do not claim runtime behavior, accessibility, responsive survival, or visual fidelity you did not inspect.
 
@@ -56,7 +56,7 @@ Every critique must include `Do not break`: name the mechanism, hierarchy, inter
 4. Compare intended priority with actual visual weight and archetype behavior.
 5. Trace biggest mismatches to likely or confirmed structural causes.
 6. Rank findings by user damage, not by how amusing metaphor is.
-7. Define up to five cuts, ordered by damage. Never invent filler to reach five.
+7. Define the distinct cuts supported by evidence, ordered by damage. Do not invent filler.
 8. If implementation was requested and repo is editable, patch highest-impact in-scope causes and prove context-specific result.
 9. For a requested durable review or proposal, use [reporting.md](reporting.md). Otherwise return the decisive findings and evidence links without manufacturing files.
 
@@ -95,4 +95,4 @@ Ban vague prescriptions. Name what dominates or loses weight; which cards, badge
 
 ## Pass Gate
 
-The critique fails when it is evasive, generic, screenshot-only despite available source, code-only despite available visuals, based on unreadable captures, unsupported, entertainment-only, padded to five, careless about what already works, or vague about the fix. It also fails when context is inferred from costume, the same prescription could be pasted onto another archetype, costly product states are skipped, or alignment, spacing, overflow/scrollbars, gradients, icons, or capture legibility were applicable but ignored.
+The critique fails when it is evasive, generic, screenshot-only despite available source, code-only despite available visuals, based on unreadable captures, unsupported, entertainment-only, padded to a quota, careless about what already works, or vague about the fix. It also fails when context is inferred from costume, the same prescription could be pasted onto another archetype, costly product states are skipped, or alignment, spacing, overflow/scrollbars, gradients, icons, or capture legibility were applicable but ignored.

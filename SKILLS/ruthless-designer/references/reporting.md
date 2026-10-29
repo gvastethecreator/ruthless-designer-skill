@@ -2,7 +2,7 @@
 
 Material critique, screenshot review, design proposal, redesign proposal. One decision artifact, two synchronized views: ingestion-first Markdown for fast correction; standalone HTML for visual inspection. Both contain evidence, diagnosis, proposed moves, preservation contract, proof targets.
 
-Use when the user requests a durable report, proposal artifact, or handoff, or an established project contract requires it. Otherwise return findings and evidence links in the response. A detailed critique alone does not require creating files.
+Use this format when the user requests synchronized Markdown and HTML, or an established project contract requires both. Otherwise use the requested format and existing records. A detailed critique alone does not require creating files.
 
 ## Required Artifacts
 
@@ -19,7 +19,7 @@ Bundled generator:
 node SKILLS/ruthless-designer/scripts/generate-design-report.mjs --manifest output/ruthless-designer/<slug>/report-manifest.json --out output/ruthless-designer/<slug>/report.html --strict-assets
 ~~~
 
-Derives `report.md` from `report.html`. `--markdown-out <path.md>` only when the caller needs another stable path.
+Derives the Markdown output path from the HTML path; both views come from the same normalized manifest. Use `--markdown-out <path.md>` when the caller needs another path.
 
 Harness emits `report.md`, `report-assets/`, `report.html` beside `review.json` and compact `README.md`:
 
@@ -146,7 +146,7 @@ One marker, one literal subject. Split broad claims across focused crops or mult
   "severity": "P1",
   "title": "Every panel shouts at the same volume",
   "evidence": "Six first-viewport panels share surface, heading, and spacing treatment.",
-  "damage": "Operators must read every region before identifying the next decision.",
+  "damage": "The next decision lacks a distinct visual priority; operator comprehension is unmeasured.",
   "cause": "The composition inventories widgets instead of modeling incident flow.",
   "solution": "Build one incident spine and move ambient metrics to a quiet rail.",
   "roast": "The command center is organized like a sticker collection.",
@@ -177,7 +177,7 @@ Status: selected, rejected, explored. Directions must be incompatible at informa
   "priority": "01",
   "title": "Rebuild the first viewport around incident priority",
   "detail": "Replace the equal panel matrix with an incident spine and one telemetry rail.",
-  "proof": "A five-second test identifies incident, owner, severity, and next action."
+  "proof": "A representative task checks whether an operator can identify the incident, owner, severity, and next action."
 }
 ~~~
 

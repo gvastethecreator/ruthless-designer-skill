@@ -36,7 +36,7 @@ Judge every scroll region by ownership, visibility, visual fit, and input behavi
 
 ## Icons And Media
 
-Icon family, viewBox, stroke/fill, cap/join, corner, negative space, optical center, visual weight coherent. Prefer existing icon system or proven library. Custom vector: product-specific, declared grid, inspected at real sizes plus an enlarged crop; improvised one-off SVG paths fail craft gate. Labels for unfamiliar or consequential actions. Reserve dimension before load; crop/focal point by meaning, not container convenience. Check resolution, compression, art direction, captions, alt, masking, theme behavior. No stock media as emotional wallpaper when claim needs product proof.
+Keep icon family, viewBox, stroke/fill, cap/join, negative space, optical center, and visual weight coherent. Reuse the existing icon system when it fits. Inspect custom vectors at their rendered size and judge their actual legibility and fit, not whether they are one-off. Label unfamiliar or consequential actions. Reserve dimensions before load; choose crop and focal point by meaning. Check resolution, compression, captions, alt text, masking, and theme behavior. Do not present stock media as product proof.
 
 ## Gradients
 
@@ -46,4 +46,4 @@ Atlases and generated grids: structured data. Define grid, cell ratio, semantic 
 
 ## Craft Gate
 
-Inspect at target size, narrow width, zoom, each supported theme, real long/short content. Blur or squint for hierarchy; crisp crops for finish. Pass only when system solves the named problem, exceptions are intentional. If the defense is a catalog of gradients, shadows, radii, micro-animations, no design decision has occurred. Chrome-versus-content, user-controlled text size, anti-iOS-costume: [human-interface-craft.md](human-interface-craft.md).
+Inspect at the target size and affected states. Include narrow width, zoom, themes, and content extremes when the change or an applicable requirement calls for them. Blur or squint for hierarchy; use readable crops for finish. Pass only when the system solves the named problem and exceptions are intentional. Chrome-versus-content, user-controlled text size, anti-iOS-costume: [human-interface-craft.md](human-interface-craft.md).
