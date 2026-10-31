@@ -43,7 +43,7 @@ Decompose by region and moment; don't average rules:
 
 - Public page with interactive preview: `landing` around a bounded `product` artifact.
 - Level editor is a `studio` even if it creates a game; play-test viewport may enter game context.
-- Browser game with DOM menus and HUD: `game UI`; route renderer, shader, camera, gameplay-system work to the specialist domain.
+- Browser game with DOM menus and HUD: `game UI`; renderer, shader, camera, and gameplay-system work is out of scope.
 - Analytics panel inside a studio: `dashboard region`; must not steal sovereignty from canvas or timeline.
 - Command center can contain dashboards; alert lifecycle, freshness, ownership, response path set shell priority.
 
@@ -133,7 +133,7 @@ Reject:
 - Decorative vector glyphs with no silhouette discipline or icon-family proof.
 - HUD tested only on a flat background, title screen, or one calm scene.
 
-Prove: calm and high-noise play, damage/critical, objective update, input switch, pause/menu focus, long localization, common aspect ratios, safe-area pressure, reduced motion, representative gameplay capture. Engine, renderer, camera, or gameplay-system changes: specialist skill; this route stays on web UI integration.
+Prove: calm and high-noise play, damage/critical, objective update, input switch, pause/menu focus, long localization, common aspect ratios, safe-area pressure, reduced motion, representative gameplay capture. Engine, renderer, camera, or gameplay-system changes are out of scope; this route stays on web UI integration.
 
 ## Interactive Prototype, Lab, Or Simulator
 

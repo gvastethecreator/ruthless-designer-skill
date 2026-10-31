@@ -2,7 +2,7 @@
 
 Creates or redesigns flows that interrupt, ask for trust, teach, search, confirm, or must survive large text. Every rule is `practice`. Do not costume a web product as iOS.
 
-Transferable tests from Apple's [Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) and [Principles of great design (WWDC26)](https://developer.apple.com/videos/play/wwdc2026/250/). No copied HIG text, SF metrics, system colors, or material specs. Apple-feel motion and materials: use the platform skill.
+Transferable tests from Apple's [Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) and [Principles of great design (WWDC26)](https://developer.apple.com/videos/play/wwdc2026/250/). No copied HIG text, SF metrics, system colors, or material specs. Native Apple-feel motion and materials are out of scope.
 
 ## Anti-Costume
 

@@ -1,6 +1,6 @@
 ---
 name: ruthless-designer
-description: "Create distinctive interfaces, rethink weak visual direction, and deliver evidence-backed design critiques. Use for greenfield, broad redesign, or deep visual autopsy. Route existing-direction web repairs to improve-ui; skip isolated components and code-only review."
+description: "Create distinctive interfaces, rethink weak visual direction, and deliver evidence-backed design critiques. Use for greenfield, broad redesign, or deep visual autopsy. Not for web repairs within an existing direction, isolated components, or code-only review."
 ---
 
 # Ruthless Designer
