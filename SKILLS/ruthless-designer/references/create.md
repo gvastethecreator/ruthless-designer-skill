@@ -23,7 +23,7 @@ Ask one question only when the missing answer splits the work into incompatible 
 4. Kill obvious category default and fashionable second default.
 5. Select context-specific composition, direction, and one signature move.
 6. Define information architecture before surface styling.
-7. Define layout grid, alignment anchors, relationship-based spacing, density, palette/type/surface roles, component ecology, states, and motion grammar.
+7. Define layout grid, alignment anchors, relationship-based spacing, density, palette/type/surface roles, component ecology, states, and motion grammar. Start numbers from [system-values.md](system-values.md) when the product has no working tokens.
 8. Build core path with realistic content.
 9. Prove result at target viewports and states.
 

@@ -12,7 +12,7 @@ Fix lonely words, accidental rivers, clipped diacritics, fake small caps, synthe
 
 ## Color And Themes
 
-Roles before values: canvas, surface, text, muted text, edge, accent, focus, selection, semantic states. Hue for identity, emphasis, luminance for hierarchy, saturation sparingly enough that status still means something. Check contrast in component states, not token pairs.
+Roles before values: canvas, surface, text, muted text, edge, accent, focus, selection, semantic states. OKLCH starting ramps and the lightness bounds that guarantee contrast: [system-values.md](system-values.md). Hue for identity, emphasis, luminance for hierarchy, saturation sparingly enough that status still means something. Check contrast in component states, not token pairs.
 
 Light, dark, high-contrast: separate perceptual systems. Dark mode is not inverted light mode: elevation, borders, images, shadows, charts, semantic colors need retuning. Test forced colors, reduced transparency when applicable. Never let a decorative palette turn error, success, selection into same neon soup.
 

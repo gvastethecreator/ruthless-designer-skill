@@ -19,6 +19,7 @@ Find the dominant design failure and build a replacement that withstands the sam
 - Landing, portfolio, campaign, pricing, editorial: [brand surfaces](references/brand-surfaces.md).
 - Data, charts, tables, uncertainty: [data information](references/data-information.md).
 - Type, color, media, themes: [visual craft](references/visual-craft.md).
+- New tokens, starting numbers, or a measured pass/fail verdict: [system values](references/system-values.md).
 - Geometry, density, scrolling, HUD safe areas: [geometry and rhythm](references/geometry-and-rhythm.md).
 - Generic or interchangeable results: [authorship](references/authorship-and-specificity.md).
 - Motion/gesture: [motion](references/motion.md); implementation adds [motion traps](references/motion-implementation.md).

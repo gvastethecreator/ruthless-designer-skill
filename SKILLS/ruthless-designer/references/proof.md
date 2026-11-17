@@ -16,7 +16,7 @@ Visual quality, fidelity, responsiveness, interaction, motion, accessibility, pe
 - Context-specific: [product context](product-contexts.md) card; prove the costly state, input, spatial, update behavior that distinguishes this archetype from generic web UI.
 - Requested synchronized proposal/review: use [reporting.md](reporting.md), inspect the requested outputs, and cross-check subjects, geometry, findings, proof states, and asset paths. A dossier packages evidence; it does not upgrade an unproven design claim.
 
-More screenshots are not better when they prove nothing.
+More screenshots are not better when they prove nothing. Accessibility and performance pass values: [system-values.md](system-values.md#acceptance-thresholds).
 
 Atlases or repeated media: complete small set, or every crop class plus first, last, edge cells. Record grid, ratio, mapping, crop/focal behavior, narrow fixture; fail stretching, bleed, subject loss, wrong mapping, blank tiles, default-item-only proof.
 
